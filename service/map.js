@@ -1,3 +1,4 @@
+/*
 function showMap () {
 
   let myMap = L.map('map').setView([50, 0], 13);
@@ -14,4 +15,5 @@ function showMap () {
  }
 
 module.exports = {showMap};
+*/
 
