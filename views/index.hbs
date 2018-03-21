@@ -3,13 +3,19 @@
 <div id="map"></div>
 <!--TODO script in map.js packen-->
 <script>
-    let myMap = L.map('map').setView([51.505, -0.09], 13);
+    let myMap = L.map('map').setView([50, 10], 10);
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{maxZoom}/{x}/{y}.png?access_token={accessToken}', {
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 10,
+        maxZoom: 18,
         id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoicGZhaWMiLCJhIjoiY2pmMTZwZTE1MDc5ZTMyb2t3amN4emx0aSJ9.eGIg8_Yx4S6dK8LmJ2817Q',
+        accessToken: 'pk.eyJ1IjoicGZhaWMiLCJhIjoiY2pmMWVjdnMxMGMydjJ3azdyZ2IwYXZvYSJ9.EoFOF5gnxwQR2C2kzF4ceg',
     }).addTo(myMap);
+    
+    function onClick (pos) {
+        L.marker([pos.latlng.lat, pos.latlng.lng]).addTo(myMap);
+    }
+
+    myMap.on('click', onClick);
 </script>
 <p>sosidnc</p>
