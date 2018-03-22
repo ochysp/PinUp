@@ -13,7 +13,9 @@
     }).addTo(myMap);
     
     function onClick (pos) {
-        L.marker([pos.latlng.lat, pos.latlng.lng]).addTo(myMap);
+        L.marker([pos.latlng.lat, pos.latlng.lng],{
+            draggable: true
+        }).addTo(myMap);
     }
 
     myMap.on('click', onClick);
