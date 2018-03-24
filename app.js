@@ -5,6 +5,19 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 
+global.window = {};
+global.document = {
+    documentElement: {
+        style: {}
+    },
+    getElementsByTagName: function() { return []; },
+    createElement: function() { return {}; }
+};
+global.navigator = {
+    userAgent: 'nodejs'
+};
+L = require('leaflet');
+
 let index = require('./routes/index');
 let app = express();
 
