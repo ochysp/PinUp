@@ -1,9 +1,22 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 let express = require('express');
 let path = require('path');
 let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
+let admin = require('firebase-admin');
+
+admin.initializeApp({
+    credential: admin.credential.cert({
+        projectId: process.env.FB_PROJECT_ID,
+        clientEmail: process.env.FB_CLIENT_EMAIL,
+        privateKey: process.env.FB_PRIVATE_KEY.replace(/\\n/g, '\n')
+    }),
+    databaseURL: process.env.FB_DATABASE_URL
+});
 
 global.window = {};
 global.document = {
