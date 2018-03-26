@@ -13,18 +13,21 @@
     }).addTo(myMap);
     
     function onClick (pos) {
-       let myMarker = L.marker([pos.latlng.lat, pos.latlng.lng],{
-            draggable: true
-        }).addTo(myMap);
+      let coordinates = [pos.latlng.lat, pos.latlng.lng];
 
-       L.circle([pos.latlng.lat, pos.latlng.lng], {radius: 2000}).addTo(myMap);
+      let myMarker = L.marker(coordinates,{
+          draggable: true
+      }).addTo(myMap);
 
-        myMarker.bindPopup(
-          '<p>Was wollen Sie setzen?' +
-          '<br\>'+
-          '<a href="/Pin">Pin</a>' +
-          '<br\>'+
-          '<a href="/Post">Post</a>');
+      L.circle(coordinates, {radius: 2000}).addTo(myMap);
+
+      myMarker.bindPopup(
+        '<p>Was wollen Sie setzen?' +
+        '<br\>'+
+        '<a href="/Pin">Pin</a>' +
+        '<br\>'+
+        '<a href="/Post">Post</a>'
+      );
     }
 
     myMap.on('click', onClick);
