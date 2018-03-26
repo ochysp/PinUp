@@ -16,7 +16,7 @@ global.document = {
 global.navigator = {
     userAgent: 'nodejs'
 };
-L = require('leaflet');
+//L = require('leaflet');
 
 let index = require('./routes/index');
 let app = express();
