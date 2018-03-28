@@ -31,7 +31,7 @@ export type Transaction = {
  * If necessary, adapt the backend address below:
  */
 
-const backend = "https://wed3-server.herokuapp.com";
+const backend = "https://pinuphero.herokuapp.com/";
 
 export function login(
   login: string,
