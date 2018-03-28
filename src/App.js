@@ -9,10 +9,8 @@ import {
 } from "react-router-dom";
 
 import Home from "./components/Home";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Map from "./components/Map"
-import PrivateRoute from "./components/PrivateRoute";
+import MyPins from "./components/MyPins"
+import MyPosts from "./components/MyPosts"
 
 import * as api from "./api";
 
@@ -45,21 +43,6 @@ class App extends React.Component<{}, State> {
     }
   }
 
-  authenticate = (
-    login: string,
-    password: string,
-    cb: (error: ?Error) => void ) => {
-    api
-      .login(login, password)
-      .then(({ token, owner }) => {
-        this.setState({ isAuthenticated: true, token, user: owner });
-        sessionStorage.setItem("token", token);
-        sessionStorage.setItem("user", JSON.stringify(owner));
-        cb(null);
-      })
-      .catch(error => cb(error));
-  };
-
   signout = (callback: () => void) => {
     this.setState({
       isAuthenticated: false,
@@ -72,18 +55,16 @@ class App extends React.Component<{}, State> {
   };
 
   render() {
-    const { isAuthenticated, user, token } = this.state;
 
     const MenuBar = withRouter(({ history, location: { pathname } }) => {
-      if (isAuthenticated && user) {
+     // if (isAuthenticated && user) {
         return (
           <div className="ui menu">
-            <span>
-              {user.firstname} {user.lastname} &ndash; {user.accountNr}
-            </span>
+            <span>User</span>
             {/* Links inside the App are created using the react-router's Link component */}
             <Link className="item" to="/">Home</Link>
-            <Link className="item" to="/map">Map</Link>
+            <Link className="item" to="/myPins">My Pins</Link>
+            <Link className="item" to="/myPosts">My Posts</Link>
             <div className="ui orange inverted right menu">
               <a className="item" href="/logout"
                  onClick={event => {
@@ -91,14 +72,11 @@ class App extends React.Component<{}, State> {
                   this.signout(() => history.push("/"));
                 }}
               >
-                Logout {user.firstname} {user.lastname}
+                Logout User
               </a>
             </div>
           </div>
         );
-      } else {
-        return null;
-      }
     });
 
     return (
@@ -109,31 +87,24 @@ class App extends React.Component<{}, State> {
             exact
             path="/"
             render={props => (
-              <Home {...props} isAuthenticated={isAuthenticated} />
+              <Home {...props} />
             )}
           />
           <Route
-            path="/login"
+            exact
+            path="/myPins"
             render={props => (
-              <Login {...props} authenticate={this.authenticate} />
+              <MyPins {...props} />
             )}
           />
           <Route
-            path="/signup"
-            component={Signup}
+            exact
+            path="/myPost"
+            render={props => (
+              <MyPosts {...props} />
+            )}
           />
 
-          {/*
-            The following are protect ed routes that are only available for logged-in users. We also pass the user and token so
-            these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
-          */}
-          <PrivateRoute
-            path="/map"
-            isAuthenticated={isAuthenticated}
-            token={token}
-            user={user}
-            component={Map}
-          />
         </div>
       </Router>
     );

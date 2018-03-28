@@ -11,48 +11,11 @@ export type User = {
   accountNr: AccountNr
 };
 
-export type TransferResult = {
-  from: AccountNr,
-  target: AccountNr,
-  amount: number,
-  total: number,
-  date: string
-};
-
-export type Transaction = {
-  from: AccountNr,
-  target: AccountNr,
-  amount: number,
-  total: number,
-  date: string
-};
-
 /* Use the exported functions to call the API. 
  * If necessary, adapt the backend address below:
  */
 
 const backend = "https://pinuphero.herokuapp.com/";
-
-export function login(
-  login: string,
-  password: string
-): Promise<{ token: string, owner: User }> {
-  return postJson("/auth/login", { login, password }).then(parseJSON);
-}
-
-export function signup(
-  login: string,
-  firstname: string,
-  lastname: string,
-  password: string
-): Promise<User> {
-  return postJson("/auth/register", {
-    login,
-    firstname,
-    lastname,
-    password
-  }).then(parseJSON);
-}
 
 export function getAccountDetails(
   token: string
@@ -79,19 +42,6 @@ export function transfer(
     target,
     amount
   }).then(parseJSON);
-}
-
-export function getTransactions(
-  token: string,
-  fromDate: string = "",
-  toDate: string = "",
-  count: number = 3,
-  skip: number = 0
-): Promise<{ result: Array<Transaction>, query: { resultcount: number } }> {
-  return getAuthenticatedJson(
-    `/accounts/transactions?fromDate=${fromDate}&toDate=${toDate}&count=${count}&skip=${skip}`,
-    token
-  ).then(parseJSON);
 }
 
 function checkStatus(response) {
