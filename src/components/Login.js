@@ -63,7 +63,7 @@ class Login extends React.Component<Props, *> {
 
     return (
       <div>
-        <h1>Bank of Rapperswil</h1>
+        <h1>PinUp</h1>
         <form class="ui form">
           <h2>Login</h2>
           <input
