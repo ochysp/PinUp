@@ -12,7 +12,7 @@ const Home = ({isAuthenticated}: Props) => (
     { isAuthenticated
       ? <div>
           <p>Willkommen zurück!</p>
-          <Link to={'/dashboard'}>Zum Dashboard</Link>
+          <Link to={'/dashboard'}>Map</Link>
         </div>
       : <div className="ui padded segment">
           <Link className="ui teal button" to={'/login'}>Einloggen</Link>

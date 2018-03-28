@@ -11,8 +11,7 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import AllTransactions from "./components/AllTransactions"
-import Dashboard from "./components/Dashboard"
+import Map from "./components/Map"
 import PrivateRoute from "./components/PrivateRoute";
 
 import * as api from "./api";
@@ -84,8 +83,7 @@ class App extends React.Component<{}, State> {
             </span>
             {/* Links inside the App are created using the react-router's Link component */}
             <Link className="item" to="/">Home</Link>
-            <Link className="item" to="/dashboard">Kontoübersicht</Link>
-            <Link className="item" to="/transactions">Zahlungen</Link>
+            <Link className="item" to="/map">Map</Link>
             <div className="ui orange inverted right menu">
               <a className="item" href="/logout"
                  onClick={event => {
@@ -126,22 +124,15 @@ class App extends React.Component<{}, State> {
           />
 
           {/*
-            The following are protected routes that are only available for logged-in users. We also pass the user and token so 
+            The following are protect ed routes that are only available for logged-in users. We also pass the user and token so
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}
           <PrivateRoute
-            path="/dashboard"
+            path="/map"
             isAuthenticated={isAuthenticated}
             token={token}
             user={user}
-            component={Dashboard}
-          />
-          <PrivateRoute
-            path="/transactions"
-            isAuthenticated={isAuthenticated}
-            token={token}
-            user={user}
-            component={AllTransactions}
+            component={Map}
           />
         </div>
       </Router>
