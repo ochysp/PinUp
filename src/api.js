@@ -11,11 +11,27 @@ export type User = {
   accountNr: AccountNr
 };
 
+export type TransferResult = {
+  from: AccountNr,
+  target: AccountNr,
+  amount: number,
+  total: number,
+  date: string
+};
+
+export type Transaction = {
+  from: AccountNr,
+  target: AccountNr,
+  amount: number,
+  total: number,
+  date: string
+};
+
 /* Use the exported functions to call the API. 
  * If necessary, adapt the backend address below:
  */
 
-const backend = "https://pinuphero.herokuapp.com";
+const backend = "https://pinuphero.herokuapp.com/";
 
 export function login(
   login: string,

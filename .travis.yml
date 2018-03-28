@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+- node
+deploy:
+  provider: heroku
+  api_key:
+    secure: c20QVzh/Qo+nXzH6R4+PGfo2pGrAJYBNnqBvaNzGQy+u/Y64Jt/B93OMAOaneMX+NjX3V9bJauYbxG4WVDxBUtCQhK3ChLoXoGu/VoxU1q1uYA4uN3TfGZkSxEtPzGfffAJMfVT2xlhRwCQc4OOMeSb3gRl3qBA8Ss1BoDa6INq2sZqkRQiqxIwNfWhFURHk3yR8s6WgOUzWRVjyziAVeNAlvSYqbgLusSl8v2iCJio30YrBEa2vl0T2ezGAhtpFSlIe9h61D2UCeH7XI2SNBq/lYPhW3hCju4KNcJVrhSRPrUcUGNWG6Za7kxl4QvYkDPP/S1FISF2Ly7bUENoAs/EwflINLZOBCx4HNPaCzDaiaT13cN06MQuSzm6cwl+4tifDvlM5MB+9jJh9y+nED3YemUhxxJALayMhih5zXWYKS3LIxr+qTw4h/l3V+aP459mi9TznoLg4/c5VGuSEtv9fYJQ/3K19qZ1a6zujhDPjCJ97wyDXuV3OAc5wobfbbt51iM7Y4a6J8uYADChxDpt7IrjKE5W4FKkiXZKaj49mqa2GObJRze3GWiFbVD0hdM06KlTAgd/4lFCnznHjwQDLEoUkakbXgxov0lnbYxTO6OqlJW/hRQlbov6d+CG5mwVJOePsTIiZjkULmlAOdhXT4NPDjrMkTE47NHX3GJg=
+  app: pinuphero
+  on:
+repo: ochysp/PinUp
