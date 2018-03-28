@@ -1,18 +1,31 @@
-// @flow
-
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import { render } from 'react-dom'
+import { Map , TileLayer, Marker, Popup } from 'react-leaflet'
 
-const Home = () => (
-  <div class="ui center aligned segment">
-    {
-       <div>
-          <p>Willkommen</p>
-          <Link to={'/map'}>Map</Link>
-       </div>
+export default class Home extends React.Component<Props, *> {
+  constructor() {
+    super()
+    this.state = {
+      lat: 51.505,
+      lng: -0.09,
+      zoom: 13
     }
-  </div>
-)
+  }
 
-export default Home
+  render() {
+    const position = [this.state.lat, this.state.lng];
+    return (
+      <Map center={position} zoom={this.state.zoom}>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+        />
+        <Marker position={position}>
+          <Popup>
+            <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
+          </Popup>
+        </Marker>
+      </Map>
+    );
+  }
+}

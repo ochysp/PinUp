@@ -9,10 +9,8 @@ import {
 } from "react-router-dom";
 
 import Home from "./components/Home";
-import MyPins from "./components/MyPins"
-import MyPosts from "./components/MyPosts"
-
-import * as api from "./api";
+import MyPins from "./components/MyPins";
+import MyPosts from "./components/MyPosts";
 
 import type { User } from "./api";
 
@@ -23,7 +21,7 @@ type State = {
   user: ?User
 }
 
-class App extends React.Component<{}, State> {
+export default class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props);
     const token = sessionStorage.getItem("token");
@@ -43,22 +41,10 @@ class App extends React.Component<{}, State> {
     }
   }
 
-  signout = (callback: () => void) => {
-    this.setState({
-      isAuthenticated: false,
-      token: undefined,
-      user: undefined
-    });
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    callback();
-  };
-
   render() {
-
     const MenuBar = withRouter(({ history, location: { pathname } }) => {
      // if (isAuthenticated && user) {
-        return (
+      return (
           <div className="ui menu">
             <span>User</span>
             {/* Links inside the App are created using the react-router's Link component */}
@@ -99,7 +85,7 @@ class App extends React.Component<{}, State> {
           />
           <Route
             exact
-            path="/myPost"
+            path="/myPosts"
             render={props => (
               <MyPosts {...props} />
             )}
@@ -110,5 +96,3 @@ class App extends React.Component<{}, State> {
     );
   }
 }
-
-export default App;
