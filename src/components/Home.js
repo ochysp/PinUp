@@ -6,8 +6,8 @@ export default class Home extends React.Component<Props, *> {
   constructor() {
     super()
     this.state = {
-      lat: 51.505,
-      lng: -0.09,
+      lat: 47.22354,
+      lng: 8.81714,
       zoom: 13
     }
   }
