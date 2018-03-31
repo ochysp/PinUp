@@ -3,7 +3,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-export default class MyPosts extends React.Component<Props, *> {
+export default class MyPosts extends React.Component<{}, {}> {
 
   render(){
     return (
