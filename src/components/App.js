@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import {firebase} from '../firebase';
+import {db} from '../firebase';
 
 import Home from "./Home";
 import MyPins from "./MyPins";
@@ -36,9 +37,12 @@ export default class App extends React.Component<{}, State> {
 
     componentDidMount() {
         firebase.auth.onAuthStateChanged(authUser => {
-            authUser
-                ? this.setState(() => ({authUser}))
-                : this.setState(() => ({authUser: null}));
+            if (authUser) {
+                this.setState(() => ({authUser}));
+                db.doCreateUser(authUser.uid, authUser.displayName, authUser.email, authUser.photoURL)
+            } else {
+                this.setState(() => ({authUser: null}))
+            }
         });
     }
 
