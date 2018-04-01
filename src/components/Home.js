@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Map , TileLayer, Marker, Popup } from 'react-leaflet'
+import { Map , TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 
 export default class Home extends React.Component<Props, *> {
   constructor() {
@@ -20,10 +20,11 @@ export default class Home extends React.Component<Props, *> {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
         />
-        <Marker position={position}>
+        <Marker position={position} draggable={true}>
           <Popup>
             <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
           </Popup>
+          <Circle center={position} radius={200}  />
         </Marker>
       </Map>
     );
