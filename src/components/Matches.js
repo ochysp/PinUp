@@ -14,15 +14,23 @@ type State = {
     dbHandle: DbHandle,
 }
 
-type Props = {}
+type Props = {
+    latitude: number,
+    longitude: number,
+    radius: number,
+}
 
 
-export default class MyPosts extends React.Component<Props, State> {
+export default class Matches extends React.Component<Props, State> {
+
     constructor(props: any) {
         super(props);
         this.state = {
             posts: [],
-            dbHandle: db.onOwnPosts(
+            dbHandle: db.onNearbyPosts(
+                this.props.latitude,
+                this.props.longitude,
+                this.props.radius,
                 this.keyEntered,
                 this.keyLeft
             )
@@ -30,10 +38,11 @@ export default class MyPosts extends React.Component<Props, State> {
     }
 
     componentWillUnmount() {
-        this.state.dbHandle.detach();
+       this.state.dbHandle.detach();
     }
 
-    keyEntered(key: number) {
+    keyEntered(key: *, location: *, distance: *) {
+        console.log(key + " entered query at " + location + " (" + distance + " km from center)");
         this.setState((prevState, props) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.push(key);
@@ -41,10 +50,11 @@ export default class MyPosts extends React.Component<Props, State> {
         });
     };
 
-    keyLeft(key: number) {
+    keyLeft(key: *, location: *, distance: *) {
+        console.log(key + " exited query to " + location + " (" + distance + " km from center)");
         this.setState((prevState, props) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
-            updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key), 1);
+            updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key),1);
             return {posts: updatedNearbyPostKeys};
         });
     };
@@ -55,17 +65,18 @@ export default class MyPosts extends React.Component<Props, State> {
         );
         return (
             <div>
-                <h1>My Posts</h1>
+                <h1>Matches</h1>
                 <div>
                     <ul>{listItems}</ul>
                 </div>
-                {/*<button onClick={*/}
-                    {/*() => db.geoFireTest(this.keyEntered, this.keyLeft)*/}
-                {/*}>*/}
-                    {/*Create a test-post*/}
-                {/*</button>*/}
+                <button onClick={
+                    () => db.geoFireTest(this.keyEntered, this.keyLeft)
+                }>
+                    GeoFire Test
+                </button>
             </div>
         );
     }
 
 }
+
