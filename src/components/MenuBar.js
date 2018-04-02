@@ -1,29 +1,13 @@
 // @flow
 
 import React from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import * as routes from '../constants/routes';
 
 import SignOutButton from './SignOut';
 
-type Props = {
-    authUser: ?any,
-};
-
-const MenuBar = (props: Props) => {
-    return (
-    <div>
-        {!!props.authUser
-            ? <MenuAuth authUser/>
-            : <MenuNonAuth/>
-        }
-    </div>
-    )
-};
-
-const MenuAuth = withRouter(({history, location: {pathname}}) => {
-    // if (isAuthenticated && user) {
+const MenuBar = () => {
     return (
         <div className="ui menu">
             {/* Links inside the App are created using the react-router's Link component */}
@@ -34,17 +18,7 @@ const MenuAuth = withRouter(({history, location: {pathname}}) => {
                 <SignOutButton/>
             </div>
         </div>
-    );
-});
-
-
-const MenuNonAuth = withRouter(({history, location: {pathname}}) => {
-    // if (isAuthenticated && user) {
-    return (
-        <div className="ui menu">
-            <span>no User</span>
-        </div>
-    );
-});
+    )
+};
 
 export default MenuBar;

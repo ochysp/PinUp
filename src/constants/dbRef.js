@@ -8,4 +8,3 @@ export const POSTS = 'posts/';
 
 export const GEOFIRE = 'GeoFire/';
 export const POST_LOCATIONS = GEOFIRE + 'postLocations/';
-export const PIN_LOCATION = GEOFIRE + 'pinLocations/';

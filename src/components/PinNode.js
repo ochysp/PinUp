@@ -1,8 +1,11 @@
 // @flow
 
 import React from 'react'
+import {Link} from 'react-router-dom';
 import {db} from '../firebase';
 import * as _ from "lodash";
+import * as routes from "../constants/routes";
+
 
 type Props = {
     pinId: number,
@@ -42,9 +45,7 @@ export class PinNode extends React.Component<Props, State> {
     render() {
         return (
             <li>
-                <div>
-                    {this.state.title}
-                </div>
+                <Link className="item" to={routes.PINS + '$' + this.props.pinId}>{this.state.title}</Link>
             </li>
         )
     }
