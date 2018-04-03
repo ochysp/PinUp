@@ -1,6 +1,6 @@
-import { auth } from './firebase';
+// @flow
 
-// Sign out
+import {auth} from './firebase';
+
 export const doSignOut = () =>
     auth.signOut();
-

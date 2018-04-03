@@ -6,9 +6,11 @@ import * as routes from '../constants/routes';
 import ListPins from "./Pin/ListPins";
 import PinDetails from "./Pin/PinDetails";
 
+
 type Props = {
     authUser: { uid: string },
 }
+
 
 export default class MyPins extends React.Component<Props> {
     render() {

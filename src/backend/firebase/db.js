@@ -30,8 +30,10 @@ export const doCreatePost = (postInfo) => {
         'title': postInfo.title
     }).key;
     db.ref(dbRef.USER_POSTS + postInfo.authUser.uid + '/' + newPostId).set({'_': 0});
-    gcreatePostLocation(newPostId, postInfo.latitude, postInfo.longitude);
+    createPostLocation(newPostId, postInfo.latitude, postInfo.longitude);
 };
+
+
 // Pin APIs ...
 
 export const onOwnPins = (authUser, keyEntered, keyLeft) => {
@@ -54,26 +56,21 @@ export const doCreatePin = (pinInfo) => {
     db.ref(dbRef.USER_PINS + pinInfo.authUser.uid + '/' + newPinId).set({'_': 0});
 };
 
+
 //GeoFire APIs
 
 export const onNearbyPosts = (latitude, longitude, radius, keyEntered, keyLeft) => {
-    // Generate Firebase location
     let geoKey = db.ref(dbRef.POST_LOCATIONS);
-
-    // Create a new GeoFire instance at the posts location
     let geoFire = new GeoFire(geoKey);
 
-    // Create a GeoQuery centered at ...
     let geoQuery = geoFire.query({
         center: [latitude, longitude],
         radius: radius
     });
 
-    //attach query
     let keyEnteredQuery = geoQuery.on("key_entered", keyEntered);
     let keyExitedQuery = geoQuery.on("key_exited", keyLeft);
 
-    //return callback to detach query
     return ({
             detach: () => {
                 keyEnteredQuery.cancel();
@@ -83,7 +80,7 @@ export const onNearbyPosts = (latitude, longitude, radius, keyEntered, keyLeft) 
     )
 };
 
-const gcreatePostLocation = (key, latitude, longitude) => {
+const createPostLocation = (key, latitude, longitude) => {
     let geoKey = db.ref(dbRef.POST_LOCATIONS);
     let geoFire = new GeoFire(geoKey);
     geoFire.set(key, [latitude, longitude]);
@@ -95,8 +92,8 @@ const gcreatePostLocation = (key, latitude, longitude) => {
 const onOwn = (authUser, keyEntered, keyLeft, dbLocation) => {
     let ref = db.ref(dbLocation + authUser.uid);
 
-    ref.on('child_added', (snapshot, sibling) => keyEntered(snapshot.key));
-    ref.on('child_removed', (snapshot, sibling) => keyLeft(snapshot.key));
+    ref.on('child_added', (snapshot) => keyEntered(snapshot.key));
+    ref.on('child_removed', (snapshot) => keyLeft(snapshot.key));
 
     return ({
             detach: () => {

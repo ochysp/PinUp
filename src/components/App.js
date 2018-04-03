@@ -8,10 +8,11 @@ import {db} from '../backend/firebase';
 import {Header} from "./Navigation/Header";
 import {Main} from "./Main";
 
-//nur wegen flow
+
 type State = {
     authUser: ?{ uid: string },
 }
+
 
 export default class App extends React.Component<{}, State> {
     constructor(props: any) {
@@ -45,8 +46,6 @@ export default class App extends React.Component<{}, State> {
             </MuiThemeProvider>
         );
     }
-
-
 }
 
 

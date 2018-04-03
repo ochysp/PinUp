@@ -3,6 +3,7 @@
 import React from 'react'
 import {db} from '../../backend/firebase/index';
 
+
 type Props = {
     postId: number,
 }
@@ -10,6 +11,7 @@ type Props = {
 type State = {
     title: string,
 }
+
 
 export class PostNode extends React.Component<Props, State> {
     constructor(props: Props) {

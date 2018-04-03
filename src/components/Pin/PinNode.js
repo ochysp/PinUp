@@ -21,6 +21,7 @@ type Pin = {
     radius: number
 }
 
+
 export class PinNode extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);

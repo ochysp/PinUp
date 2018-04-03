@@ -1,16 +1,18 @@
 // @flow
 
-import React from 'react'
-import {Route, Redirect} from 'react-router-dom'
+import React from 'react';
+import {Route, Redirect} from 'react-router-dom';
 import Home from "./Home";
 import MyPins from "./MyPins";
 import MyPosts from "./MyPosts";
 import SignIn from "./Authentication/SignIn";
 import * as routes from "../constants/routes";
 
+
 type Props = {
     authUser: ?{ uid: string },
 }
+
 
 export class Main extends React.Component<Props> {
     render() {

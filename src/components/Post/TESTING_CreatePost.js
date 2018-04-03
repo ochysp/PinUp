@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 
+
 type State = {
     title: string,
     longitude: string,
@@ -15,6 +16,7 @@ type State = {
 type Props = {
     authUser: { uid: string },
 }
+
 
 export class CreatePostForm extends React.Component<Props, State> {
     constructor(props: Props) {
