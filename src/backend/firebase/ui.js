@@ -4,7 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as auth from './firebase';
 import firebase from 'firebase';
 
-import * as routes from '../constants/routes';
+import * as routes from '../../constants/routes';
 
 // Configure FirebaseUI.
 const uiConfig = {

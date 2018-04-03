@@ -5,7 +5,7 @@ import {Route, Redirect} from 'react-router-dom'
 import Home from "./Home";
 import MyPins from "./MyPins";
 import MyPosts from "./MyPosts";
-import SignIn from "./SignIn";
+import SignIn from "./Authentication/SignIn";
 import * as routes from "../constants/routes";
 
 type Props = {

@@ -1,7 +1,7 @@
 import {db} from './firebase';
 import * as authentication from './authentication';
 import * as GeoFire from 'geofire';
-import * as dbRef from '../constants/dbRef'
+import * as dbRef from '../../constants/dbRef'
 
 
 // User API

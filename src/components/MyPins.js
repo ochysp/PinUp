@@ -3,8 +3,8 @@
 import React from 'react'
 import {Switch, Route} from 'react-router-dom'
 import * as routes from '../constants/routes';
-import ListPins from "./ListPins";
-import PinDetails from "./PinDetails";
+import ListPins from "./Pin/ListPins";
+import PinDetails from "./Pin/PinDetails";
 
 type Props = {
     authUser: { uid: string },

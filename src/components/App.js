@@ -3,9 +3,9 @@
 //React
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {firebase} from '../firebase';
-import {db} from '../firebase';
-import {Header} from "./Header";
+import {firebase} from '../backend/firebase';
+import {db} from '../backend/firebase';
+import {Header} from "./Navigation/Header";
 import {Main} from "./Main";
 
 //nur wegen flow

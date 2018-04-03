@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {authentication} from '../firebase';
-import * as routes from "../constants/routes";
+import {authentication} from '../../backend/firebase/index';
+import * as routes from "../../constants/routes";
 
 const SignOutButton = () =>
     <button

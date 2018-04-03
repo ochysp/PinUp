@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {db} from '../firebase';
+import {db} from '../../backend/firebase/index';
 import {PinNode} from "./PinNode";
 import {CreatePinForm} from "./TESTING_CreatePin";
 

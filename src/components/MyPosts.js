@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react'
-import {db} from '../firebase';
-import {PostNode} from "./PostNode";
-import {CreatePostForm} from "./TESTING_CreatePost";
+import {db} from '../backend/firebase/index';
+import {PostNode} from "./Post/PostNode";
+import {CreatePostForm} from "./Post/TESTING_CreatePost";
 
 
 type DbHandle = {

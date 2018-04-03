@@ -2,9 +2,9 @@
 
 import React from 'react'
 import {Link} from 'react-router-dom';
-import {db} from '../firebase';
+import {db} from '../../backend/firebase/index';
 import * as _ from "lodash";
-import * as routes from "../constants/routes";
+import * as routes from "../../constants/routes";
 
 
 type Props = {
