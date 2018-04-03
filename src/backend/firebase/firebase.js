@@ -1,6 +1,7 @@
+// @flow
+
 import * as firebase from 'firebase';
 
-// Configure Firebase.
 const config = {
     apiKey: "AIzaSyCB8YV-RAEjpwxjixq-stzkSc_JZgQw-88",
     authDomain: "pinup-cfc23.firebaseapp.com",

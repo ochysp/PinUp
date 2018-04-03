@@ -1,14 +1,17 @@
-import React from 'react';
+// @flow
 
+import React from 'react';
 import {authentication} from '../../backend/firebase/index';
 
 const SignOutButton = () =>
-    <button
-        className="item"
-        type="button"
-        onClick={authentication.doSignOut}
-    >
-        Sign Out
-    </button>;
+    (
+        <button
+            className="item"
+            type="button"
+            onClick={authentication.doSignOut}
+        >
+            Sign Out
+        </button>
+    );
 
 export default SignOutButton;

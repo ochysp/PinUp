@@ -22,7 +22,6 @@ type Props = {
 
 
 export default class Matches extends React.Component<Props, State> {
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -49,8 +48,7 @@ export default class Matches extends React.Component<Props, State> {
     }
 
     keyEntered = (key: *, location: *, distance: *) => {
-        console.log(key + " entered query at " + location + " (" + distance + " km from center)");
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.push(key);
             return {posts: updatedNearbyPostKeys};
@@ -58,8 +56,7 @@ export default class Matches extends React.Component<Props, State> {
     };
 
     keyLeft = (key: *, location: *, distance: *) => {
-        console.log(key + " exited query to " + location + " (" + distance + " km from center)");
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key), 1);
             return {posts: updatedNearbyPostKeys};

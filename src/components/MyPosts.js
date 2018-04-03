@@ -19,6 +19,7 @@ type Props = {
     authUser: { uid: string },
 }
 
+
 export default class MyPosts extends React.Component<Props, State> {
     constructor(props: any) {
         super(props);
