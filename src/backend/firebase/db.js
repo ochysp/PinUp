@@ -1,5 +1,4 @@
 import {db} from './firebase';
-import * as authentication from './authentication';
 import * as GeoFire from 'geofire';
 import * as dbRef from '../../constants/dbRef'
 
@@ -88,33 +87,6 @@ const gcreatePostLocation = (key, latitude, longitude) => {
     let geoKey = db.ref(dbRef.POST_LOCATIONS);
     let geoFire = new GeoFire(geoKey);
     geoFire.set(key, [latitude, longitude]);
-};
-
-//Test API
-
-export const geoFireTest = (keyEntered, keyLeft) => {
-    // Generate Firebase location
-    let geoKey = db.ref('geoFire/pin_locations');
-
-    // Create a new GeoFire instance at the posts location
-    let geoFire = new GeoFire(geoKey);
-
-    //create demo post
-    let postKey;
-    postKey = geoFire.set("geotestpostA", [47.223952, 8.8159]);
-    postKey = geoFire.set("geotestpostB", [47.217009, 8.829109]);
-    postKey = geoFire.set("geotestpostC", [47.217009, 8.829109]);
-    postKey = geoFire.set("geotestpostD", [47.219952, 8.810122]);
-    postKey = geoFire.set("geotestpostE", [47.224452, 8.801398]);
-
-    // Create a GeoQuery centered at geotestpostA
-    var geoQuery = geoFire.query({
-        center: [47.223952, 8.8159],
-        radius: 1
-    });
-
-    geoQuery.on("key_entered", keyEntered);
-    geoQuery.on("key_exited", keyLeft);
 };
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {ui} from '../../backend/firebase/index';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import {uiConfig, firebase} from "../../backend/firebase";
 
 class SignInScreen extends React.Component {
     render() {
@@ -8,7 +9,7 @@ class SignInScreen extends React.Component {
             <div>
                 <h1>My App</h1>
                 <p>Please sign-in:</p>
-                <ui.SignInScreen/>
+                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth}/>
             </div>
         );
     }

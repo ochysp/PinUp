@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import * as routes from '../constants/routes';
 import ListPins from "./Pin/ListPins";
 import PinDetails from "./Pin/PinDetails";

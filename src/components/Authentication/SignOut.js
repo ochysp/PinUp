@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {authentication} from '../../backend/firebase/index';
-import * as routes from "../../constants/routes";
 
 const SignOutButton = () =>
     <button
@@ -10,6 +9,6 @@ const SignOutButton = () =>
         onClick={authentication.doSignOut}
     >
         Sign Out
-    </button>
+    </button>;
 
 export default SignOutButton;

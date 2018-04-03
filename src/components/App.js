@@ -38,8 +38,10 @@ export default class App extends React.Component<{}, State> {
     render() {
         return (
             <MuiThemeProvider>
-                <Header authUser={this.state.authUser}/>
-                <Main authUser={this.state.authUser}/>
+                <div>
+                    <Header authUser={this.state.authUser}/>
+                    <Main authUser={this.state.authUser}/>
+                </div>
             </MuiThemeProvider>
         );
     }

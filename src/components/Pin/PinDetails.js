@@ -2,7 +2,6 @@
 
 import React from 'react'
 import {db} from '../../backend/firebase/index';
-import * as _ from "lodash";
 import Matches from "../Match/Matches";
 import type Match from 'react-router';
 

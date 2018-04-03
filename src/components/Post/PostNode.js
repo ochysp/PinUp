@@ -2,7 +2,6 @@
 
 import React from 'react'
 import {db} from '../../backend/firebase/index';
-import * as _ from "lodash";
 
 type Props = {
     postId: number,
