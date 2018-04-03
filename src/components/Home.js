@@ -29,13 +29,10 @@ export default class Home extends React.Component<Props, State> {
                 lat: 47.22354,
                 lng: 8.81714,
             },
-            marker: {
-                lat: 47.22354,
-                lng: 8.81714
-            },
             zoom: 13,
             draggable: true,
-            radius: 200
+            radius: 200,
+            markers: [[47.22354, 8.81714]]
         }
     }
 
@@ -43,6 +40,7 @@ export default class Home extends React.Component<Props, State> {
         this.setState({draggable: !this.state.draggable})
     };
 
+    //TODO update im array anpassen anhand von index
     updatePosition = () => {
         const {lat, lng} = this.refs.marker.leafletElement.getLatLng();
         this.setState({
@@ -50,27 +48,39 @@ export default class Home extends React.Component<Props, State> {
         })
     };
 
+    addMarker = (e) => {
+        const {markers} = this.state
+        markers.push(e.latlng)
+        this.setState({markers})
+    }
+
     render() {
-        const position = [this.state.center.lat, this.state.center.lng];
-        const markerPosition = [this.state.marker.lat, this.state.marker.lng];
+        const startPosition = [this.state.center.lat, this.state.center.lng];
         return (
-            <Map center={position} zoom={this.state.zoom}>
+            <Map center={startPosition}
+                 zoom={this.state.zoom}
+                 onClick={this.addMarker}
+            >
                 <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                 />
-                <Marker draggable={this.state.draggable}
-                        onDragend={this.updatePosition}
-                        position={markerPosition}
-                        ref="marker">
-                    <Popup>
-                        <span>I am a draggable Pin <br/> Easily customizable.</span>
-                    </Popup>
-                    <Circle center={markerPosition}
-                            radius={this.state.radius}
-                            ref="circle"
-                    />
-                </Marker>
+                {this.state.markers.map((position, index) =>
+                    <Marker key={'marker-${index}'}
+                            draggable={this.state.draggable}
+                            onDragend={this.updatePosition}
+                            position={position}
+                            ref="marker">
+                        <Popup>
+
+                            <span>I am a draggable Pin<br/> Pin#: {index}</span>
+                        </Popup>
+                        <Circle center={position}
+                                radius={this.state.radius}
+                                ref="circle"
+                        />
+                    </Marker>
+                )}
             </Map>
         );
     }
