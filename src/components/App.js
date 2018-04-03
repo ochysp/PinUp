@@ -25,7 +25,7 @@ export default class App extends React.Component<{}, State> {
         firebase.auth.onAuthStateChanged(authUser => {
             console.log('auth user changed');
             if (authUser) {
-                // db.doCreateUser(authUser.uid, authUser.displayName, authUser.email, authUser.photoURL);
+                db.doCreateUser(authUser.uid, authUser.displayName, authUser.email, authUser.photoURL);
                 console.log('to: ' + authUser.uid);
                 this.setState(() => ({authUser: authUser}));
             } else {
