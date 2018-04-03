@@ -34,11 +34,16 @@ export default class Home extends React.Component<Props, State> {
                 lat: 47.22354,
                 lng: 8.1714,
             },
+            pin: {
+                lat: 47.22354,
+                lng: 8.1714,
+            },
             zoom: 13,
             draggable: true,
             radius: 200,
             // TODO markers sollte man zu Pins oder Post umändern um so Pins oder Posts auf der Map anzuzeigen (müsste geladen werden)
-            markers: [/*[47.22354, 8.81714]*/]
+            pins: [/*lat, lng*/],
+            posts: [/*lat, lng*/]
         }
     }
 
@@ -57,33 +62,29 @@ export default class Home extends React.Component<Props, State> {
 
     //TODO Pins erstellen zur zeit wird nur die Position übergeben
     createPin = () => {
-        console.log('create Pin at ' + this.refs.marker.leafletElement.getLatLng())
-    }
-    //TODO Posts erstellen zur zeit wird nur die Position übergeben
+        const latlng = this.refs.marker.leafletElement.getLatLng();
+        const {pins} = this.state;
+        pins.push(latlng);
+        this.setState({pins})
+    };
+
     createPost = () => {
-        console.log('create Post at ' + this.refs.marker.leafletElement.getLatLng())
-    }
+        const latlng = this.refs.marker.leafletElement.getLatLng();
+        const {posts} = this.state;
+        posts.push(latlng);
+        this.setState({posts})
+    };
 
     setMarker = (e) => {
-        //const {marker} = this.state
         const {lat, lng} = e.latlng;
-        //marker.push(e.latlng)
         this.setState({
             markerIsSet: true,
             marker: {lat, lng}
         })
     };
-    /*addMarker = (e) => {
-        const {markers} = this.state
-        markers.push(e.latlng)
-        this.setState({markers})
-    };*/
 
     render() {
         const startPosition = [this.state.center.lat, this.state.center.lng];
-        const pathCreatePin = "";
-        const pathCreatePost = "";
-        // TODO Wird zur Zeit in PopUp referenziert
 
         const marker = this.state.markerIsSet ? (
             <Marker
@@ -94,17 +95,17 @@ export default class Home extends React.Component<Props, State> {
                 <Popup>
                     <span>
                         Create a<br/>
-                        <a href={pathCreatePin} onClick={this.createPin}>
+                        <a ref="" onClick={this.createPin}>
                             Pin
                         </a>
                         <br/>
-                        <a href={pathCreatePost} onClick={this.createPost}>
+                        <a ref="" onClick={this.createPost}>
                             Post
                         </a>
                     </span>
                 </Popup>
             </Marker>
-        ):null
+        ):null;
 
 
         return (
@@ -117,12 +118,12 @@ export default class Home extends React.Component<Props, State> {
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                 />
                 //Array of markers * can be used later to show Pins
-                /*{this.state.markers.map((position, index) =>
-                    <Marker key={'marker-${index}'}
+                {this.state.pins.map((position, index) =>
+                    <Marker key={'pin-${index}'}
                             draggable={this.state.draggable}
                             onDragend={this.updatePosition}
                             position={position}
-                            ref="marker">
+                            ref="pin">
                         <Popup>
                             <span>I am a draggable Pin<br/> Pin#: {index}</span>
                         </Popup>
@@ -132,7 +133,16 @@ export default class Home extends React.Component<Props, State> {
                                 ref="circle"
                         />
                     </Marker>
-                )}*/
+                )}
+                {this.state.posts.map((position, index) =>
+                    <Marker key={'post-${index}'}
+                            position={position}
+                            ref="post">
+                        <Popup>
+                            <span>I am a Post<br/> Post#: {index}</span>
+                        </Popup>
+                    </Marker>
+                )}
                 {marker}
             </Map>
         );
