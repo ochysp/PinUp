@@ -1,6 +1,6 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { ui } from '../firebase';
+import {withRouter} from 'react-router-dom';
+import {ui} from '../firebase';
 
 class SignInScreen extends React.Component {
     render() {

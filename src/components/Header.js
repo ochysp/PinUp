@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const Header = (props: Props) => {
-    if (!!props.authUser){
+    if (!!props.authUser) {
         return <MenuBar/>
     } else {
         return null;

@@ -6,3 +6,5 @@ export const getUid = () =>
 // Sign out
 export const doSignOut = () =>
     auth.signOut();
+
+export const Auth = auth.Auth;

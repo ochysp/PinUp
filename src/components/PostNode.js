@@ -18,6 +18,9 @@ export class PostNode extends React.Component<Props, State> {
         this.state = {
             title: '',
         };
+    }
+
+    componentDidMount() {
         db.onPost(this.props.postId, (snapshot) => {
             this.updateData(snapshot.val())
         })
@@ -27,17 +30,10 @@ export class PostNode extends React.Component<Props, State> {
         db.detachPost(this.props.postId);
     }
 
-    updateData(values: any) {
-        let newState = _(values)
-            .keys()
-            .map(valueKey => {
-                let cloned = _.clone(values[valueKey]);
-                cloned.key = valueKey;
-                return cloned;
-            })
-            .value();
+    updateData = (values: any) => {
+        let newState = {title: values.title};
         this.setState(newState);
-    }
+    };
 
     render() {
         return (

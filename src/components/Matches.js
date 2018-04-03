@@ -11,7 +11,7 @@ type DbHandle = {
 
 type State = {
     posts: number[],
-    dbHandle: DbHandle,
+    dbHandle: ?DbHandle,
 }
 
 type Props = {
@@ -27,6 +27,12 @@ export default class Matches extends React.Component<Props, State> {
         super(props);
         this.state = {
             posts: [],
+            dbHandle: null
+        };
+    }
+
+    componentDidMount() {
+        this.setState({
             dbHandle: db.onNearbyPosts(
                 this.props.latitude,
                 this.props.longitude,
@@ -34,14 +40,15 @@ export default class Matches extends React.Component<Props, State> {
                 this.keyEntered,
                 this.keyLeft
             )
-        };
+        })
     }
 
     componentWillUnmount() {
-       this.state.dbHandle.detach();
+        if (this.state.dbHandle)
+            this.state.dbHandle.detach();
     }
 
-    keyEntered(key: *, location: *, distance: *) {
+    keyEntered = (key: *, location: *, distance: *) => {
         console.log(key + " entered query at " + location + " (" + distance + " km from center)");
         this.setState((prevState, props) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
@@ -50,11 +57,11 @@ export default class Matches extends React.Component<Props, State> {
         });
     };
 
-    keyLeft(key: *, location: *, distance: *) {
+    keyLeft = (key: *, location: *, distance: *) => {
         console.log(key + " exited query to " + location + " (" + distance + " km from center)");
         this.setState((prevState, props) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
-            updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key),1);
+            updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key), 1);
             return {posts: updatedNearbyPostKeys};
         });
     };
@@ -65,15 +72,7 @@ export default class Matches extends React.Component<Props, State> {
         );
         return (
             <div>
-                <h1>Matches</h1>
-                <div>
-                    <ul>{listItems}</ul>
-                </div>
-                <button onClick={
-                    () => db.geoFireTest(this.keyEntered, this.keyLeft)
-                }>
-                    GeoFire Test
-                </button>
+                <ul>{listItems}</ul>
             </div>
         );
     }

@@ -3,6 +3,7 @@
 import React from 'react'
 import {db} from '../firebase';
 import {PinNode} from "./PinNode";
+import {CreatePinForm} from "./TESTING_CreatePin";
 
 type DbHandle = {
     detach: () => {},
@@ -10,29 +11,38 @@ type DbHandle = {
 
 type State = {
     pins: number[],
-    dbHandle: DbHandle,
+    dbHandle: ?DbHandle,
 }
 
-type Props = {}
-
+type Props = {
+    authUser: { uid: string },
+}
 
 export default class ListPins extends React.Component<Props, State> {
     constructor(props: any) {
         super(props);
         this.state = {
             pins: [],
-            dbHandle: db.onOwnPins(
-                this.keyEntered,
-                this.keyLeft
-            )
+            dbHandle: null
         };
     }
 
-    componentWillUnmount() {
-        this.state.dbHandle.detach();
+    componentDidMount() {
+        this.setState({
+            dbHandle: db.onOwnPins(
+                this.props.authUser,
+                this.keyEntered,
+                this.keyLeft
+            )
+        })
     }
 
-    keyEntered(key: number) {
+    componentWillUnmount() {
+        if (this.state.dbHandle)
+            this.state.dbHandle.detach();
+    }
+
+    keyEntered = (key: number) => {
         this.setState((prevState) => {
             const updatedNearbyPinKeys = prevState.pins.slice();
             updatedNearbyPinKeys.push(key);
@@ -40,7 +50,7 @@ export default class ListPins extends React.Component<Props, State> {
         });
     };
 
-    keyLeft(key: number) {
+    keyLeft = (key: number) => {
         this.setState((prevState) => {
             const updatedNearbyPinKeys = prevState.pins.slice();
             updatedNearbyPinKeys.splice(updatedNearbyPinKeys.indexOf(key), 1);
@@ -58,11 +68,7 @@ export default class ListPins extends React.Component<Props, State> {
                 <div>
                     <ul>{listItems}</ul>
                 </div>
-                {/*<button onClick={*/}
-                {/*() => db.geoFireTest(this.keyEntered, this.keyLeft)*/}
-                {/*}>*/}
-                {/*Create a test-pin*/}
-                {/*</button>*/}
+                <CreatePinForm authUser={this.props.authUser}/>
             </div>
         );
     }

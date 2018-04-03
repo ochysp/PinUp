@@ -18,7 +18,6 @@ type Props = {
 }
 
 export default class PinDetails extends React.Component<Props, State> {
-
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -26,6 +25,9 @@ export default class PinDetails extends React.Component<Props, State> {
             longitude: null,
             radius: null,
         };
+    }
+
+    componentDidMount() {
         db.onPin(this.props.match.params.pinId, (snapshot) => {
             this.updateData(snapshot.val())
         })
@@ -35,28 +37,29 @@ export default class PinDetails extends React.Component<Props, State> {
         db.detachPin(this.props.match.params.pinId);
     }
 
-    updateData(values: any) {
-        let newState = _(values)
-            .keys()
-            .map(valueKey => {
-                let cloned = _.clone(values[valueKey]);
-                cloned.key = valueKey;
-                return cloned;
-            })
-            .value();
+    updateData = (values: any) => {
+        console.log('new data: ' + values.latitude + ', ' + values.longitude + ', ' + values.radius);
+        let newState = {
+            latitude: values.latitude,
+            longitude: values.longitude,
+            radius: values.radius,
+        };
         this.setState(newState);
-    }
+    };
 
     render() {
+        let matches = null;
         if (this.state.latitude && this.state.longitude && this.state.radius) {
-            return (
-                <Matches
-                    latitude={this.state.latitude}
-                    longitude={this.state.longitude}
-                    radius={this.state.radius}/>
-            )
-        } else {
-            return null
+            matches = <Matches
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                radius={this.state.radius}/>
         }
+        return (
+            <div>
+                <h1>Matches</h1>
+                {matches}
+            </div>
+        )
     }
 }

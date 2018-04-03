@@ -16,29 +16,44 @@ export const doCreateUser = (userId, name, email, imageUrl) =>
 
 // Post APIs ...
 
-export const onOwnPosts = (keyEntered, keyLeft) => {
-    return onOwn(keyEntered, keyLeft, dbRef.USER_POSTS);
+export const onOwnPosts = (authUser, keyEntered, keyLeft) => {
+    return onOwn(authUser, keyEntered, keyLeft, dbRef.USER_POSTS);
 };
 
 export const onPost = (postId, f) =>
-    db.ref(dbRef.POSTS + authentication.getUid() + '/' + postId).on('value', f);
+    db.ref(dbRef.POSTS + postId).on('value', f);
 
 export const detachPost = (postId) =>
-    db.ref(dbRef.POSTS + authentication.getUid() + '/' + postId).off();
+    db.ref(dbRef.POSTS + postId).off();
 
-
+export const doCreatePost = (postInfo) => {
+    let newPostId = db.ref(dbRef.POSTS).push({
+        'title': postInfo.title
+    }).key;
+    db.ref(dbRef.USER_POSTS + postInfo.authUser.uid + '/' + newPostId).set({'_': 0});
+    gcreatePostLocation(newPostId, postInfo.latitude, postInfo.longitude);
+};
 // Pin APIs ...
 
-export const onOwnPins = (keyEntered, keyLeft) => {
-    return onOwn(keyEntered, keyLeft, dbRef.USER_PINS);
+export const onOwnPins = (authUser, keyEntered, keyLeft) => {
+    return onOwn(authUser, keyEntered, keyLeft, dbRef.USER_PINS);
 };
 
 export const onPin = (pinId, f) =>
-    db.ref(dbRef.PINS + authentication.getUid() + '/' + pinId).on('value', f);
+    db.ref(dbRef.PINS + pinId).on('value', f);
 
 export const detachPin = (pinId) =>
-    db.ref(dbRef.PINS + authentication.getUid() + '/' + pinId).off();
+    db.ref(dbRef.PINS + pinId).off();
 
+export const doCreatePin = (pinInfo) => {
+    let newPinId = db.ref(dbRef.PINS).push({
+        'title': pinInfo.title,
+        'latitude': pinInfo.latitude,
+        'longitude': pinInfo.longitude,
+        'radius': pinInfo.radius
+    }).key;
+    db.ref(dbRef.USER_PINS + pinInfo.authUser.uid + '/' + newPinId).set({'_': 0});
+};
 
 //GeoFire APIs
 
@@ -69,6 +84,11 @@ export const onNearbyPosts = (latitude, longitude, radius, keyEntered, keyLeft) 
     )
 };
 
+const gcreatePostLocation = (key, latitude, longitude) => {
+    let geoKey = db.ref(dbRef.POST_LOCATIONS);
+    let geoFire = new GeoFire(geoKey);
+    geoFire.set(key, [latitude, longitude]);
+};
 
 //Test API
 
@@ -100,11 +120,11 @@ export const geoFireTest = (keyEntered, keyLeft) => {
 
 // Helpers
 
-const onOwn = (keyEntered, keyLeft, dbLocation) => {
-    let ref = db.ref(dbLocation + authentication.getUid());
+const onOwn = (authUser, keyEntered, keyLeft, dbLocation) => {
+    let ref = db.ref(dbLocation + authUser.uid);
 
-    ref.on('child_added', (snapshot, sibling) => keyEntered(snapshot.key()));
-    ref.on('child_removed', (snapshot, sibling) => keyLeft(snapshot.key()));
+    ref.on('child_added', (snapshot, sibling) => keyEntered(snapshot.key));
+    ref.on('child_removed', (snapshot, sibling) => keyLeft(snapshot.key));
 
     return ({
             detach: () => {

@@ -15,12 +15,22 @@ type State = {
     title: string,
 }
 
+type Pin = {
+    title: string,
+    latitude: number,
+    longitude: number,
+    radius: number
+}
+
 export class PinNode extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             title: '',
         };
+    }
+
+    componentDidMount() {
         db.onPin(this.props.pinId, (snapshot) => {
             this.updateData(snapshot.val())
         })
@@ -30,22 +40,15 @@ export class PinNode extends React.Component<Props, State> {
         db.detachPin(this.props.pinId);
     }
 
-    updateData(values: any) {
-        let newState = _(values)
-            .keys()
-            .map(valueKey => {
-                let cloned = _.clone(values[valueKey]);
-                cloned.key = valueKey;
-                return cloned;
-            })
-            .value();
+    updateData(values: Pin) {
+        let newState = {title: values.title};
         this.setState(newState);
     }
 
     render() {
         return (
             <li>
-                <Link className="item" to={routes.PINS + '$' + this.props.pinId}>{this.state.title}</Link>
+                <Link className="item" to={routes.PINS + '/' + this.props.pinId}>{this.state.title}</Link>
             </li>
         )
     }

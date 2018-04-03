@@ -3,6 +3,7 @@
 import React from 'react'
 import {db} from '../firebase';
 import {PostNode} from "./PostNode";
+import {CreatePostForm} from "./TESTING_CreatePost";
 
 
 type DbHandle = {
@@ -11,38 +12,47 @@ type DbHandle = {
 
 type State = {
     posts: number[],
-    dbHandle: DbHandle,
+    dbHandle: ?DbHandle,
 }
 
-type Props = {}
-
+type Props = {
+    authUser: { uid: string },
+}
 
 export default class MyPosts extends React.Component<Props, State> {
     constructor(props: any) {
         super(props);
         this.state = {
             posts: [],
-            dbHandle: db.onOwnPosts(
-                this.keyEntered,
-                this.keyLeft
-            )
+            dbHandle: null
         };
     }
 
-    componentWillUnmount() {
-        this.state.dbHandle.detach();
+    componentDidMount() {
+        this.setState({
+            dbHandle: db.onOwnPosts(
+                this.props.authUser,
+                this.keyEntered,
+                this.keyLeft
+            )
+        })
     }
 
-    keyEntered(key: number) {
-        this.setState((prevState, props) => {
+    componentWillUnmount() {
+        if (this.state.dbHandle)
+            this.state.dbHandle.detach();
+    }
+
+    keyEntered = (key: number) => {
+        this.setState((prevState) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.push(key);
             return {posts: updatedNearbyPostKeys};
         });
     };
 
-    keyLeft(key: number) {
-        this.setState((prevState, props) => {
+    keyLeft = (key: number) => {
+        this.setState((prevState) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key), 1);
             return {posts: updatedNearbyPostKeys};
@@ -59,11 +69,7 @@ export default class MyPosts extends React.Component<Props, State> {
                 <div>
                     <ul>{listItems}</ul>
                 </div>
-                {/*<button onClick={*/}
-                    {/*() => db.geoFireTest(this.keyEntered, this.keyLeft)*/}
-                {/*}>*/}
-                    {/*Create a test-post*/}
-                {/*</button>*/}
+                <CreatePostForm authUser={this.props.authUser}/>
             </div>
         );
     }
