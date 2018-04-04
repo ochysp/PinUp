@@ -48,6 +48,7 @@ export const detachPin = (pinId) =>
 
 export const doCreatePin = (pinInfo) => {
     let newPinId = db.ref(dbRef.PINS).push({
+        'uid': pinInfo.authUser.uid,
         'title': pinInfo.title,
         'latitude': pinInfo.latitude,
         'longitude': pinInfo.longitude,
@@ -55,6 +56,15 @@ export const doCreatePin = (pinInfo) => {
     }).key;
     db.ref(dbRef.USER_PINS + pinInfo.authUser.uid + '/' + newPinId).set({'_': 0});
 };
+
+export const onAllPins = (userId, f) =>{
+    let allUserPins = db.ref(dbRef.PINS);
+    allUserPins.orderByChild('uid').equalTo(userId).on('value', f);
+}
+
+export const detachAllPins = () =>{
+    db.ref(dbRef.PINS).off();
+}
 
 
 //GeoFire APIs

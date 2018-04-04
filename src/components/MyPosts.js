@@ -3,7 +3,7 @@
 import React from 'react'
 import {db} from '../backend/firebase/index';
 import {PostNode} from "./Post/PostNode";
-import {CreatePostForm} from "./Post/TESTING_CreatePost";
+import CreatePostForm from "./Post/TESTING_CreatePost";
 
 
 type DbHandle = {

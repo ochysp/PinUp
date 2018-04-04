@@ -18,7 +18,7 @@ type Props = {
 }
 
 
-export class CreatePostForm extends React.Component<Props, State> {
+export default class CreatePostForm extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -43,7 +43,7 @@ export class CreatePostForm extends React.Component<Props, State> {
             authUser: this.props.authUser,
             title: this.state.title,
             latitude: parseFloat(this.state.latitude),
-            longitude: parseFloat(this.state.longitude)
+            longitude: parseFloat(this.state.longitude),
         });
         alert('Post sent to DB');
         event.preventDefault();

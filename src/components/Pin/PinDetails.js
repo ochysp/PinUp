@@ -16,7 +16,6 @@ type Props = {
     match: Match,
 }
 
-
 export default class PinDetails extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
