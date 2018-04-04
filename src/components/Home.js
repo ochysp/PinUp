@@ -34,44 +34,42 @@ export default class Home extends React.Component<Props, State> {
                 lat: 47.22354,
                 lng: 8.1714,
             },
-            pin: {
-                lat: 47.22354,
-                lng: 8.1714,
-            },
             zoom: 13,
             draggable: true,
             radius: 200,
             // TODO markers sollte man zu Pins oder Post umändern um so Pins oder Posts auf der Map anzuzeigen (müsste geladen werden)
-            pins: [/*lat, lng*/],
-            posts: [/*lat, lng*/]
+            pins: [/*(lat, lng), index*/],
+            posts: [/*(lat, lng), index*/]
         }
     }
 
-    toggleDraggable = () => {
-        this.setState({draggable: !this.state.draggable})
-    };
-
     //TODO update im array anpassen anhand von index
-    updatePosition = () => {
+    updatePositionMarker = () => {
         const {lat, lng} = this.refs.marker.leafletElement.getLatLng();
         this.setState({
             marker: {lat, lng},
-            circle: {lat, lng}
         })
+    };
+    updatePositionPins = (e) => {
+        console.log(e);
+        /*const {pins} = this.state;
+        pins.   update(pin at index of e update lat,lng value)
+        pins.push(latLng);
+        this.setState({pins})*/
     };
 
     //TODO Pins erstellen zur zeit wird nur die Position übergeben
     createPin = () => {
-        const latlng = this.refs.marker.leafletElement.getLatLng();
+        const latLng = this.refs.marker.leafletElement.getLatLng();
         const {pins} = this.state;
-        pins.push(latlng);
+        pins.push(latLng);
         this.setState({pins})
     };
 
     createPost = () => {
-        const latlng = this.refs.marker.leafletElement.getLatLng();
+        const latLng = this.refs.marker.leafletElement.getLatLng();
         const {posts} = this.state;
-        posts.push(latlng);
+        posts.push(latLng);
         this.setState({posts})
     };
 
@@ -89,7 +87,7 @@ export default class Home extends React.Component<Props, State> {
         const marker = this.state.markerIsSet ? (
             <Marker
                 draggable={this.state.draggable}
-                onDragend={this.updatePosition}
+                onDragend={this.updatePositionMarker}
                 position={this.state.marker}
                 ref="marker">
                 <Popup>
@@ -119,15 +117,15 @@ export default class Home extends React.Component<Props, State> {
                 />
                 //Array of markers * can be used later to show Pins
                 {this.state.pins.map((position, index) =>
-                    <Marker key={'pin-${index}'}
+                    <Marker key={'pin-$'+index}
                             draggable={this.state.draggable}
-                            onDragend={this.updatePosition}
+                            onDragend={this.updatePositionPins}
                             position={position}
                             ref="pin">
                         <Popup>
                             <span>I am a draggable Pin<br/> Pin#: {index}</span>
                         </Popup>
-                        <Circle key={'circle-${index}'}
+                        <Circle key={'circle-$'+index}
                                 center={position}
                                 radius={this.state.radius}
                                 ref="circle"
@@ -135,7 +133,7 @@ export default class Home extends React.Component<Props, State> {
                     </Marker>
                 )}
                 {this.state.posts.map((position, index) =>
-                    <Marker key={'post-${index}'}
+                    <Marker key={'post-$'+index}
                             position={position}
                             ref="post">
                         <Popup>
