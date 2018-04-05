@@ -8,3 +8,11 @@ deploy:
   app: pinuphero
   on:
 repo: ochysp/PinUp
+notifications:
+  email:
+    recipients:
+      - tiziano@gemma-mail.ch
+      - patrick.faic@hsr.ch
+      - cedric.wagner@hsr.ch
+    on_success: change # default: change
+    on_failure: always # default: always
