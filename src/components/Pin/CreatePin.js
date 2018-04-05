@@ -18,7 +18,7 @@ export type Props = {
     lng: number
 }
 
-export default class CreatePinForm extends React.Component<Props, State> {
+export default class CreatePin extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -62,20 +62,6 @@ export default class CreatePinForm extends React.Component<Props, State> {
                         hintText={'Rapperswil'}
                         floatingLabelText="Title"
                         value={this.state.title}
-                    /><br/>
-                    <TextField
-                        name={'latitude'}
-                        onChange={this.handleInputChange}
-                        hintText={'47.223946'}
-                        floatingLabelText="Latitude"
-                        value={this.props.lat}
-                    /><br/>
-                    <TextField
-                        name={'longitude'}
-                        onChange={this.handleInputChange}
-                        hintText={'8.815886'}
-                        floatingLabelText="Longitude"
-                        value={this.props.lng}
                     /><br/>
                     <TextField
                         name={'radius'}

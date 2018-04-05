@@ -18,7 +18,7 @@ type Props = {
 }
 
 
-export default class CreatePostForm extends React.Component<Props, State> {
+export default class CreatePost extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {

@@ -3,17 +3,17 @@
 import React from "react";
 import { Map, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import { db } from "../backend/firebase";
-import CreatePinForm from "./Pin/TESTING_CreatePin";
-import CreatePostForm from "./Post/TESTING_CreatePost";
+import CreatePin from "./Pin/CreatePin";
+import CreatePost from "./Post/TESTING_CreatePost";
 
 type State = {
-  markerIsSet: boolean,
   isPin: boolean,
   isPost: boolean,
   center: {
     lat: number,
     lng: number
   },
+  markerIsSet: boolean,
   marker: {
     lat: number,
     lng: number
@@ -24,7 +24,8 @@ type State = {
   },
   zoom: number,
   radius: number,
-  pins: Array<any>
+  pins: Array<any>,
+  posts: Array<any>
 };
 
 type Props = {
@@ -35,11 +36,11 @@ export default class Home extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {
-      markerIsSet: false,
       center: {
         lat: 47.22354,
         lng: 8.81714
       },
+      markerIsSet: false,
       marker: {
         lat: 47.22354,
         lng: 8.1714
@@ -74,14 +75,18 @@ export default class Home extends React.Component<Props, State> {
 
   render() {
     const pinForm = this.state.isPin ? (
-      <CreatePinForm
+      <CreatePin
           authUser={this.props.authUser}
           lat={this.state.marker.lat}
           lng={this.state.marker.lng}
       />
     ) : null;
     const postForm = this.state.isPost ? (
-      <CreatePostForm authUser={this.props.authUser} />
+      <CreatePost
+        authUser={this.props.authUser}
+        lat={this.state.marker.lat}
+        lng={this.state.marker.lng}
+      />
     ) : null;
 
     const marker = this.state.markerIsSet ? (
@@ -116,17 +121,29 @@ export default class Home extends React.Component<Props, State> {
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
 
-          {this.state.pins.map(pin => (
+          {this.state.pins.map((pin,index) => (
             <Marker
               key={pin.key}
-              draggable={true}
               position={pin.position}
               ref="pin"
             >
               <Popup>
-                <span>I am a draggable Pin</span>
+                <span>My Pin #{index}</span>
               </Popup>
               <Circle center={pin.position} radius={pin.radius} ref="circle" />
+            </Marker>
+          ))}
+
+          {this.state.posts.map((post,index) => (
+            <Marker
+              key={post.key}
+              position={post.position}
+              ref="post"
+            >
+              <Popup>
+                <span>My Post #{index}</span>
+              </Popup>
+              <Circle center={post.position} radius={post.radius} ref="circle" />
             </Marker>
           ))}
           {marker}

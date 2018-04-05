@@ -3,7 +3,7 @@
 import React from 'react'
 import {db} from '../../backend/firebase/index';
 import {PinNode} from "./PinNode";
-import CreatePinForm from "./TESTING_CreatePin";
+import CreatePinForm from "./CreatePin";
 
 
 type DbHandle = {
@@ -70,11 +70,9 @@ export default class ListPins extends React.Component<Props, State> {
                 <div>
                     <ul>{listItems}</ul>
                 </div>
-                <CreatePinForm authUser={this.props.authUser}/>
             </div>
         );
     }
-
 }
 
 
