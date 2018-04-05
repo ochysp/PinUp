@@ -48,7 +48,7 @@ export default class Matches extends React.Component<Props, State> {
     }
 
     keyEntered = (key: *, location: *, distance: *) => {
-        this.setState((prevState) => {
+        this.setState((prevState: State) => {
             const updatedNearbyPostKeys = prevState.posts.slice();
             updatedNearbyPostKeys.push(key);
             return {posts: updatedNearbyPostKeys};
