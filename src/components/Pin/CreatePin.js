@@ -9,23 +9,20 @@ import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 
 type State = {
     title: string,
-    longitude: string,
-    latitude: string,
     radius: string,
 }
 
-type Props = {
+export type Props = {
     authUser: { uid: string },
+    lat: number,
+    lng: number
 }
 
-
-export class CreatePinForm extends React.Component<Props, State> {
+export default class CreatePin extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             title: '',
-            longitude: '8.815886',
-            latitude: '47.223946',
             radius: '',
         };
     }
@@ -44,8 +41,8 @@ export class CreatePinForm extends React.Component<Props, State> {
         db.doCreatePin({
             authUser: this.props.authUser,
             title: this.state.title,
-            latitude: parseFloat(this.state.latitude),
-            longitude: parseFloat(this.state.longitude),
+            latitude: parseFloat(this.props.lat),
+            longitude: parseFloat(this.props.lng),
             radius: parseFloat(this.state.radius)
         });
         alert('Pin sent to DB');
@@ -65,20 +62,6 @@ export class CreatePinForm extends React.Component<Props, State> {
                         hintText={'Rapperswil'}
                         floatingLabelText="Title"
                         value={this.state.title}
-                    /><br/>
-                    <TextField
-                        name={'latitude'}
-                        onChange={this.handleInputChange}
-                        hintText={'47.223946'}
-                        floatingLabelText="Latitude"
-                        value={this.state.latitude}
-                    /><br/>
-                    <TextField
-                        name={'longitude'}
-                        onChange={this.handleInputChange}
-                        hintText={'8.815886'}
-                        floatingLabelText="Longitude"
-                        value={this.state.longitude}
                     /><br/>
                     <TextField
                         name={'radius'}

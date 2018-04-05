@@ -8,11 +8,9 @@ import MyPosts from "./MyPosts";
 import SignIn from "./Authentication/SignIn";
 import * as routes from "../constants/routes";
 
-
 type Props = {
     authUser: ?{ uid: string },
 }
-
 
 export class Main extends React.Component<Props> {
     render() {

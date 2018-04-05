@@ -5,7 +5,6 @@ import {Link} from 'react-router-dom';
 import {db} from '../../backend/firebase/index';
 import * as routes from "../../constants/routes";
 
-
 type Props = {
     pinId: number,
 }
@@ -16,11 +15,7 @@ type State = {
 
 type Pin = {
     title: string,
-    latitude: number,
-    longitude: number,
-    radius: number
 }
-
 
 export class PinNode extends React.Component<Props, State> {
     constructor(props: Props) {
