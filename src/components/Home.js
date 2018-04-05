@@ -7,23 +7,17 @@ import CreatePin from "./Pin/CreatePin";
 import CreatePost from "./Post/TESTING_CreatePost";
 
 type State = {
+  center: {lat: number, lng: number},
+  zoom: number,
+
+  marker: {lat: number, lng: number},
+  markerIsSet: boolean,
   isPin: boolean,
   isPost: boolean,
-  center: {
-    lat: number,
-    lng: number
-  },
-  markerIsSet: boolean,
-  marker: {
-    lat: number,
-    lng: number
-  },
-  circle: {
-    lat: number,
-    lng: number
-  },
-  zoom: number,
+
+  circle: {lat: number, lng: number},
   radius: number,
+
   pins: Array<any>,
   posts: Array<any>
 };
@@ -34,35 +28,38 @@ type Props = {
 
 export default class Home extends React.Component<Props, State> {
   constructor() {
+
     super();
+
+    const LAT = 47.22354
+    const LNG = 8.81714
+    const ZOOM = 13
+    const RADIUS = 1000
+
+    let position = {lat: LAT, lng: LNG,}
+
     this.state = {
-      center: {
-        lat: 47.22354,
-        lng: 8.81714
-      },
+      mapCenter: {position},
+      zoom: ZOOM,
+
+      marker: {position},
       markerIsSet: false,
-      marker: {
-        lat: 47.22354,
-        lng: 8.1714
-      },
-      circle: {
-        lat: 47.22354,
-        lng: 8.1714
-      },
-      zoom: 13,
-      radius: 200,
       isPin: false,
       isPost: false,
+
+      circle: {position},
+      radius: RADIUS,
+
       pins: [],
       posts: []
     };
   }
 
   setMarker = (e: any) => {
-    const { lat, lng } = e.latlng;
+    let position = e.latlng
     this.setState({
       markerIsSet: true,
-      marker: { lat, lng }
+      marker: { position}
     });
   };
 
@@ -74,29 +71,28 @@ export default class Home extends React.Component<Props, State> {
   };
 
   handleDeletePin(pin){
-    console.log(pin.key)
     db.doDeletePin(pin.key)
   }
 
   render() {
-    const pinForm = this.state.isPin ? (
+    const {marker, mapCenter, zoom, markerIsSet, isPin, isPost} = this.state
+
+    const pinForm = isPin ? (
       <CreatePin
           authUser={this.props.authUser}
-          lat={this.state.marker.lat}
-          lng={this.state.marker.lng}
+          position={marker.position}
       />
     ) : null;
-    const postForm = this.state.isPost ? (
+    const postForm = isPost ? (
       <CreatePost
         authUser={this.props.authUser}
-        lat={this.state.marker.lat}
-        lng={this.state.marker.lng}
+        position={marker.position}
       />
     ) : null;
 
-    const marker = this.state.markerIsSet ? (
+    const currentMarker = markerIsSet ? (
       <Marker
-        position={this.state.marker}
+        position={marker.position}
         ref="marker"
       >
         <Popup>
@@ -117,8 +113,8 @@ export default class Home extends React.Component<Props, State> {
     return (
       <div>
         <Map
-          center={this.state.center}
-          zoom={this.state.zoom}
+          center={mapCenter.position}
+          zoom={zoom}
           onClick={this.setMarker}
         >
           <TileLayer
@@ -151,10 +147,9 @@ export default class Home extends React.Component<Props, State> {
               <Popup>
                 <span>My Post #{index}</span>
               </Popup>
-              <Circle center={post.position} radius={post.radius} ref="circle" />
             </Marker>
           ))}
-          {marker}
+          {currentMarker}
         </Map>
         {pinForm}
         {postForm}
@@ -164,7 +159,6 @@ export default class Home extends React.Component<Props, State> {
 
   componentDidMount() {
     db.onAllPins(this.props.authUser.uid, snapshot => {
-      console.log(snapshot.val());
       if (snapshot.val() === null) {
         this.setState({ pins: [] });
       } else {
@@ -178,6 +172,7 @@ export default class Home extends React.Component<Props, State> {
       }
     });
   }
+
   componentWillUnmount() {
     db.detachAllPins();
   }

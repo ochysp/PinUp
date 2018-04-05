@@ -14,8 +14,7 @@ type State = {
 
 export type Props = {
     authUser: { uid: string },
-    lat: number,
-    lng: number
+    position: { lat: number, lng: number}
 }
 
 export default class CreatePin extends React.Component<Props, State> {
@@ -41,8 +40,8 @@ export default class CreatePin extends React.Component<Props, State> {
         db.doCreatePin({
             authUser: this.props.authUser,
             title: this.state.title,
-            latitude: parseFloat(this.props.lat),
-            longitude: parseFloat(this.props.lng),
+            latitude: parseFloat(this.props.position.lat),
+            longitude: parseFloat(this.props.position.lng),
             radius: parseFloat(this.state.radius)
         });
         alert('Pin sent to DB');

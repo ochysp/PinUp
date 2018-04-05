@@ -3,8 +3,6 @@
 import React from 'react'
 import {db} from '../../backend/firebase/index';
 import {PinNode} from "./PinNode";
-import CreatePinForm from "./CreatePin";
-
 
 type DbHandle = {
     detach: () => {},
