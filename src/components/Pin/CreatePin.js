@@ -67,7 +67,7 @@ export default class CreatePin extends React.Component<Props, State> {
                         name={'radius'}
                         onChange={this.handleInputChange}
                         hintText={'1'}
-                        floatingLabelText="Radius in km"
+                        floatingLabelText="Radius in m"
                         value={this.state.radius}
                     /><br/>
                 </CardText>

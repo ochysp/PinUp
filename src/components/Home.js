@@ -73,6 +73,11 @@ export default class Home extends React.Component<Props, State> {
     this.setState({ isPost: true, isPin: false });
   };
 
+  handleDeletePin(pin){
+    console.log(pin.key)
+    db.doDeletePin(pin.key)
+  }
+
   render() {
     const pinForm = this.state.isPin ? (
       <CreatePin
@@ -128,7 +133,10 @@ export default class Home extends React.Component<Props, State> {
               ref="pin"
             >
               <Popup>
-                <span>My Pin #{index}</span>
+                <span>
+                  My Pin #{index}<br />
+                  <a ref='' onClick={this.handleDeletePin.bind(this, pin)}>Delete Pin</a>
+                </span>
               </Popup>
               <Circle center={pin.position} radius={pin.radius} ref="circle" />
             </Marker>

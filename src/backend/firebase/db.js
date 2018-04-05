@@ -35,7 +35,6 @@ export const doCreatePost = (postInfo) => {
 
 
 // Pin APIs ...
-
 export const onOwnPins = (authUser, keyEntered, keyLeft) => {
     return onOwn(authUser, keyEntered, keyLeft, dbRef.USER_PINS);
 };
@@ -64,6 +63,10 @@ export const onAllPins = (userId, f) =>{
 
 export const detachAllPins = () =>{
     db.ref(dbRef.PINS).off();
+}
+
+export const doDeletePin = (pinKey) => {
+ db.ref(dbRef.PINS).child(pinKey).remove();
 }
 
 
@@ -98,7 +101,6 @@ const createPostLocation = (key, latitude, longitude) => {
 
 
 // Helpers
-
 const onOwn = (authUser, keyEntered, keyLeft, dbLocation) => {
     let ref = db.ref(dbLocation + authUser.uid);
 
