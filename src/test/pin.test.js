@@ -1,15 +1,11 @@
-
-
-// @flow
-
-import React from "react";
-import { Map, TileLayer, Marker, Popup, Circle } from "react-leaflet";
-import { db } from "../backend/firebase";
-import CreatePin from "../components/Pin/CreatePin";
-import CreatePost from "../components/Post/TESTING_CreatePost";
+import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 
+const sum = require('../components/TESTING_Demo');
 
+test('adds 1 + 2 to equal 3', () => {
+    expect(sum(1, 2)).toBe(3);
+});
 //TODO Account erstellen / einloggen
 //Test Account Mail: test_user@gmail.com PW: TestUser ist bereits erstellt
 
