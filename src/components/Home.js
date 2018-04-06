@@ -31,12 +31,12 @@ export default class Home extends React.Component<Props, State> {
 
     super();
 
-    const LAT = 47.22354
-    const LNG = 8.81714
-    const ZOOM = 13
-    const RADIUS = 1000
+    const LAT = 47.22354;
+    const LNG = 8.81714;
+    const ZOOM = 13;
+    const RADIUS = 1000;
 
-    let position = {lat: LAT, lng: LNG,}
+    let position = {lat: LAT, lng: LNG,};
 
     this.state = {
       mapCenter: {position},
@@ -56,7 +56,7 @@ export default class Home extends React.Component<Props, State> {
   }
 
   setMarker = (e: any) => {
-    let position = e.latlng
+    let position = e.latlng;
     this.setState({
       markerIsSet: true,
       marker: { position}
@@ -75,7 +75,7 @@ export default class Home extends React.Component<Props, State> {
   }
 
   render() {
-    const {marker, mapCenter, zoom, markerIsSet, isPin, isPost} = this.state
+    const {marker, mapCenter, zoom, markerIsSet, isPin, isPost} = this.state;
 
     const pinForm = isPin ? (
       <CreatePin

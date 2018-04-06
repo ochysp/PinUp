@@ -59,15 +59,15 @@ export const doCreatePin = (pinInfo) => {
 export const onAllPins = (userId, f) =>{
     let allUserPins = db.ref(dbRef.PINS);
     allUserPins.orderByChild('uid').equalTo(userId).on('value', f);
-}
+};
 
 export const detachAllPins = () =>{
     db.ref(dbRef.PINS).off();
-}
+};
 
 export const doDeletePin = (pinKey) => {
  db.ref(dbRef.PINS).child(pinKey).remove();
-}
+};
 
 
 //GeoFire APIs
