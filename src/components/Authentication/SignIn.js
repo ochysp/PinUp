@@ -3,7 +3,7 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import {uiConfig, firebase} from "../../backend/firebase";
+import {uiConfig, firebase} from "../../datalayer/firebase";
 
 const SignInScreen = () =>
     (

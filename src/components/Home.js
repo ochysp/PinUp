@@ -2,9 +2,10 @@
 
 import React from "react";
 import { Map, TileLayer, Marker, Popup, Circle } from "react-leaflet";
-import { db } from "../backend/firebase";
+import { db } from "../datalayer/firebase";
 import CreatePin from "./Pin/CreatePin";
 import CreatePost from "./Post/TESTING_CreatePost";
+import * as leafletValues from '../constants/leafletValues'
 
 type State = {
   center: {lat: number, lng: number},
@@ -31,16 +32,11 @@ export default class Home extends React.Component<Props, State> {
 
     super();
 
-    const LAT = 47.22354;
-    const LNG = 8.81714;
-    const ZOOM = 13;
-    const RADIUS = 1000;
-
-    let position = {lat: LAT, lng: LNG,};
+    let position = {lat: leafletValues.LAT, lng: leafletValues.LNG,};
 
     this.state = {
       mapCenter: {position},
-      zoom: ZOOM,
+      zoom: leafletValues.ZOOM,
 
       marker: {position},
       markerIsSet: false,
@@ -48,7 +44,7 @@ export default class Home extends React.Component<Props, State> {
       isPost: false,
 
       circle: {position},
-      radius: RADIUS,
+      radius: leafletValues.RADIUS,
 
       pins: [],
       posts: []
@@ -71,7 +67,7 @@ export default class Home extends React.Component<Props, State> {
   };
 
   handleDeletePin(pin){
-    db.doDeletePin(pin.key)
+    db.doDeletePin(this.props.authUser, pin.key)
   }
 
   render() {

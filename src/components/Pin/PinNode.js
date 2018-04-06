@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Link} from 'react-router-dom';
-import {db} from '../../backend/firebase/index';
+import {db} from '../../datalayer/firebase/index';
 import * as routes from "../../constants/routes";
 
 type Props = {

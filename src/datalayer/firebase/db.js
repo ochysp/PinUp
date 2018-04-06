@@ -65,8 +65,9 @@ export const detachAllPins = () =>{
     db.ref(dbRef.PINS).off();
 };
 
-export const doDeletePin = (pinKey) => {
- db.ref(dbRef.PINS).child(pinKey).remove();
+export const doDeletePin = (authUser, pinKey) => {
+ db.ref(dbRef.PINS).child(pinKey).remove()
+ db.ref(dbRef.USER_PINS + authUser.uid).child(pinKey).remove()
 };
 
 

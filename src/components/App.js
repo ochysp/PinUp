@@ -3,8 +3,8 @@
 //React
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {firebase} from '../backend/firebase';
-import {db} from '../backend/firebase';
+import {firebase} from '../datalayer/firebase';
+import {db} from '../datalayer/firebase';
 import {Header} from "./Navigation/Header";
 import {Main} from "./Main";
 

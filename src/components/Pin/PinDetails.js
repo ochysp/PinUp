@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {db} from '../../backend/firebase/index';
+import {db} from '../../datalayer/firebase/index';
 import Matches from "../Match/Matches";
 import type Match from 'react-router';
 
