@@ -4,6 +4,9 @@ var Mock                = require('mockfirebase');
 var Firebase            = Mock.MockFirebase;
 var FirebaseSimpleLogin = Mock.MockFirebaseSimpleLogin;
 
+
+//Tests the login functionality of firebase
+
 describe('MockFirebaseSimpleLogin', function() {
     var fb, callback, auth;
 
@@ -18,12 +21,12 @@ describe('MockFirebaseSimpleLogin', function() {
 
     describe('#login', function() {
         it('should invoke the callback if autoFlush is set', function() {
-            auth.autoFlush(true).login('twitter');
+            auth.autoFlush(true).login('google');
             expect(callback.callCount).equals(1);
         });
 
         it('should wait for flush', function() {
-            auth.login('twitter');
+            auth.login('google');
             expect(callback.callCount).equals(0);
             auth.flush();
             expect(callback.callCount).equals(1);
@@ -46,7 +49,7 @@ describe('MockFirebaseSimpleLogin', function() {
         it('should return a valid user on a good login', function() {
             auth.autoFlush(true).login('facebook');
             var call = callback.getCall(0);
-            expect(call.args[1]).eqls(auth.getUser('facebook'));
+            expect(call.args[1]).equals(auth.getUser('facebook'));
         });
     });
 
@@ -58,7 +61,7 @@ describe('MockFirebaseSimpleLogin', function() {
             expect(spy.callCount).equals(1);
             var call = spy.getCall(0);
             expect(call.args[0]).equals(null);
-            expect(call.args[1]).eqls(auth.getUser('password', {email: 'newuser@firebase.com'}));
+            expect(call.args[1]).equals(auth.getUser('password', {email: 'newuser@firebase.com'}));
 
         });
 
