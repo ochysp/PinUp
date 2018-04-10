@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import {onPost, detachPost} from '../../business/Post'
 
 type Props = {
   postId: number
@@ -20,13 +20,13 @@ export class PostNode extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    db.onPost(this.props.postId, snapshot => {
+    onPost(this.props.postId, snapshot => {
       this.updateData(snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    db.detachPost(this.props.postId);
+    detachPost(this.props.postId);
   }
 
   updateData = (values: any) => {

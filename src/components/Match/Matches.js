@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import {onNearbyPosts} from '../../business/Match'
 import { PostNode } from "../Post/PostNode";
 
 type DbHandle = {
@@ -30,7 +30,7 @@ export default class Matches extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState({
-      dbHandle: db.onNearbyPosts(
+      dbHandle: onNearbyPosts(
         this.props.latitude,
         this.props.longitude,
         this.props.radius,

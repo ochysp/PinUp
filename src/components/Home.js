@@ -2,9 +2,9 @@
 
 import React from "react";
 import { Map, TileLayer, Marker, Popup, Circle } from "react-leaflet";
-import { db } from "../datalayer/firebase";
-import CreatePin from "./Pin/CreatePin";
-import CreatePost from "./Post/TESTING_CreatePost";
+import {detachAllPins, onAllPins, doDeletePin} from '../business/Pin'
+import CreatePinForm from "./Pin/CreatePinForm";
+import CreatePostForm from "./Post/CreatePostForm";
 import * as leafletValues from "../constants/leafletValues";
 
 type State = {
@@ -34,15 +34,15 @@ export default class Home extends React.Component<Props, State> {
     let position = { lat: leafletValues.LAT, lng: leafletValues.LNG };
 
     this.state = {
-      mapCenter: { position },
+      center: position,
       zoom: leafletValues.ZOOM,
 
-      marker: { position },
+      marker: position,
       markerIsSet: false,
       isPin: false,
       isPost: false,
 
-      circle: { position },
+      circle: position,
       radius: leafletValues.RADIUS,
 
       pins: [],
@@ -54,7 +54,7 @@ export default class Home extends React.Component<Props, State> {
     let position = e.latlng;
     this.setState({
       markerIsSet: true,
-      marker: { position }
+      marker: position
     });
   };
 
@@ -66,21 +66,21 @@ export default class Home extends React.Component<Props, State> {
   };
 
   handleDeletePin(pin) {
-    db.doDeletePin(this.props.authUser, pin.key);
+    doDeletePin(this.props.authUser, pin.key);
   }
 
   render() {
-    const { marker, mapCenter, zoom, markerIsSet, isPin, isPost } = this.state;
+    const { marker, center, zoom, markerIsSet, isPin, isPost } = this.state;
 
     const pinForm = isPin ? (
-      <CreatePin authUser={this.props.authUser} position={marker.position} />
+      <CreatePinForm authUser={this.props.authUser} position={marker} />
     ) : null;
     const postForm = isPost ? (
-      <CreatePost authUser={this.props.authUser} position={marker.position} />
+      <CreatePostForm authUser={this.props.authUser} position={marker} />
     ) : null;
 
     const currentMarker = markerIsSet ? (
-      <Marker position={marker.position} ref="marker">
+      <Marker position={marker} ref="marker">
         <Popup>
           <span>
             Create a<br />
@@ -98,7 +98,7 @@ export default class Home extends React.Component<Props, State> {
 
     return (
       <div>
-        <Map center={mapCenter.position} zoom={zoom} onClick={this.setMarker}>
+        <Map center={center} zoom={zoom} onClick={this.setMarker}>
           <TileLayer
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -135,7 +135,7 @@ export default class Home extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    db.onAllPins(this.props.authUser.uid, snapshot => {
+    onAllPins(this.props.authUser.uid, snapshot => {
       if (snapshot.val() === null) {
         this.setState({ pins: [] });
       } else {
@@ -153,6 +153,6 @@ export default class Home extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    db.detachAllPins();
+    detachAllPins();
   }
 }

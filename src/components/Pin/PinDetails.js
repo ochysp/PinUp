@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import {onPin, detachPin} from '../../business/Pin'
 import Matches from "../Match/Matches";
 import type Match from "react-router";
 
@@ -26,13 +26,13 @@ export default class PinDetails extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    db.onPin(this.props.match.params.pinId, snapshot => {
+    onPin(this.props.match.params.pinId, snapshot => {
       this.updateData(snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    db.detachPin(this.props.match.params.pinId);
+    detachPin(this.props.match.params.pinId);
   }
 
   updateData = (values: any) => {

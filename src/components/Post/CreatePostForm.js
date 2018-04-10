@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import {doCreatePost} from '../../business/Post'
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
@@ -16,7 +16,7 @@ type Props = {
   authUser: { uid: string }
 };
 
-export default class CreatePost extends React.Component<Props, State> {
+export default class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -37,7 +37,7 @@ export default class CreatePost extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    db.doCreatePost({
+    doCreatePost({
       authUser: this.props.authUser,
       title: this.state.title,
       latitude: parseFloat(this.state.latitude),
