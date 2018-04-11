@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { db } from "../../datalayer/firebase/index";
+import {onPin, detachPin} from '../../business/Pin'
 import * as routes from "../../constants/routes";
 
 type Props = {
@@ -26,13 +26,13 @@ export class PinNode extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    db.onPin(this.props.pinId, snapshot => {
+    onPin(this.props.pinId, snapshot => {
       this.updateData(snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    db.detachPin(this.props.pinId);
+    detachPin(this.props.pinId);
   }
 
   updateData(values: Pin) {

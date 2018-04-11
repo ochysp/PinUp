@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import {onOwnPins} from '../../business/Pin'
 import { PinNode } from "./PinNode";
 
 type DbHandle = {
@@ -28,7 +28,7 @@ export default class ListPins extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState({
-      dbHandle: db.onOwnPins(this.props.authUser, this.keyEntered, this.keyLeft)
+      dbHandle: onOwnPins(this.props.authUser, this.keyEntered, this.keyLeft)
     });
   }
 

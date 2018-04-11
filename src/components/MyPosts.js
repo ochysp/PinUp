@@ -1,9 +1,8 @@
 // @flow
 
 import React from "react";
-import { db } from "../datalayer/firebase/index";
+import { onOwnPosts } from "../business/Post";
 import { PostNode } from "./Post/PostNode";
-import CreatePostForm from "./Post/TESTING_CreatePost";
 
 type DbHandle = {
   detach: () => {}
@@ -29,11 +28,7 @@ export default class MyPosts extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState({
-      dbHandle: db.onOwnPosts(
-        this.props.authUser,
-        this.keyEntered,
-        this.keyLeft
-      )
+      dbHandle: onOwnPosts(this.props.authUser, this.keyEntered, this.keyLeft)
     });
   }
 
@@ -64,10 +59,7 @@ export default class MyPosts extends React.Component<Props, State> {
     return (
       <div>
         <h1>My Posts</h1>
-        <div>
-          <ul>{listItems}</ul>
-        </div>
-        <CreatePostForm authUser={this.props.authUser} />
+        <ul>{listItems}</ul>
       </div>
     );
   }

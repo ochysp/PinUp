@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { db } from "../../datalayer/firebase/index";
+import { doCreatePin } from "../../business/Pin";
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
@@ -16,7 +16,7 @@ export type Props = {
   position: { lat: number, lng: number }
 };
 
-export default class CreatePin extends React.Component<Props, State> {
+export default class CreatePinForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -36,7 +36,7 @@ export default class CreatePin extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    db.doCreatePin({
+    doCreatePin({
       authUser: this.props.authUser,
       title: this.state.title,
       latitude: parseFloat(this.props.position.lat),

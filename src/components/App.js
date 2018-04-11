@@ -4,7 +4,7 @@
 import React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { firebase } from "../datalayer/firebase";
-import { db } from "../datalayer/firebase";
+import {doCreateUser} from '../business/User'
 import { Header } from "./Navigation/Header";
 import { Main } from "./Main";
 
@@ -24,7 +24,7 @@ export default class App extends React.Component<{}, State> {
     firebase.auth.onAuthStateChanged(authUser => {
       console.log("auth user changed");
       if (authUser) {
-        db.doCreateUser(
+        doCreateUser(
           authUser.uid,
           authUser.displayName,
           authUser.email,
