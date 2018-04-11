@@ -1,13 +1,12 @@
-var sinon = require("sinon");
-var expect = require("chai").use(require("sinon-chai")).expect;
-var Mock = require("mockfirebase");
-var Firebase = Mock.MockFirebase;
-var FirebaseSimpleLogin = Mock.MockFirebaseSimpleLogin;
+let sinon = require("sinon");
+let expect = require("chai").use(require("sinon-chai")).expect;
+let Mock = require("mockfirebase");
+let Firebase = Mock.MockFirebase;
+let FirebaseSimpleLogin = Mock.MockFirebaseSimpleLogin;
 
 //Tests the login functionality of firebase
-
 describe("MockFirebaseSimpleLogin", function() {
-  var fb, callback, auth;
+  let fb, callback, auth;
 
   beforeEach(function() {
     // we need our own callback to test the MockFirebaseSimpleLogin API
@@ -35,7 +34,7 @@ describe("MockFirebaseSimpleLogin", function() {
       auth
         .autoFlush(true)
         .login("password", { email: "bademail", password: "notagoodpassword" });
-      var call = callback.getCall(0);
+      let call = callback.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_USER");
     });
@@ -45,25 +44,25 @@ describe("MockFirebaseSimpleLogin", function() {
         email: "email@firebase.com",
         password: "notagoodpassword"
       });
-      var call = callback.getCall(0);
+      let call = callback.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_PASSWORD");
     });
 
     it("should return a valid user on a good login", function() {
       auth.autoFlush(true).login("facebook");
-      var call = callback.getCall(0);
+      let call = callback.getCall(0);
       expect(call.args[1]).equals(auth.getUser("facebook"));
     });
   });
 
   describe("#createUser", function() {
     it("should return a user on success", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.createUser("newuser@firebase.com", "password", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).equals(null);
       expect(call.args[1]).equals(
         auth.getUser("password", { email: "newuser@firebase.com" })
@@ -71,14 +70,14 @@ describe("MockFirebaseSimpleLogin", function() {
     });
 
     it("should fail with EMAIL_TAKEN if user already exists", function() {
-      var spy = sinon.spy();
-      var existingUser = auth.getUser("password", {
+      let spy = sinon.spy();
+      let existingUser = auth.getUser("password", {
         email: "email@firebase.com"
       });
       expect(existingUser).is.an("object");
       auth.createUser(existingUser.email, existingUser.password, spy);
       auth.flush();
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(spy.called).to.equal(true);
       expect(call.args[0]).is.an("object");
       expect(call.args[0]).to.include.keys("code");
@@ -87,25 +86,25 @@ describe("MockFirebaseSimpleLogin", function() {
 
   describe("#changePassword", function() {
     it("should invoke callback on success", function() {
-      var spy = sinon.spy();
-      var user = auth.getUser("password", { email: "email@firebase.com" });
+      let spy = sinon.spy();
+      let user = auth.getUser("password", { email: "email@firebase.com" });
       auth.changePassword("email@firebase.com", user.password, "spiffy", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).equals(null);
       expect(call.args[1]).equals(true);
     });
 
     it("should physically modify the password", function() {
-      var user = auth.getUser("password", { email: "email@firebase.com" });
+      let user = auth.getUser("password", { email: "email@firebase.com" });
       auth.changePassword("email@firebase.com", user.password, "spiffynewpass");
       auth.flush();
       expect(user.password).equals("spiffynewpass");
     });
 
     it("should fail with INVALID_USER if bad user given", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.changePassword(
         "notvalidemail@firebase.com",
         "all your base",
@@ -114,14 +113,14 @@ describe("MockFirebaseSimpleLogin", function() {
       );
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_USER");
       expect(call.args[1]).equals(false);
     });
 
     it("should fail with INVALID_PASSWORD on a mismatch", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.changePassword(
         "email@firebase.com",
         "notvalidpassword",
@@ -130,7 +129,7 @@ describe("MockFirebaseSimpleLogin", function() {
       );
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_PASSWORD");
       expect(call.args[1]).equals(false);
@@ -139,21 +138,21 @@ describe("MockFirebaseSimpleLogin", function() {
 
   describe("#sendPasswordResetEmail", function() {
     it("should return null, true on success", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.sendPasswordResetEmail("email@firebase.com", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).equals(null);
       expect(call.args[1]).equals(true);
     });
 
     it("should fail with INVALID_USER if not a valid email", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.sendPasswordResetEmail("notavaliduser@firebase.com", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_USER");
       expect(call.args[1]).equals(false);
@@ -162,18 +161,18 @@ describe("MockFirebaseSimpleLogin", function() {
 
   describe("#removeUser", function() {
     it("should invoke callback", function() {
-      var spy = sinon.spy();
-      var user = auth.getUser("password", { email: "email@firebase.com" });
+      let spy = sinon.spy();
+      let user = auth.getUser("password", { email: "email@firebase.com" });
       auth.removeUser("email@firebase.com", user.password, spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).equals(null);
       expect(call.args[1]).equals(true);
     });
 
     it("should physically remove the user", function() {
-      var user = auth.getUser("password", { email: "email@firebase.com" });
+      let user = auth.getUser("password", { email: "email@firebase.com" });
       expect(user).is.an("object");
       auth.removeUser("email@firebase.com", user.password);
       auth.flush();
@@ -183,21 +182,21 @@ describe("MockFirebaseSimpleLogin", function() {
     });
 
     it("should fail with INVALID_USER if bad email", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.removeUser("notvaliduser@firebase.com", "xxxxx", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_USER");
     });
 
     it("should fail with INVALID_PASSWORD if bad password", function() {
-      var spy = sinon.spy();
+      let spy = sinon.spy();
       auth.removeUser("email@firebase.com", "notavalidpassword", spy);
       auth.flush();
       expect(spy.callCount).equals(1);
-      var call = spy.getCall(0);
+      let call = spy.getCall(0);
       expect(call.args[0]).is.an("object");
       expect(call.args[0].code).equals("INVALID_PASSWORD");
       expect(call.args[1]).equals(false);
