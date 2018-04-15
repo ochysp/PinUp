@@ -1,15 +1,19 @@
 // @flow
 
-import React from 'react';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
-import { doCreatePost } from '../../business/Post';
+import React from "react";
+import { doCreatePost } from "../../business/Post";
+import { CATEGORIES } from "../../constants/categories";
+import TextField from "material-ui/TextField";
+import SelectField from "material-ui/SelectField";
+import MenuItem from "material-ui/MenuItem";
+import FlatButton from "material-ui/FlatButton";
+import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
 
 type State = {
   title: string,
   longitude: string,
-  latitude: string
+  latitude: string,
+  values: []
 };
 
 type Props = {
@@ -20,11 +24,37 @@ export default class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: '',
-      longitude: '8.815886',
-      latitude: '47.223946',
+      title: "",
+      longitude: "8.815886",
+      latitude: "47.223946",
+      values: []
     };
   }
+
+  handleMenuItemChange = (event, index, values) => this.setState({ values });
+
+  menuItems(persons) {
+    return persons.map(person => (
+      <MenuItem
+        key={person.value}
+        insetChildren={true}
+        checked={this.state.values.indexOf(person.value) > -1}
+        value={person.value}
+        primaryText={person.name}
+      />
+    ));
+  }
+
+  selectionRenderer = values => {
+    switch (values.length) {
+      case 0:
+        return "";
+      case 1:
+        return CATEGORIES[values[0]].name;
+      default:
+        return `Post belongs to ${values.length} categories`;
+    }
+  };
 
   handleInputChange = (event: any) => {
     const { target } = event;
@@ -81,6 +111,15 @@ export default class CreatePostForm extends React.Component<Props, State> {
             floatingLabelText="Longitude"
             value={this.state.longitude}
           />
+          <br />
+          <SelectField
+            multiple={true}
+            hintText="Select category of Post"
+            value={this.state.values}
+            onChange={this.handleMenuItemChange}
+          >
+            {this.menuItems(CATEGORIES)}
+          </SelectField>
           <br />
         </CardText>
         <CardActions>
