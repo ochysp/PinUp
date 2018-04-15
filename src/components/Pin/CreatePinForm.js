@@ -1,10 +1,11 @@
 // @flow
 
-import React from 'react';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
-import { doCreatePin } from '../../business/Pin';
+import React from "react";
+import { doCreatePin } from "../../business/Pin";
+import TextField from "material-ui/TextField";
+import FlatButton from "material-ui/FlatButton";
+import Slider from "material-ui/Slider";
+import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
 
 type State = {
   title: string,
@@ -20,8 +21,8 @@ export default class CreatePinForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: '',
-      radius: '',
+      title: "",
+      radius: 500
     };
   }
 
@@ -33,6 +34,10 @@ export default class CreatePinForm extends React.Component<Props, State> {
     this.setState({
       [name]: value,
     });
+  };
+
+  handleSlider = (event, value) => {
+    this.setState({ radius: value });
   };
 
   handleSubmit = (event: any) => {
@@ -68,14 +73,23 @@ export default class CreatePinForm extends React.Component<Props, State> {
             value={this.state.title}
           />
           <br />
-          <TextField
-            name="radius"
-            onChange={this.handleInputChange}
-            hintText="1"
-            floatingLabelText="Radius in km"
-            value={this.state.radius}
-          />
           <br />
+          <div>
+            <p>Set Radius</p>
+            <Slider
+              min={100}
+              max={2000}
+              step={100}
+              value={this.state.radius}
+              onChange={this.handleSlider}
+            />
+            <p>
+              <span>{"Current set Radius "}</span>
+              <span>{this.state.radius + "m"}</span>
+              <br />
+              <span>{"(Range from 100 to 2000m)"}</span>
+            </p>
+          </div>
         </CardText>
         <CardActions>
           <FlatButton onClick={this.handleSubmit} label="Create" />
