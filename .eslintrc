@@ -1,6 +1,22 @@
 {
-  "extends": "airbnb",
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:flowtype/recommended"
+  ],
+  "parser": "babel-eslint",
   "rules": {
-    "linebreak-style": [1, "windows"]
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "function-paren-newline": ["error", { "minItems": 3 }],
+    "linebreak-style": [1, "windows"],
+    "jsx-a11y/anchor-is-valid": [ "error", { "components": [ "Link" ], "specialLink": [ "to" ] } ]
+  },
+  "plugins": [
+    "flowtype"
+  ],
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    }
   }
 }

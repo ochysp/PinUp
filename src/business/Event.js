@@ -1,7 +1,7 @@
-import * as dbRef from '../constants/dbRef'
-import {db} from '../datalayer/firebase/firebase'
-import {onOwn} from './Helper'
-import * as GeoFire from 'geofire'
+import * as GeoFire from 'geofire';
+import * as dbRef from '../constants/dbRef';
+import { db } from '../datalayer/firebase/firebase';
+import { attachChildListener } from './Helper';
 
-//TODO implement: create, take part, ...
+// TODO implement: create, take part, ...
 

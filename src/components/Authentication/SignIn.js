@@ -1,9 +1,9 @@
 // @flow
 
-import React from "react";
-import { withRouter } from "react-router-dom";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import { uiConfig, firebase } from "../../datalayer/firebase";
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { uiConfig, firebase } from '../../datalayer/firebase';
 
 const SignInScreen = () => (
   <div>
