@@ -2,14 +2,18 @@
 
 import React from "react";
 import { doCreatePin } from "../../business/Pin";
+import { CATEGORIES } from "../../constants/categories";
 import TextField from "material-ui/TextField";
+import SelectField from "material-ui/SelectField";
+import MenuItem from "material-ui/MenuItem";
 import FlatButton from "material-ui/FlatButton";
 import Slider from "material-ui/Slider";
 import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
 
 type State = {
   title: string,
-  radius: string
+  radius: number,
+  values: []
 };
 
 export type Props = {
@@ -22,11 +26,37 @@ export default class CreatePinForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: "",
-      radius: 500
+      radius: 500,
+      values: []
     };
   }
 
-  handleInputChange = (event: any) => {
+  handleMenuItemChange = (event, index, values) => this.setState({ values });
+
+  selectionRenderer = values => {
+    switch (values.length) {
+      case 0:
+        return "";
+      case 1:
+        return CATEGORIES[values[0]].name;
+      default:
+        return `Filter contains ${values.length} categories`;
+    }
+  };
+
+  menuItems(persons) {
+    return persons.map(person => (
+      <MenuItem
+        key={person.value}
+        insetChildren={true}
+        checked={this.state.values.indexOf(person.value) > -1}
+        value={person.value}
+        primaryText={person.name}
+      />
+    ));
+  }
+
+  handleTextFieldInputChange = (event: any) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -63,15 +93,26 @@ export default class CreatePinForm extends React.Component<Props, State> {
         <CardText>
           <TextField
             name={"title"}
-            onChange={this.handleInputChange}
+            onChange={this.handleTextFieldInputChange}
             hintText={"Rapperswil"}
             floatingLabelText="Title"
             value={this.state.title}
           />
+
+          <br />
+          <SelectField
+            multiple={true}
+            hintText="Select category filter"
+            value={this.state.values}
+            onChange={this.handleMenuItemChange}
+            selectionRenderer={this.selectionRenderer}
+          >
+            {this.menuItems(CATEGORIES)}
+          </SelectField>
           <br />
           <br />
           <div>
-            <p>Set Radius</p>
+            <p>Set Search-Radius</p>
             <Slider
               min={100}
               max={2000}
