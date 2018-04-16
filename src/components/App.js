@@ -3,7 +3,7 @@
 //React
 import React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { firebase } from "../datalayer/firebase";
+import { firebase } from "../data/firebase";
 import {doCreateUser} from '../business/User'
 import { Header } from "./Navigation/Header";
 import { Main } from "./Main";

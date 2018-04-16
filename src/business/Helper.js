@@ -1,4 +1,4 @@
-import {db} from '../datalayer/firebase/firebase'
+import {db} from '../data/firebase/firebase'
 
 export const onOwn = (authUser, keyEntered, keyLeft, dbLocation) => {
   let ref = db.ref(dbLocation + authUser.uid);

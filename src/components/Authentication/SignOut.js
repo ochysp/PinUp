@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { authentication } from "../../datalayer/firebase/index";
+import { authentication } from "../../data/firebase/index";
 
 const SignOutButton = () => (
   <button className="item" type="button" onClick={authentication.doSignOut}>

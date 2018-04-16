@@ -1,5 +1,5 @@
 import * as dbRef from '../constants/dbRef'
-import {db} from '../datalayer/firebase/firebase'
+import {db} from '../data/firebase/firebase'
 import * as GeoFire from 'geofire'
 
 export const onNearbyPosts = (
