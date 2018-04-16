@@ -51,13 +51,13 @@ export const doDeletePost = (authUser, postKey) => {
     .remove();
 };
 
-export const onAllPosts = (uid ,f) => {
+export const listenForAllPosts = (uid ,f) => {
   let allPosts = db.ref(dbRef.POST_LOCATIONS);
   allPosts
     .on("value", f);
 };
 
-export const detachAllPosts = () => {
+export const detachAllPostListeners = () => {
   db.ref(dbRef.POSTS).off();
 };
 

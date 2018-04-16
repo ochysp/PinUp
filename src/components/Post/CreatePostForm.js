@@ -86,22 +86,6 @@ export default class CreatePostForm extends React.Component<Props, State> {
             value={this.state.title}
           />
           <br />
-          <TextField
-            name="latitude"
-            onChange={this.handleInputChange}
-            hintText="47.223946"
-            floatingLabelText="Latitude"
-            value={this.state.latitude}
-          />
-          <br />
-          <TextField
-            name="longitude"
-            onChange={this.handleInputChange}
-            hintText="8.815886"
-            floatingLabelText="Longitude"
-            value={this.state.longitude}
-          />
-          <br />
           <SelectField
             hintText="Select category of Post"
             value={this.state.category}

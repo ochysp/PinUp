@@ -4,13 +4,19 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import { detachAllPinListeners, listenForAllPinsOfUser, doDeletePin } from '../business/Pin';
+import { detachAllPostListeners, listenForAllPosts, doDeletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinInfoType, SnapshotType } from '../Types';
+import type {AuthUserType, LocationType, PinInfoType, PostInfoWithLocationType, SnapshotType} from '../Types';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
-  { lat: location.latitude, lng: location.longitude });
+  { lat: location.latitude, lng: location.longitude }
+  );
+
+const convertFromGeofireToLeafletLocation = (location: Array): LatLng => (
+  {lat: location[0], lng: location[1]}
+);
 
 const convertToLeafletRadius = (radius: number): number => (radius * 1000);
 
@@ -24,6 +30,7 @@ type State = {
   isPost: boolean,
 
   pins: Array<PinInfoType>,
+  posts: Array<PostInfoWithLocationType>,
 };
 
 type Props = {
@@ -46,13 +53,14 @@ export default class Home extends React.Component<Props, State> {
       isPost: false,
 
       pins: [],
+      posts: []
     };
   }
 
   componentDidMount() {
     listenForAllPinsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      console.log('listenForAllPinsOfUser Callbacked');
-      console.log(snapshot.val());
+      console.log(snapshot.val())
+
       if (snapshot.val() === null) {
         this.setState({ pins: [] });
       } else {
@@ -65,26 +73,20 @@ export default class Home extends React.Component<Props, State> {
       }
     });
 
-    onAllPosts(this.props.authUser.uid, snapshot => {
+    listenForAllPosts(this.props.authUser.uid, (snapshot: SnapshotType)  => {
+      console.log(snapshot.val())
       if (snapshot.val() === null) {
         this.setState({ posts: [] });
       } else {
         this.setState({
-          posts: Object.entries(snapshot.val()).map(
-            ([key, value]: [string, any]) => ({
-              key,
+          posts: Object.entries(snapshot.val()).map(([key, value]: [string, Array]) => ({
+              postId: key,
               ...value,
-              position: { lat: value.l[0], lng: value.l[1] } //.l is an array with GeoFire-Locations
             })
           )
         });
       }
     });
-
-  }
-
-  componentWillUnmount() {
-    detachAllPinListeners();
   }
 
   setMarker = (e: any) => {
@@ -103,13 +105,13 @@ export default class Home extends React.Component<Props, State> {
     this.setState({ isPost: true, isPin: false });
   };
 
-  handleDeletePin = (pin: any) => {
-    doDeletePin(this.props.authUser, pin.key);
-  }
+  handleDeletePin = (pin: PinInfoType) => {
+    doDeletePin(this.props.authUser, pin.pinId);
+  };
 
-  handleDeletePost(post) {
-    doDeletePost(this.props.authUser, post.key);
-  }
+  handleDeletePost(post: PostInfoWithLocationType) {
+    doDeletePost(this.props.authUser, post.postId);
+  };
 
   render() {
     const {
@@ -167,8 +169,8 @@ export default class Home extends React.Component<Props, State> {
             </Marker>
           ))}
 
-          {this.state.posts.map((post, index) => (
-            <Marker key={post.key} position={post.position} ref="post">
+          {this.state.posts.map((post: PostInfoWithLocationType, index) => (
+            <Marker key={post.postId} position={convertFromGeofireToLeafletLocation(post.l)} ref="post">
               <Popup>
                 <span>
                   My Post #{index}
@@ -180,7 +182,6 @@ export default class Home extends React.Component<Props, State> {
               </Popup>
             </Marker>
           ))}
-
           {currentMarker}
         </Map>
         {pinForm}
@@ -190,7 +191,7 @@ export default class Home extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    detachAllPins();
-    detachAllPosts();
+    detachAllPinListeners();
+    detachAllPostListeners();
   }
 }
