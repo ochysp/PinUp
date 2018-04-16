@@ -25,7 +25,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
+      title: '',
       radius: 500,
       values: []
     };
@@ -36,7 +36,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
   selectionRenderer = values => {
     switch (values.length) {
       case 0:
-        return "";
+        return '';
       case 1:
         return CATEGORIES[values[0]].name;
       default:
