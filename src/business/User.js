@@ -2,7 +2,7 @@
 // @flow
 
 import * as dbRef from '../constants/dbRef';
-import { db } from '../datalayer/firebase/firebase';
+import { db } from '../data/firebase/firebase';
 import type { KeyType } from '../Types';
 
 export const doCreateUser = (

@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 // @flow
 
-import { db } from '../datalayer/firebase/firebase';
+import { db } from '../data/firebase/firebase';
 import type { ConnectionType, KeyChangedCallback } from '../Types';
 
 export const attachChildListener = (
