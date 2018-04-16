@@ -1,5 +1,6 @@
 [ignore]
-
+.*/node_modules/grpc/node_modules/protobufjs/src/bower\.json.*
+.*/node_modules/react-leaflet/lib/index\.js\.flow.*
 [include]
 
 [libs]

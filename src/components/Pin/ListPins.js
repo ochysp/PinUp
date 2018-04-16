@@ -1,20 +1,17 @@
 // @flow
 
-import React from "react";
-import {onOwnPins} from '../../business/Pin'
-import { PinNode } from "./PinNode";
-
-type DbHandle = {
-  detach: () => {}
-};
+import React from 'react';
+import { listenForAllPinIDsOfUser } from '../../business/Pin';
+import PinNode from './PinNode';
+import type { AuthUserType, ConnectionType, KeyType } from '../../Types';
 
 type State = {
-  pins: number[],
-  dbHandle: ?DbHandle
+  pins: KeyType[],
+  dbHandle: ?ConnectionType
 };
 
 type Props = {
-  authUser: { uid: string }
+  authUser: AuthUserType
 };
 
 export default class ListPins extends React.Component<Props, State> {
@@ -22,13 +19,16 @@ export default class ListPins extends React.Component<Props, State> {
     super(props);
     this.state = {
       pins: [],
-      dbHandle: null
+      dbHandle: null,
     };
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandle: onOwnPins(this.props.authUser, this.keyEntered, this.keyLeft)
+      dbHandle: listenForAllPinIDsOfUser(
+        this.props.authUser, this.keyEntered, this.keyLeft,
+      ),
     });
   }
 
@@ -36,16 +36,16 @@ export default class ListPins extends React.Component<Props, State> {
     if (this.state.dbHandle) this.state.dbHandle.detach();
   }
 
-  keyEntered = (key: number) => {
-    this.setState(prevState => {
+  keyEntered = (key: KeyType) => {
+    this.setState((prevState) => {
       const updatedNearbyPinKeys = prevState.pins.slice();
       updatedNearbyPinKeys.push(key);
       return { pins: updatedNearbyPinKeys };
     });
   };
 
-  keyLeft = (key: number) => {
-    this.setState(prevState => {
+  keyLeft = (key: KeyType) => {
+    this.setState((prevState) => {
       const updatedNearbyPinKeys = prevState.pins.slice();
       updatedNearbyPinKeys.splice(updatedNearbyPinKeys.indexOf(key), 1);
       return { pins: updatedNearbyPinKeys };

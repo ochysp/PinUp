@@ -1,42 +1,45 @@
 // @flow
 
-import React from "react";
-import {onNearbyPosts} from '../../business/Match'
-import { PostNode } from "../Post/PostNode";
-
-type DbHandle = {
-  detach: () => {}
-};
+import React from 'react';
+import listenForPostsIDsInArea from '../../business/Match';
+import { PostNode } from '../Post/PostNode';
+import type {
+  KeyType,
+  ConnectionType, AreaType,
+} from '../../Types';
 
 type State = {
-  posts: number[],
-  dbHandle: ?DbHandle
+  posts: KeyType[],
+  dbHandle: ?ConnectionType
 };
 
 type Props = {
-  latitude: number,
-  longitude: number,
-  radius: number
+  area: AreaType
 };
 
 export default class Matches extends React.Component<Props, State> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       posts: [],
-      dbHandle: null
+      dbHandle: null,
     };
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandle: onNearbyPosts(
-        this.props.latitude,
-        this.props.longitude,
-        this.props.radius,
+      dbHandle: listenForPostsIDsInArea(
+        {
+          location: {
+            latitude: this.props.area.location.latitude,
+            longitude: this.props.area.location.longitude,
+          },
+          radius: this.props.area.radius,
+        },
         this.keyEntered,
-        this.keyLeft
-      )
+        this.keyLeft,
+      ),
     });
   }
 
@@ -44,7 +47,7 @@ export default class Matches extends React.Component<Props, State> {
     if (this.state.dbHandle) this.state.dbHandle.detach();
   }
 
-  keyEntered = (key: *, location: *, distance: *) => {
+  keyEntered = (key: KeyType) => {
     this.setState((prevState: State) => {
       const updatedNearbyPostKeys = prevState.posts.slice();
       updatedNearbyPostKeys.push(key);
@@ -52,8 +55,8 @@ export default class Matches extends React.Component<Props, State> {
     });
   };
 
-  keyLeft = (key: *, location: *, distance: *) => {
-    this.setState(prevState => {
+  keyLeft = (key: KeyType) => {
+    this.setState((prevState) => {
       const updatedNearbyPostKeys = prevState.posts.slice();
       updatedNearbyPostKeys.splice(updatedNearbyPostKeys.indexOf(key), 1);
       return { posts: updatedNearbyPostKeys };

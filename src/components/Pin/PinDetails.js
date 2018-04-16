@@ -1,14 +1,13 @@
 // @flow
 
-import React from "react";
-import {onPin, detachPin} from '../../business/Pin'
-import Matches from "../Match/Matches";
-import type Match from "react-router";
+import React from 'react';
+import type Match from 'react-router';
+import { listenForPinData, detachPinListener } from '../../business/Pin';
+import Matches from '../Match/Matches';
+import type { AreaType, SnapshotType, PinInfoType } from '../../Types';
 
 type State = {
-  latitude: ?number,
-  longitude: ?number,
-  radius: ?number
+  area: ?AreaType
 };
 
 type Props = {
@@ -19,48 +18,32 @@ export default class PinDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      latitude: null,
-      longitude: null,
-      radius: null
+      area: null,
     };
   }
 
   componentDidMount() {
-    onPin(this.props.match.params.pinId, snapshot => {
+    listenForPinData(this.props.match.params.pinId, (snapshot: SnapshotType) => {
       this.updateData(snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    detachPin(this.props.match.params.pinId);
+    detachPinListener(this.props.match.params.pinId);
   }
 
-  updateData = (values: any) => {
-    console.log(
-      "new data: " +
-        values.latitude +
-        ", " +
-        values.longitude +
-        ", " +
-        values.radius
-    );
-    let newState = {
-      latitude: values.latitude,
-      longitude: values.longitude,
-      radius: values.radius
+  updateData = (values: PinInfoType) => {
+    const newState = {
+      area: values.area,
     };
     this.setState(newState);
   };
 
   render() {
     let matches = null;
-    if (this.state.latitude && this.state.longitude && this.state.radius) {
+    if (this.state.area) {
       matches = (
-        <Matches
-          latitude={this.state.latitude}
-          longitude={this.state.longitude}
-          radius={this.state.radius}
-        />
+        <Matches area={this.state.area} />
       );
     }
     return (

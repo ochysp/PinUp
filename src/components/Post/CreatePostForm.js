@@ -1,10 +1,10 @@
 // @flow
 
-import React from "react";
-import {doCreatePost} from '../../business/Post'
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
-import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
+import React from 'react';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
+import { doCreatePost } from '../../business/Post';
 
 type State = {
   title: string,
@@ -20,30 +20,32 @@ export default class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
-      longitude: "8.815886",
-      latitude: "47.223946"
+      title: '',
+      longitude: '8.815886',
+      latitude: '47.223946',
     };
   }
 
   handleInputChange = (event: any) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const { target } = event;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const { name } = target;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   };
 
   handleSubmit = (event: any) => {
     doCreatePost({
-      authUser: this.props.authUser,
+      userId: this.props.authUser.uid,
       title: this.state.title,
-      latitude: parseFloat(this.state.latitude),
-      longitude: parseFloat(this.state.longitude)
+      location: {
+        latitude: parseFloat(this.state.latitude),
+        longitude: parseFloat(this.state.longitude),
+      },
     });
-    alert("Post sent to DB");
+    alert('Post sent to DB');
     event.preventDefault();
   };
 
@@ -51,31 +53,31 @@ export default class CreatePostForm extends React.Component<Props, State> {
     return (
       <Card
         style={{
-          width: "-moz-fit-content"
+          width: '-moz-fit-content',
         }}
       >
         <CardTitle title="Create a post for testing" />
         <CardText>
           <TextField
-            name={"title"}
+            name="title"
             onChange={this.handleInputChange}
-            hintText={"Eine Veranstaltung"}
+            hintText="Eine Veranstaltung"
             floatingLabelText="Title"
             value={this.state.title}
           />
           <br />
           <TextField
-            name={"latitude"}
+            name="latitude"
             onChange={this.handleInputChange}
-            hintText={"47.223946"}
+            hintText="47.223946"
             floatingLabelText="Latitude"
             value={this.state.latitude}
           />
           <br />
           <TextField
-            name={"longitude"}
+            name="longitude"
             onChange={this.handleInputChange}
-            hintText={"8.815886"}
+            hintText="8.815886"
             floatingLabelText="Longitude"
             value={this.state.longitude}
           />
