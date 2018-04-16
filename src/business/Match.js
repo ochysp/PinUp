@@ -2,7 +2,7 @@
 
 import * as GeoFire from 'geofire';
 import * as dbRef from '../constants/dbRef';
-import { db } from '../data/firebase/firebase';
+import { db } from '../datalayer/firebase/firebase';
 import type { AreaType, GeoQuerryCallback, ConnectionType } from '../Types';
 
 const listenForPostsIDsInArea = (

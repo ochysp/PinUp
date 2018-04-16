@@ -1,7 +1,7 @@
 // @flow
 
 import * as dbRef from '../constants/dbRef';
-import { db } from '../data/firebase/firebase';
+import { db } from '../datalayer/firebase/firebase';
 import { attachChildListener } from './Helper';
 import type { AuthUserType, KeyChangedCallback, ValueQueryCallback, PinInfoType, KeyType } from '../Types';
 
