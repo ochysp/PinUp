@@ -14,8 +14,6 @@ const convertToLeafletLocation = (location: LocationType): LatLng => (
 
 const convertToLeafletRadius = (radius: number): number => (radius * 1000);
 
-
-
 type State = {
   center: LatLng,
   zoom: number,

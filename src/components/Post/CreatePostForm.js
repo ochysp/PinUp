@@ -2,14 +2,18 @@
 
 import React from 'react';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
 import { doCreatePost } from '../../business/Post';
+import { CATEGORIES } from '../../constants/categories';
 
 type State = {
   title: string,
   longitude: string,
-  latitude: string
+  latitude: string,
+  category: string
 };
 
 type Props = {
@@ -23,7 +27,25 @@ export default class CreatePostForm extends React.Component<Props, State> {
       title: '',
       longitude: '8.815886',
       latitude: '47.223946',
+      category: '',
     };
+  }
+
+  handleMenuItemChange = (
+    event, index, category,
+  ) =>
+    this.setState({ category });
+
+  menuItems(categories) {
+    return categories.map(category => (
+      <MenuItem
+        key={category.value}
+        insetChildren
+        checked={this.state.category === category}
+        value={category.value}
+        primaryText={category.name}
+      />
+    ));
   }
 
   handleInputChange = (event: any) => {
@@ -81,6 +103,14 @@ export default class CreatePostForm extends React.Component<Props, State> {
             floatingLabelText="Longitude"
             value={this.state.longitude}
           />
+          <br />
+          <SelectField
+            hintText="Select category of Post"
+            value={this.state.category}
+            onChange={this.handleMenuItemChange}
+          >
+            {this.menuItems(CATEGORIES)}
+          </SelectField>
           <br />
         </CardText>
         <CardActions>
