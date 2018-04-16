@@ -1,14 +1,14 @@
 // @flow
 
-import React from "react";
-import { doCreatePin } from "../../business/Pin";
-import { CATEGORIES } from "../../constants/categories";
-import TextField from "material-ui/TextField";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
-import FlatButton from "material-ui/FlatButton";
-import Slider from "material-ui/Slider";
-import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
+import React from 'react';
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
+import Slider from 'material-ui/Slider';
+import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
+import { doCreatePin } from '../../business/Pin';
+import { CATEGORIES } from '../../constants/categories';
 
 type State = {
   title: string,
@@ -27,13 +27,15 @@ export default class CreatePinForm extends React.Component<Props, State> {
     this.state = {
       title: '',
       radius: 500,
-      values: []
+      values: [],
     };
   }
 
-  handleMenuItemChange = (event, index, values) => this.setState({ values });
+  handleMenuItemChange = (
+    event, index, values,
+  ) => this.setState({ values });
 
-  selectionRenderer = values => {
+  selectionRenderer = (values) => {
     switch (values.length) {
       case 0:
         return '';
@@ -48,7 +50,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
     return persons.map(person => (
       <MenuItem
         key={person.value}
-        insetChildren={true}
+        insetChildren
         checked={this.state.values.indexOf(person.value) > -1}
         value={person.value}
         primaryText={person.name}
@@ -57,9 +59,9 @@ export default class CreatePinForm extends React.Component<Props, State> {
   }
 
   handleTextFieldInputChange = (event: any) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const { target } = event;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const { name } = target;
 
     this.setState({
       [name]: value,
@@ -96,16 +98,16 @@ export default class CreatePinForm extends React.Component<Props, State> {
         <CardTitle title="Create a pin for testing" />
         <CardText>
           <TextField
-            name={"title"}
+            name="title"
             onChange={this.handleTextFieldInputChange}
-            hintText={"Rapperswil"}
+            hintText="Rapperswil"
             floatingLabelText="Title"
             value={this.state.title}
           />
 
           <br />
           <SelectField
-            multiple={true}
+            multiple
             hintText="Select category filter"
             value={this.state.values}
             onChange={this.handleMenuItemChange}
@@ -125,10 +127,10 @@ export default class CreatePinForm extends React.Component<Props, State> {
               onChange={this.handleSlider}
             />
             <p>
-              <span>{"Current set Radius "}</span>
-              <span>{this.state.radius + "m"}</span>
+              <span>Current set Radius </span>
+              <span>{`${this.state.radius}m`}</span>
               <br />
-              <span>{"(Range from 100 to 2000m)"}</span>
+              <span>(Range from 100 to 2000m)</span>
             </p>
           </div>
         </CardText>

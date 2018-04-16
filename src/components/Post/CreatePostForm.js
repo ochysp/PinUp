@@ -1,13 +1,13 @@
 // @flow
 
-import React from "react";
-import { doCreatePost } from "../../business/Post";
-import { CATEGORIES } from "../../constants/categories";
-import TextField from "material-ui/TextField";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
-import FlatButton from "material-ui/FlatButton";
-import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
+import React from 'react';
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
+import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
+import { doCreatePost } from '../../business/Post';
+import { CATEGORIES } from '../../constants/categories';
 
 type State = {
   title: string,
@@ -24,21 +24,23 @@ export default class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
-      longitude: "8.815886",
-      latitude: "47.223946",
-      category: ""
+      title: '',
+      longitude: '8.815886',
+      latitude: '47.223946',
+      category: '',
     };
   }
 
-  handleMenuItemChange = (event, index, category) =>
+  handleMenuItemChange = (
+    event, index, category,
+  ) =>
     this.setState({ category });
 
   menuItems(categories) {
     return categories.map(category => (
       <MenuItem
         key={category.value}
-        insetChildren={true}
+        insetChildren
         checked={this.state.category === category}
         value={category.value}
         primaryText={category.name}
