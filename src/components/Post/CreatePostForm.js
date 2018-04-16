@@ -13,7 +13,7 @@ type State = {
   title: string,
   longitude: string,
   latitude: string,
-  values: []
+  category: string
 };
 
 type Props = {
@@ -27,34 +27,24 @@ export default class CreatePostForm extends React.Component<Props, State> {
       title: "",
       longitude: "8.815886",
       latitude: "47.223946",
-      values: []
+      category: ""
     };
   }
 
-  handleMenuItemChange = (event, index, values) => this.setState({ values });
+  handleMenuItemChange = (event, index, category) =>
+    this.setState({ category });
 
-  menuItems(persons) {
-    return persons.map(person => (
+  menuItems(categories) {
+    return categories.map(category => (
       <MenuItem
-        key={person.value}
+        key={category.value}
         insetChildren={true}
-        checked={this.state.values.indexOf(person.value) > -1}
-        value={person.value}
-        primaryText={person.name}
+        checked={this.state.category === category}
+        value={category.value}
+        primaryText={category.name}
       />
     ));
   }
-
-  selectionRenderer = values => {
-    switch (values.length) {
-      case 0:
-        return "";
-      case 1:
-        return CATEGORIES[values[0]].name;
-      default:
-        return `Post belongs to ${values.length} categories`;
-    }
-  };
 
   handleInputChange = (event: any) => {
     const { target } = event;
@@ -113,9 +103,8 @@ export default class CreatePostForm extends React.Component<Props, State> {
           />
           <br />
           <SelectField
-            multiple={true}
             hintText="Select category of Post"
-            value={this.state.values}
+            value={this.state.category}
             onChange={this.handleMenuItemChange}
           >
             {this.menuItems(CATEGORIES)}
