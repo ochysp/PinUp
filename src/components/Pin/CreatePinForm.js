@@ -26,7 +26,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
-      radius: 500,
+      radius: 0.5,
       values: [],
     };
   }
@@ -120,9 +120,9 @@ export default class CreatePinForm extends React.Component<Props, State> {
           <div>
             <p>Set Search-Radius</p>
             <Slider
-              min={100}
-              max={2000}
-              step={100}
+              min={0.1}
+              max={20}
+              step={0.1}
               value={this.state.radius}
               onChange={this.handleSlider}
             />
@@ -130,7 +130,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
               <span>Current set Radius </span>
               <span>{`${this.state.radius}m`}</span>
               <br />
-              <span>(Range from 100 to 2000m)</span>
+              <span>(Range from 100 to 20000m)</span>
             </p>
           </div>
         </CardText>
