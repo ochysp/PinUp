@@ -27,3 +27,27 @@ const createPostLocation = (key, latitude, longitude) => {
   let geoFire = new GeoFire(geoKey);
   geoFire.set(key, [latitude, longitude]);
 };
+
+export const onAllPosts = (uid ,f) => {
+  let allPosts = db.ref(dbRef.POST_LOCATIONS);
+  allPosts
+    .on("value", f);
+};
+
+export const detachAllPosts = () => {
+  db.ref(dbRef.POSTS).off();
+};
+
+export const doDeletePost = (authUser, postKey) => {
+  db
+    .ref(dbRef.POSTS)
+    .child(postKey)
+    .remove();
+  db
+    .ref(dbRef.USER_POSTS + authUser.uid)
+    .child(postKey)
+    .remove();
+  db
+    .ref(dbRef.POST_LOCATIONS + postKey)
+    .remove();
+};

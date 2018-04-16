@@ -3,6 +3,7 @@
 import React from "react";
 import { Map, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import {detachAllPins, onAllPins, doDeletePin} from '../business/Pin'
+import {detachAllPosts, onAllPosts, doDeletePost} from '../business/Post'
 import CreatePinForm from "./Pin/CreatePinForm";
 import CreatePostForm from "./Post/CreatePostForm";
 import * as leafletValues from "../constants/leafletValues";
@@ -68,6 +69,9 @@ export default class Home extends React.Component<Props, State> {
   handleDeletePin(pin) {
     doDeletePin(this.props.authUser, pin.key);
   }
+  handleDeletePost(post) {
+    doDeletePost(this.props.authUser, post.key);
+  }
 
   render() {
     const { marker, center, zoom, markerIsSet, isPin, isPost } = this.state;
@@ -122,7 +126,13 @@ export default class Home extends React.Component<Props, State> {
           {this.state.posts.map((post, index) => (
             <Marker key={post.key} position={post.position} ref="post">
               <Popup>
-                <span>My Post #{index}</span>
+                <span>
+                  My Post #{index}
+                  <br />
+                  <a ref="" onClick={this.handleDeletePost.bind(this, post)}>
+                    Delete Post
+                  </a>
+                </span>
               </Popup>
             </Marker>
           ))}
@@ -150,9 +160,26 @@ export default class Home extends React.Component<Props, State> {
         });
       }
     });
+
+    onAllPosts(this.props.authUser.uid, snapshot => {
+      if (snapshot.val() === null) {
+        this.setState({ posts: [] });
+      } else {
+        this.setState({
+          posts: Object.entries(snapshot.val()).map(
+            ([key, value]: [string, any]) => ({
+              key,
+              ...value,
+              position: { lat: value.l[0], lng: value.l[1] } //.l is an array with GeoFire-Locations
+            })
+          )
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     detachAllPins();
+    detachAllPosts();
   }
 }

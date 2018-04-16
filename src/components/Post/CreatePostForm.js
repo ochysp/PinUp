@@ -8,12 +8,11 @@ import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
 
 type State = {
   title: string,
-  longitude: string,
-  latitude: string
 };
 
 type Props = {
-  authUser: { uid: string }
+  authUser: { uid: string },
+  position: { lat: number, lng: number }
 };
 
 export default class CreatePostForm extends React.Component<Props, State> {
@@ -21,8 +20,6 @@ export default class CreatePostForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: "",
-      longitude: "8.815886",
-      latitude: "47.223946"
     };
   }
 
@@ -37,14 +34,14 @@ export default class CreatePostForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
+    event.preventDefault();
     doCreatePost({
       authUser: this.props.authUser,
       title: this.state.title,
-      latitude: parseFloat(this.state.latitude),
-      longitude: parseFloat(this.state.longitude)
+      latitude: parseFloat(this.props.position.lat),
+      longitude: parseFloat(this.props.position.lng)
     });
     alert("Post sent to DB");
-    event.preventDefault();
   };
 
   render() {
@@ -62,22 +59,6 @@ export default class CreatePostForm extends React.Component<Props, State> {
             hintText={"Eine Veranstaltung"}
             floatingLabelText="Title"
             value={this.state.title}
-          />
-          <br />
-          <TextField
-            name={"latitude"}
-            onChange={this.handleInputChange}
-            hintText={"47.223946"}
-            floatingLabelText="Latitude"
-            value={this.state.latitude}
-          />
-          <br />
-          <TextField
-            name={"longitude"}
-            onChange={this.handleInputChange}
-            hintText={"8.815886"}
-            floatingLabelText="Longitude"
-            value={this.state.longitude}
           />
           <br />
         </CardText>

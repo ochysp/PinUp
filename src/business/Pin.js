@@ -11,7 +11,6 @@ export const onPin = (pinId, f) => db.ref(dbRef.PINS + pinId).on("value", f);
 export const detachPin = pinId => db.ref(dbRef.PINS + pinId).off();
 
 export const doCreatePin = pinInfo => {
-  console.log("create")
   let newPinId = db.ref(dbRef.PINS).push({
     uid: pinInfo.authUser.uid,
     title: pinInfo.title,
@@ -19,7 +18,8 @@ export const doCreatePin = pinInfo => {
     longitude: pinInfo.longitude,
     radius: pinInfo.radius
   }).key;
-  db.ref(dbRef.USER_PINS + pinInfo.authUser.uid + "/" + newPinId).set({ _: 0 });
+  db.ref(dbRef.USER_PINS + pinInfo.authUser.uid + "/" + newPinId)
+    .set({ _: 0 });
 };
 
 export const onAllPins = (userId, f) => {

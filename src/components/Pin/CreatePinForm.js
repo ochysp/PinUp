@@ -36,6 +36,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
+    event.preventDefault();
     doCreatePin({
       authUser: this.props.authUser,
       title: this.state.title,
@@ -44,7 +45,6 @@ export default class CreatePinForm extends React.Component<Props, State> {
       radius: parseFloat(this.state.radius)
     });
     alert("Pin sent to DB");
-    event.preventDefault();
   };
 
   render() {
