@@ -64,6 +64,23 @@ export default class Home extends React.Component<Props, State> {
         });
       }
     });
+
+    onAllPosts(this.props.authUser.uid, snapshot => {
+      if (snapshot.val() === null) {
+        this.setState({ posts: [] });
+      } else {
+        this.setState({
+          posts: Object.entries(snapshot.val()).map(
+            ([key, value]: [string, any]) => ({
+              key,
+              ...value,
+              position: { lat: value.l[0], lng: value.l[1] } //.l is an array with GeoFire-Locations
+            })
+          )
+        });
+      }
+    });
+
   }
 
   componentWillUnmount() {
@@ -88,7 +105,11 @@ export default class Home extends React.Component<Props, State> {
 
   handleDeletePin = (pin: any) => {
     doDeletePin(this.props.authUser, pin.key);
-  };
+  }
+
+  handleDeletePost(post) {
+    doDeletePost(this.props.authUser, post.key);
+  }
 
   render() {
     const {
@@ -146,6 +167,20 @@ export default class Home extends React.Component<Props, State> {
             </Marker>
           ))}
 
+          {this.state.posts.map((post, index) => (
+            <Marker key={post.key} position={post.position} ref="post">
+              <Popup>
+                <span>
+                  My Post #{index}
+                  <br />
+                  <a ref="" onClick={this.handleDeletePost.bind(this, post)}>
+                    Delete Post
+                  </a>
+                </span>
+              </Popup>
+            </Marker>
+          ))}
+
           {currentMarker}
         </Map>
         {pinForm}
@@ -153,5 +188,9 @@ export default class Home extends React.Component<Props, State> {
       </div>
     );
   }
-}
 
+  componentWillUnmount() {
+    detachAllPins();
+    detachAllPosts();
+  }
+}
