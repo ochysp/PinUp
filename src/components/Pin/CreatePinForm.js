@@ -1,10 +1,10 @@
 // @flow
 
-import React from "react";
-import { doCreatePin } from "../../business/Pin";
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
-import { Card, CardActions, CardTitle, CardText } from "material-ui/Card";
+import React from 'react';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
+import { doCreatePin } from '../../business/Pin';
 
 type State = {
   title: string,
@@ -20,30 +20,34 @@ export default class CreatePinForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
-      radius: ""
+      title: '',
+      radius: '',
     };
   }
 
   handleInputChange = (event: any) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const { target } = event;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const { name } = target;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   };
 
   handleSubmit = (event: any) => {
     doCreatePin({
-      authUser: this.props.authUser,
+      userId: this.props.authUser.uid,
       title: this.state.title,
-      latitude: parseFloat(this.props.position.lat),
-      longitude: parseFloat(this.props.position.lng),
-      radius: parseFloat(this.state.radius)
+      area: {
+        location: {
+          latitude: parseFloat(this.props.position.lat),
+          longitude: parseFloat(this.props.position.lng),
+        },
+        radius: parseFloat(this.state.radius),
+      },
     });
-    alert("Pin sent to DB");
+    alert('Pin sent to DB');
     event.preventDefault();
   };
 
@@ -51,24 +55,24 @@ export default class CreatePinForm extends React.Component<Props, State> {
     return (
       <Card
         style={{
-          width: "-moz-fit-content"
+          width: '-moz-fit-content',
         }}
       >
         <CardTitle title="Create a pin for testing" />
         <CardText>
           <TextField
-            name={"title"}
+            name="title"
             onChange={this.handleInputChange}
-            hintText={"Rapperswil"}
+            hintText="Rapperswil"
             floatingLabelText="Title"
             value={this.state.title}
           />
           <br />
           <TextField
-            name={"radius"}
+            name="radius"
             onChange={this.handleInputChange}
-            hintText={"1"}
-            floatingLabelText="Radius in m"
+            hintText="1"
+            floatingLabelText="Radius in km"
             value={this.state.radius}
           />
           <br />

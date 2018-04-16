@@ -1,36 +1,38 @@
 // @flow
 
-import React from "react";
-import {onPost, detachPost} from '../../business/Post'
+import React from 'react';
+import { listenForPostData, detachPostListener } from '../../business/Post';
+import type { PostInfoWithoutLocationType, SnapshotType, KeyType } from '../../Types';
 
 type Props = {
-  postId: number
+  postId: KeyType
 };
 
 type State = {
   title: string
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export class PostNode extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: ""
+      title: '',
     };
   }
 
   componentDidMount() {
-    onPost(this.props.postId, snapshot => {
+    listenForPostData(this.props.postId, (snapshot: SnapshotType) => {
       this.updateData(snapshot.val());
     });
   }
 
   componentWillUnmount() {
-    detachPost(this.props.postId);
+    detachPostListener(this.props.postId);
   }
 
-  updateData = (values: any) => {
-    let newState = { title: values.title };
+  updateData = (values: PostInfoWithoutLocationType) => {
+    const newState = { title: values.title };
     this.setState(newState);
   };
 

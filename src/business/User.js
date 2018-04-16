@@ -1,9 +1,15 @@
-import * as dbRef from '../constants/dbRef'
-import { db } from '../data/firebase/firebase'
+/* eslint-disable import/prefer-default-export */
+// @flow
 
-export const doCreateUser = (userId, name, email, imageUrl) =>
+import * as dbRef from '../constants/dbRef';
+import { db } from '../data/firebase/firebase';
+import type { KeyType } from '../Types';
+
+export const doCreateUser = (
+  userId: KeyType, name: string, email: string, imageUrl: ?string,
+) =>
   db.ref(dbRef.USER_INFO + userId).set({
     username: name,
-    email: email,
-    profile_picture: imageUrl
+    email,
+    profile_picture: imageUrl,
   });

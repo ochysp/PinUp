@@ -1,29 +1,32 @@
-import * as dbRef from '../constants/dbRef'
-import {db} from '../data/firebase/firebase'
-import * as GeoFire from 'geofire'
+// @flow
 
-export const onNearbyPosts = (
-  latitude,
-  longitude,
-  radius,
-  keyEntered,
-  keyLeft
-) => {
-  let geoKey = db.ref(dbRef.POST_LOCATIONS);
-  let geoFire = new GeoFire(geoKey);
+import * as GeoFire from 'geofire';
+import * as dbRef from '../constants/dbRef';
+import { db } from '../data/firebase/firebase';
+import type { AreaType, GeoQuerryCallback, ConnectionType } from '../Types';
 
-  let geoQuery = geoFire.query({
-    center: [latitude, longitude],
-    radius: radius
+const listenForPostsIDsInArea = (
+  area: AreaType,
+  keyEntered: GeoQuerryCallback,
+  keyLeft: GeoQuerryCallback,
+): ConnectionType => {
+  const geoKey = db.ref(dbRef.POST_LOCATIONS);
+  const geoFire = new GeoFire(geoKey);
+
+  const geoQuery = geoFire.query({
+    center: [area.location.latitude, area.location.longitude],
+    radius: area.radius,
   });
 
-  let keyEnteredQuery = geoQuery.on("key_entered", keyEntered);
-  let keyExitedQuery = geoQuery.on("key_exited", keyLeft);
+  const keyEnteredQuery = geoQuery.on('key_entered', keyEntered);
+  const keyExitedQuery = geoQuery.on('key_exited', keyLeft);
 
   return {
     detach: () => {
       keyEnteredQuery.cancel();
       keyExitedQuery.cancel();
-    }
+    },
   };
 };
+
+export default listenForPostsIDsInArea;
