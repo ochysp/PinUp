@@ -12,7 +12,7 @@ export const doSignUpForEvent = (
     .ref(`${dbRef.POSTS + postIdOfEvent}`)
     .child('event')
     .child('participants')
-    .update({ [authUser.uid]: true })
+    .update({ [authUser.uid]: Date.now() })
     .then(callbackOnSuccess, callbackOnError);
 };
 

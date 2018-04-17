@@ -38,7 +38,7 @@ export type PinInfoType = {
 
 export type EventType = {
   date: Date,
-  participants: { [KeyType]: boolean }
+  participants: { [KeyType]: Date }
 };
 
 export type PostInfoWithLocationType = {
