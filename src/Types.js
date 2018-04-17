@@ -38,7 +38,7 @@ export type PinInfoType = {
 
 export type EventType = {
   date: Date,
-  participants: Array<KeyType>
+  participants: { [KeyType]: boolean }
 };
 
 export type PostInfoWithLocationType = {
@@ -53,7 +53,7 @@ export type PostInfoWithoutLocationType = {
   postId?: KeyType,
   userId: KeyType,
   title: string,
-  event?: Array<KeyType>
+  event?: EventType
 };
 
 export type DetachFunction = () => void;
