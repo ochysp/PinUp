@@ -13,11 +13,13 @@ type State = {
   title: string,
   longitude: string,
   latitude: string,
-  category: string
+  category: string,
+  invalidSubmit: boolean
 };
 
 type Props = {
-  authUser: { uid: string }
+  authUser: { uid: string },
+  position: { lat: number, lng: number }
 };
 
 export default class CreatePostForm extends React.Component<Props, State> {
@@ -25,9 +27,8 @@ export default class CreatePostForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
-      longitude: '8.815886',
-      latitude: '47.223946',
       category: '',
+      invalidSubmit: false,
     };
   }
 
@@ -59,16 +60,21 @@ export default class CreatePostForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    doCreatePost({
-      userId: this.props.authUser.uid,
-      title: this.state.title,
-      location: {
-        latitude: parseFloat(this.state.latitude),
-        longitude: parseFloat(this.state.longitude),
-      },
-    });
-    alert('Post sent to DB');
-    event.preventDefault();
+    if (this.state.title !== '' && this.state.category !== '') {
+      this.setState({ invalidSubmit: false });
+      event.preventDefault();
+      doCreatePost({
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        location: {
+          latitude: parseFloat(this.props.position.lat),
+          longitude: parseFloat(this.props.position.lng),
+        },
+      });
+      alert('Post sent to DB');
+    } else {
+      this.setState({ invalidSubmit: true });
+    }
   };
 
   render() {
@@ -85,29 +91,15 @@ export default class CreatePostForm extends React.Component<Props, State> {
             onChange={this.handleInputChange}
             hintText="Eine Veranstaltung"
             floatingLabelText="Title"
+            errorText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
             value={this.state.title}
-          />
-          <br />
-          <TextField
-            name="latitude"
-            onChange={this.handleInputChange}
-            hintText="47.223946"
-            floatingLabelText="Latitude"
-            value={this.state.latitude}
-          />
-          <br />
-          <TextField
-            name="longitude"
-            onChange={this.handleInputChange}
-            hintText="8.815886"
-            floatingLabelText="Longitude"
-            value={this.state.longitude}
           />
           <br />
           <SelectField
             hintText="Select category of Post"
             value={this.state.category}
             onChange={this.handleMenuItemChange}
+            errorText={this.state.invalidSubmit && this.state.category === '' ? 'Requires a category' : ''}
           >
             {this.menuItems(CATEGORIES)}
           </SelectField>

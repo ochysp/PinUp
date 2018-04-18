@@ -37,3 +37,27 @@ export const doCreatePost = (postInfo: PostInfoWithLocationType) => {
   createPostLocation(newPostId, postInfo.location);
 };
 
+export const doDeletePost = (authUser, postKey) => {
+  db
+    .ref(dbRef.POSTS)
+    .child(postKey)
+    .remove();
+  db
+    .ref(dbRef.USER_POSTS + authUser.uid)
+    .child(postKey)
+    .remove();
+  db
+    .ref(dbRef.POST_LOCATIONS + postKey)
+    .remove();
+};
+
+export const listenForAllPosts = (uid, f) => {
+  const allPosts = db.ref(dbRef.POST_LOCATIONS);
+  allPosts
+    .on('value', f);
+};
+
+export const detachAllPostListeners = () => {
+  db.ref(dbRef.POSTS).off();
+};
+
