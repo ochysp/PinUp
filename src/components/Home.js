@@ -1,16 +1,23 @@
 // @flow
+/* eslint-disable react/jsx-no-bind,react/sort-comp */
 
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import { detachAllPinListeners, listenForAllPinsOfUser, doDeletePin } from '../business/Pin';
+import { detachAllPostListeners, listenForAllPosts, doDeletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinInfoType, SnapshotType } from '../Types';
+import type { AuthUserType, LocationType, PinInfoType, PostInfoWithLocationType, SnapshotType } from '../Types';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
-  { lat: location.latitude, lng: location.longitude });
+  { lat: location.latitude, lng: location.longitude }
+);
+
+const convertFromGeofireToLeafletLocation = (location: Array): LatLng => (
+  { lat: location[0], lng: location[1] }
+);
 
 const convertToLeafletRadius = (radius: number): number => (radius * 1000);
 
@@ -24,6 +31,7 @@ type State = {
   isPost: boolean,
 
   pins: Array<PinInfoType>,
+  posts: Array<PostInfoWithLocationType>,
 };
 
 type Props = {
@@ -46,13 +54,14 @@ export default class Home extends React.Component<Props, State> {
       isPost: false,
 
       pins: [],
+      posts: [],
     };
   }
 
   componentDidMount() {
     listenForAllPinsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      console.log('listenForAllPinsOfUser Callbacked');
       console.log(snapshot.val());
+
       if (snapshot.val() === null) {
         this.setState({ pins: [] });
       } else {
@@ -64,10 +73,20 @@ export default class Home extends React.Component<Props, State> {
         });
       }
     });
-  }
 
-  componentWillUnmount() {
-    detachAllPinListeners();
+    listenForAllPosts(this.props.authUser.uid, (snapshot: SnapshotType) => {
+      console.log(snapshot.val());
+      if (snapshot.val() === null) {
+        this.setState({ posts: [] });
+      } else {
+        this.setState({
+          posts: Object.entries(snapshot.val()).map(([key, value]: [string, Array]) => ({
+            postId: key,
+            ...value,
+          })),
+        });
+      }
+    });
   }
 
   setMarker = (e: any) => {
@@ -86,9 +105,13 @@ export default class Home extends React.Component<Props, State> {
     this.setState({ isPost: true, isPin: false });
   };
 
-  handleDeletePin = (pin: any) => {
-    doDeletePin(this.props.authUser, pin.key);
+  handleDeletePin = (pin: PinInfoType) => {
+    doDeletePin(this.props.authUser, pin.pinId);
   };
+
+  handleDeletePost(post: PostInfoWithLocationType) {
+    doDeletePost(this.props.authUser, post.postId);
+  }
 
   render() {
     const {
@@ -103,17 +126,17 @@ export default class Home extends React.Component<Props, State> {
     ) : null;
 
     const currentMarker = markerIsSet ? (
-      <Marker position={marker} ref="marker">
+      <Marker position={marker}>
         <Popup>
           <span>
             Create a<br />
-            <a ref="" onClick={this.handleSetPin}>
+            <button onClick={this.handleSetPin}>
               Pin
-            </a>
+            </button>
             <br />
-            <a ref="" onClick={this.handleSetPost}>
+            <button onClick={this.handleSetPost}>
               Post
-            </a>
+            </button>
           </span>
         </Popup>
       </Marker>
@@ -128,24 +151,36 @@ export default class Home extends React.Component<Props, State> {
           />
 
           {this.state.pins.map((pin: PinInfoType, index) => (
-            <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)} ref="pin">
+            <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)}>
               <Popup>
                 <span>
                   My Pin #{index}
                   <br />
-                  <a ref="" onClick={this.handleDeletePin.bind(this, pin)}>
+                  <button onClick={this.handleDeletePin.bind(this, pin)}>
                     Delete Pin
-                  </a>
+                  </button>
                 </span>
               </Popup>
               <Circle
                 center={convertToLeafletLocation(pin.area.location)}
                 radius={convertToLeafletRadius(pin.area.radius)}
-                ref="circle"
               />
             </Marker>
           ))}
 
+          {this.state.posts.map((post: PostInfoWithLocationType, index) => (
+            <Marker key={post.postId} position={convertFromGeofireToLeafletLocation(post.l)}>
+              <Popup>
+                <span>
+                  My Post #{index}
+                  <br />
+                  <button onClick={this.handleDeletePost.bind(this, post)}>
+                    Delete Post
+                  </button>
+                </span>
+              </Popup>
+            </Marker>
+          ))}
           {currentMarker}
         </Map>
         {pinForm}
@@ -153,5 +188,9 @@ export default class Home extends React.Component<Props, State> {
       </div>
     );
   }
-}
 
+  componentWillUnmount() {
+    detachAllPinListeners();
+    detachAllPostListeners();
+  }
+}
