@@ -85,7 +85,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
         radius: parseFloat(this.state.radius),
       },
     });
-    alert("Pin sent to DB");
+    alert('Pin sent to DB');
   };
 
   render() {
@@ -121,16 +121,16 @@ export default class CreatePinForm extends React.Component<Props, State> {
             <p>Set Search-Radius</p>
             <Slider
               min={0.1}
-              max={20}
+              max={2}
               step={0.1}
               value={this.state.radius}
               onChange={this.handleSlider}
             />
             <p>
               <span>Current set Radius </span>
-              <span>{`${this.state.radius}m`}</span>
+              <span>{`${this.state.radius}km`}</span>
               <br />
-              <span>(Range from 100 to 20000m)</span>
+              <span>(Range from 0.1 to 2km)</span>
             </p>
           </div>
         </CardText>

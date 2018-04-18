@@ -25,7 +25,7 @@ export default class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
+      title: '',
     };
   }
 
@@ -66,7 +66,7 @@ export default class CreatePostForm extends React.Component<Props, State> {
         longitude: parseFloat(this.props.position.lng),
       },
     });
-    alert("Post sent to DB");
+    alert('Post sent to DB');
   };
 
   render() {
