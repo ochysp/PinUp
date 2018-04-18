@@ -32,13 +32,18 @@ export type AreaType = {
 export type PinInfoType = {
   pinId?: KeyType,
   userId?: KeyType,
-  title?: string,
+  title: string,
   area: AreaType
 };
 
 export type EventType = {
   date: Date,
   participants: { [KeyType]: Date }
+};
+
+export type CategoryType = {
+  value: number,
+  name: string
 };
 
 export type PostInfoWithLocationType = {
