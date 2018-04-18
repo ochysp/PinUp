@@ -2,121 +2,129 @@
 
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
-import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card';
+import { MenuItem } from 'material-ui/Menu';
+import Button from 'material-ui/Button';
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import { withStyles } from 'material-ui/styles';
 import { doCreatePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
+import { CategoryType } from '../../Types';
+import type { AuthUserType, LocationType } from '../../Types';
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
+  menu: {
+    width: 200,
+  },
+});
 
 type State = {
   title: string,
   longitude: string,
   latitude: string,
-  category: string
+  category: CategoryType
 };
 
 type Props = {
-  authUser: { uid: string }
+  classes: any,
+  authUser: AuthUserType,
+  position: LocationType
 };
 
-export default class CreatePostForm extends React.Component<Props, State> {
+class CreatePostForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       title: '',
-      longitude: '8.815886',
-      latitude: '47.223946',
-      category: '',
+      category: null,
     };
   }
-
-  handleMenuItemChange = (
-    event, index, category,
-  ) =>
-    this.setState({ category });
-
-  menuItems(categories) {
-    return categories.map(category => (
-      <MenuItem
-        key={category.value}
-        insetChildren
-        checked={this.state.category === category}
-        value={category.value}
-        primaryText={category.name}
-      />
-    ));
-  }
-
-  handleInputChange = (event: any) => {
-    const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const { name } = target;
-
-    this.setState({
-      [name]: value,
-    });
-  };
 
   handleSubmit = (event: any) => {
     doCreatePost({
       userId: this.props.authUser.uid,
       title: this.state.title,
       location: {
-        latitude: parseFloat(this.state.latitude),
-        longitude: parseFloat(this.state.longitude),
+        latitude: parseFloat(this.props.position.lat),
+        longitude: parseFloat(this.props.position.lng),
       },
+      radius: parseFloat(this.state.radius),
     });
     alert('Post sent to DB');
     event.preventDefault();
   };
 
+  handleChange = name => (event) => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
   render() {
+    const { classes } = this.props;
+
     return (
       <Card
         style={{
           width: '-moz-fit-content',
         }}
       >
-        <CardTitle title="Create a post for testing" />
-        <CardText>
+        <CardMedia
+          className={classes.media}
+          title="Edit Post"
+        />
+        <CardContent>
           <TextField
-            name="title"
-            onChange={this.handleInputChange}
+            label="Title"
+            id="title"
+            onChange={this.handleChange('title')}
             hintText="Eine Veranstaltung"
             floatingLabelText="Title"
             value={this.state.title}
+            className={classes.textField}
           />
           <br />
+
           <TextField
-            name="latitude"
-            onChange={this.handleInputChange}
-            hintText="47.223946"
-            floatingLabelText="Latitude"
-            value={this.state.latitude}
-          />
-          <br />
-          <TextField
-            name="longitude"
-            onChange={this.handleInputChange}
-            hintText="8.815886"
-            floatingLabelText="Longitude"
-            value={this.state.longitude}
-          />
-          <br />
-          <SelectField
-            hintText="Select category of Post"
-            value={this.state.category}
-            onChange={this.handleMenuItemChange}
+            id="select-category"
+            select
+            label="Category"
+            className={classes.textField}
+            onChange={this.handleChange('category')}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            margin="normal"
           >
-            {this.menuItems(CATEGORIES)}
-          </SelectField>
+            {CATEGORIES.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
           <br />
-        </CardText>
+        </CardContent>
+
         <CardActions>
-          <FlatButton onClick={this.handleSubmit} label="Create" />
+          <Button
+            className={classes.button}
+            onClick={this.handleSubmit}
+          >Save
+          </Button>
         </CardActions>
       </Card>
     );
   }
 }
+
+export default withStyles(styles)(CreatePostForm);

@@ -3,6 +3,8 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
+import Drawer from 'material-ui/Drawer';
+import Button from 'material-ui/Button';
 import { detachAllPinListeners, listenForAllPinsOfUser, doDeletePin } from '../business/Pin';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -24,6 +26,8 @@ type State = {
   isPost: boolean,
 
   pins: Array<PinInfoType>,
+
+  drawer: boolean,
 };
 
 type Props = {
@@ -46,6 +50,8 @@ export default class Home extends React.Component<Props, State> {
       isPost: false,
 
       pins: [],
+
+      drawer: false,
     };
   }
 
@@ -86,8 +92,13 @@ export default class Home extends React.Component<Props, State> {
     this.setState({ isPost: true, isPin: false });
   };
 
-  handleDeletePin = (pin: any) => {
-    doDeletePin(this.props.authUser, pin.key);
+  handleDeletePin = (pin: PinInfoType) => {
+    if (pin.pinId) {
+      doDeletePin(this.props.authUser, pin.pinId);
+    } else {
+      // eslint-disable-next-line no-throw-literal
+      throw 'pin can not be deleted because no pinId was provided';
+    }
   };
 
   render() {
@@ -104,23 +115,33 @@ export default class Home extends React.Component<Props, State> {
 
     const currentMarker = markerIsSet ? (
       <Marker position={marker} ref="marker">
+
         <Popup>
-          <span>
-            Create a<br />
-            <a ref="" onClick={this.handleSetPin}>
-              Pin
-            </a>
-            <br />
-            <a ref="" onClick={this.handleSetPost}>
-              Post
-            </a>
-          </span>
+          <PopupAdapter
+            onOpen={() => this.setState({ drawer: true })}
+            onClose={() => this.setState({ drawer: false })}
+          />
         </Popup>
+
       </Marker>
     ) : null;
 
     return (
       <div>
+        <Drawer
+          anchor="bottom"
+          open={this.state.drawer}
+          onClose={() => this.setState({ drawer: false })}
+        >
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={() => this.setState({ drawer: false })}
+            onKeyDown={() => this.setState({ drawer: false })}
+          >
+            <Button onClick={this.handleSetPin}>Create Pin</Button>
+          </div>
+        </Drawer>
         <Map center={center} zoom={zoom} onClick={this.setMarker}>
           <TileLayer
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -133,9 +154,9 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   My Pin #{index}
                   <br />
-                  <a ref="" onClick={this.handleDeletePin.bind(this, pin)}>
+                  <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
-                  </a>
+                  </Button>
                 </span>
               </Popup>
               <Circle
@@ -147,6 +168,7 @@ export default class Home extends React.Component<Props, State> {
           ))}
 
           {currentMarker}
+
         </Map>
         {pinForm}
         {postForm}
@@ -155,3 +177,17 @@ export default class Home extends React.Component<Props, State> {
   }
 }
 
+// eslint-disable-next-line react/no-multi-comp
+class PopupAdapter extends React.Component<{onOpen: () => void, onClose: () => void}> {
+  componentDidMount() {
+    this.props.onOpen();
+  }
+
+  componentWillUnmount() {
+    this.props.onClose();
+  }
+
+  render() {
+    return (null);
+  }
+}

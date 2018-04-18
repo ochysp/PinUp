@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
@@ -41,12 +40,10 @@ export default class App extends React.Component<{}, State> {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <div>
-          <Header authUser={this.state.authUser} />
-          <Main authUser={this.state.authUser} />
-        </div>
-      </MuiThemeProvider>
+      <div>
+        <Header authUser={this.state.authUser} />
+        <Main authUser={this.state.authUser} />
+      </div>
     );
   }
 }
