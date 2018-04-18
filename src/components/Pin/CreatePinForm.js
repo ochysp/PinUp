@@ -13,6 +13,7 @@ import { CATEGORIES } from '../../constants/categories';
 type State = {
   title: string,
   radius: number,
+  invalidSubmit: boolean,
   values: []
 };
 
@@ -27,6 +28,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
     this.state = {
       title: '',
       radius: 0.5,
+      invalidSubmit: false,
       values: [],
     };
   }
@@ -73,19 +75,23 @@ export default class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    event.preventDefault();
-    doCreatePin({
-      userId: this.props.authUser.uid,
-      title: this.state.title,
-      area: {
-        location: {
-          latitude: parseFloat(this.props.position.lat),
-          longitude: parseFloat(this.props.position.lng),
+    if (this.state.values.length > 0) {
+      event.preventDefault();
+      doCreatePin({
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        area: {
+          location: {
+            latitude: parseFloat(this.props.position.lat),
+            longitude: parseFloat(this.props.position.lng),
+          },
+          radius: parseFloat(this.state.radius),
         },
-        radius: parseFloat(this.state.radius),
-      },
-    });
-    alert('Pin sent to DB');
+      });
+      alert('Pin sent to DB');
+    } else {
+      this.setState({ invalidSubmit: true });
+    }
   };
 
   render() {
@@ -109,6 +115,7 @@ export default class CreatePinForm extends React.Component<Props, State> {
           <SelectField
             multiple
             hintText="Select category filter"
+            errorText={this.state.invalidSubmit && this.state.values.length === 0 ? 'Requires one or more' : ''}
             value={this.state.values}
             onChange={this.handleMenuItemChange}
             selectionRenderer={this.selectionRenderer}
