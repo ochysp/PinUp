@@ -100,6 +100,7 @@ export default class Home extends React.Component<Props, State> {
     this.setState({
       markerIsSet: true,
       marker: position,
+      drawer: true,
     });
   };
 
@@ -137,16 +138,7 @@ export default class Home extends React.Component<Props, State> {
     ) : null;
 
     const currentMarker = markerIsSet ? (
-      <Marker position={marker} ref="marker">
-
-        <Popup>
-          <PopupAdapter
-            onOpen={() => this.setState({ drawer: true })}
-            onClose={() => this.setState({ drawer: false })}
-          />
-        </Popup>
-
-      </Marker>
+      <Marker position={marker} ref="marker" />
     ) : null;
 
     return (
@@ -214,20 +206,5 @@ export default class Home extends React.Component<Props, State> {
   componentWillUnmount() {
     detachAllPinListeners();
     detachAllPostListeners();
-  }
-}
-
-// eslint-disable-next-line react/no-multi-comp
-class PopupAdapter extends React.Component<{onOpen: () => void, onClose: () => void}> {
-  componentDidMount() {
-    this.props.onOpen();
-  }
-
-  componentWillUnmount() {
-    this.props.onClose();
-  }
-
-  render() {
-    return (null);
   }
 }
