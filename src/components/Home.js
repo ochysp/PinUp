@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/jsx-no-bind,react/sort-comp */
 
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
