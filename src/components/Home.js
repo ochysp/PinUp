@@ -17,6 +17,14 @@ const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
 );
 
+const convertToLocationType = (location: LatLng): LocationType => {
+  if (location.lat && location.lng && typeof location.lat === 'number' && typeof location.lng === 'number') {
+    return { latitude: location.lat, longitude: location.lng };
+  }
+  // eslint-disable-next-line no-throw-literal
+  throw 'unknown leaflet location type';
+};
+
 const convertFromGeofireToLeafletLocation = (location: Array): LatLng => (
   { lat: location[0], lng: location[1] }
 );
@@ -131,10 +139,10 @@ export default class Home extends React.Component<Props, State> {
     } = this.state;
 
     const pinForm = isPin ? (
-      <CreatePinForm authUser={this.props.authUser} position={marker} />
+      <CreatePinForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
     ) : null;
     const postForm = isPost ? (
-      <CreatePostForm authUser={this.props.authUser} position={marker} />
+      <CreatePostForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
     ) : null;
 
     const currentMarker = markerIsSet ? (
@@ -182,7 +190,7 @@ export default class Home extends React.Component<Props, State> {
           ))}
 
           {this.state.posts.map((post: PostInfoWithLocationType, index) => (
-            <Marker key={post.postId} position={convertFromGeofireToLeafletLocation(post.l)}>
+            <Marker key={post.postId} position={convertFromGeofireToLeafletLocation(post.location)}>
               <Popup>
                 <span>
                   My Post #{index}

@@ -17,9 +17,8 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { doCreatePin } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
-import { CategoryType } from '../../Types';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
-import type { LocationType } from '../../Types';
+import type { AuthUserType, LocationType, CategoryType } from '../../Types';
 
 
 const styles = theme => ({
@@ -46,7 +45,7 @@ type State = {
 
 export type Props = {
   classes: any,
-  authUser: { uid: string },
+  authUser: AuthUserType,
   position: LocationType
 };
 
@@ -68,8 +67,8 @@ class CreatePinForm extends React.Component<Props, State> {
         title: this.state.title,
         area: {
           location: {
-            latitude: parseFloat(this.props.position.lat),
-            longitude: parseFloat(this.props.position.lng),
+            latitude: parseFloat(this.props.position.latitude),
+            longitude: parseFloat(this.props.position.longitude),
           },
           radius: parseFloat(this.state.radius),
         },
