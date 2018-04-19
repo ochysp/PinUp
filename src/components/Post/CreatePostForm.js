@@ -93,8 +93,7 @@ class CreatePostForm extends React.Component<Props, State> {
             label="Title"
             id="title"
             onChange={this.handleChange('title')}
-            hintText="Eine Veranstaltung"
-            floatingLabelText="Title"
+            helperText="Eine Veranstaltung"
             errorText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
             value={this.state.title}
             className={classes.textField}

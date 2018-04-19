@@ -1,16 +1,26 @@
 // @flow
 
 import React from 'react';
+import {
+  Checkbox,
+  FormControl, FormHelperText,
+  Input,
+  InputLabel,
+  ListItemText,
+  Select,
+  Typography,
+} from 'material-ui';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { doCreatePin } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import { CategoryType } from '../../Types';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
 import type { LocationType } from '../../Types';
+
 
 const styles = theme => ({
   container: {
@@ -30,7 +40,7 @@ const styles = theme => ({
 type State = {
   title: string,
   radius: number,
-  category: CategoryType,
+  categories: CategoryType[],
   invalidSubmit: boolean,
 };
 
@@ -45,14 +55,14 @@ class CreatePinForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
-      radius: 0.5,
-      category: null,
+      radius: 10,
+      categories: [],
       invalidSubmit: false,
     };
   }
 
   handleSubmit = (event: any) => {
-    if (this.state.values.length > 0) {
+    if (this.state.categories.length > 0) {
       doCreatePin({
         userId: this.props.authUser.uid,
         title: this.state.title,
@@ -72,6 +82,9 @@ class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleChange = name => (event) => {
+    console.log('handleChange');
+    console.log(event.target.value);
+
     this.setState({
       [name]: event.target.value,
     });
@@ -86,10 +99,9 @@ class CreatePinForm extends React.Component<Props, State> {
           width: '-moz-fit-content',
         }}
       >
-        <CardMedia
-          className={classes.media}
-          title="Edit Pin"
-        />
+        <Typography className={classes.title}>
+          Edit Pin
+        </Typography>
         <CardContent>
           <form className={classes.container} noValidate autoComplete="off">
 
@@ -97,35 +109,38 @@ class CreatePinForm extends React.Component<Props, State> {
               id="title"
               label="Title"
               onChange={this.handleChange('title')}
-              hintText="Rapperswil"
-              floatingLabelText="Title"
+              helperText="Rapperswil"
               margin="normal"
               className={classes.textField}
             />
             <br />
 
-            <TextField
-              id="select-category"
-              select
-              label="Category"
-              errorText={this.state.invalidSubmit && this.state.category ? 'Requires one or more' : ''}
-              className={classes.textField}
-              onChange={this.handleChange('category')}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              margin="normal"
+
+            <FormControl
+              className={classes.formControl}
+              error={this.state.invalidSubmit && this.state.categories.length === 0}
             >
-              {CATEGORIES.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              <InputLabel htmlFor="select-multiple-checkbox">Category</InputLabel>
+              <Select
+                multiple
+                value={this.state.categories}
+                onChange={this.handleChange('categories')}
+                input={<Input id="select-categories" />}
+                renderValue={selected => selected.map(category => (category.name)).join(', ')}
+              >
+                {CATEGORIES.map(category => (
+                  <MenuItem key={category.value} value={category.value}>
+                    <Checkbox checked={this.state.categories.indexOf(category.value) > -1} />
+                    <ListItemText primary={category.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+              { this.state.invalidSubmit
+                && this.state.categories.length === 0
+                && (<FormHelperText>Requires one or more</FormHelperText>)}
+            </FormControl>
             <br />
-            <CompoundSlider />
+
             <div>
               <p>Set Search-Radius</p>
               <CompoundSlider
@@ -134,12 +149,11 @@ class CreatePinForm extends React.Component<Props, State> {
                 step={0.1}
                 value={this.state.radius}
                 onUpdate={this.handleChange('radius')}
+                onChange={() => {}}
               />
               <p>
                 <span>Current set Radius </span>
                 <span>{`${this.state.radius}km`}</span>
-                <br />
-                <span>(Range from 1km to 50km)</span>
               </p>
             </div>
           </form>
