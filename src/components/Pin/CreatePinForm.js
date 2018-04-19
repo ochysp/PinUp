@@ -75,6 +75,7 @@ class CreatePinForm extends React.Component<Props, State> {
             },
             radius: parseFloat(this.state.radius),
           },
+          categories: this.state.categories,
         },
         () => { alert('Pin saved!'); },
         (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },

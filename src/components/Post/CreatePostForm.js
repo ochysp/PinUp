@@ -63,8 +63,9 @@ class CreatePostForm extends React.Component<Props, State> {
             latitude: parseFloat(this.props.position.latitude),
             longitude: parseFloat(this.props.position.longitude),
           },
+          category: this.state.category,
         },
-        () => { alert('Pin saved!'); },
+        () => { alert('Post saved!'); },
         (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
       );
       event.preventDefault();
