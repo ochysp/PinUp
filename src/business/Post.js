@@ -30,6 +30,7 @@ export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + post
 export const doCreatePost = (postInfo: PostInfoWithLocationType) => {
   const newPostId = db.ref(dbRef.POSTS).push({
     title: postInfo.title,
+    category: postInfo.category,
   }).key;
   db
     .ref(`${dbRef.USER_POSTS + postInfo.userId}`)

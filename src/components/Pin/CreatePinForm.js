@@ -71,6 +71,7 @@ class CreatePinForm extends React.Component<Props, State> {
             longitude: parseFloat(this.props.position.longitude),
           },
           radius: parseFloat(this.state.radius),
+          categories: this.state.categories,
         },
       });
       alert('Pin sent to DB');

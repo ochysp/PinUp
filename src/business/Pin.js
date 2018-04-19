@@ -3,7 +3,13 @@
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import { attachChildListener } from './Helper';
-import type { AuthUserType, KeyChangedCallback, ValueQueryCallback, PinInfoType, KeyType } from '../Types';
+import type {
+  AuthUserType,
+  KeyChangedCallback,
+  ValueQueryCallback,
+  PinInfoType,
+  KeyType,
+} from '../Types';
 
 export const listenForAllPinIDsOfUser = (
   authUser: AuthUserType, keyEntered: KeyChangedCallback, keyLeft: KeyChangedCallback,

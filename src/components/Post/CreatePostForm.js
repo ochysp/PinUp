@@ -61,6 +61,7 @@ class CreatePostForm extends React.Component<Props, State> {
           latitude: parseFloat(this.props.position.lat),
           longitude: parseFloat(this.props.position.lng),
         },
+        category: this.state.category,
       });
       alert('Post sent to DB');
       event.preventDefault();
