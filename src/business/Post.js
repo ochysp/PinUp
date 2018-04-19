@@ -6,7 +6,7 @@ import { db } from '../data/firebase/firebase';
 import { attachChildListener } from './Helper';
 import type {
   KeyType, LocationType, AuthUserType, KeyChangedCallback,
-  ValueQueryCallback, PostInfoWithLocationType,
+  ValueQueryCallback, PostType, SuccessCallback, ErrorCallback,
 } from '../Types';
 
 const createPostLocation = (key: KeyType, position: LocationType) => {
@@ -22,22 +22,33 @@ export const listenForPostsIDsOfUser = (
     keyEntered, keyLeft, dbRef.USER_POSTS + authUser.uid,
   );
 
+export const listenForAllPostsOfUser = (userId: KeyType, callback: ValueQueryCallback) => {
+  const allPosts = db.ref(dbRef.POSTS);
+  allPosts
+    .orderByChild('userId')
+    .equalTo(userId)
+    .on('value', callback);
+};
+
 export const listenForPostData = (postId: KeyType, callback: ValueQueryCallback) =>
   db.ref(dbRef.POSTS + postId).on('value', callback);
 
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
-export const doCreatePost = (postInfo: PostInfoWithLocationType) => {
-  const newPostId = db.ref(dbRef.POSTS).push({
-    title: postInfo.title,
-  }).key;
+export const createPost = (
+  postInfo: PostType,
+  callbackOnSuccess: SuccessCallback,
+  callbackOnError: ErrorCallback,
+) => {
+  const newPostId = db.ref(dbRef.POSTS).push(postInfo).key;
   db
     .ref(`${dbRef.USER_POSTS + postInfo.userId}`)
-    .update({ [newPostId]: true });
+    .update({ [newPostId]: true })
+    .then(callbackOnSuccess, callbackOnError);
   createPostLocation(newPostId, postInfo.location);
 };
 
-export const doDeletePost = (authUser, postKey) => {
+export const deletePost = (authUser: AuthUserType, postKey: KeyType) => {
   db
     .ref(dbRef.POSTS)
     .child(postKey)
@@ -49,12 +60,6 @@ export const doDeletePost = (authUser, postKey) => {
   db
     .ref(dbRef.POST_LOCATIONS + postKey)
     .remove();
-};
-
-export const listenForAllPosts = (uid, f) => {
-  const allPosts = db.ref(dbRef.POST_LOCATIONS);
-  allPosts
-    .on('value', f);
 };
 
 export const detachAllPostListeners = () => {

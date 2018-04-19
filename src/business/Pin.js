@@ -3,7 +3,14 @@
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import { attachChildListener } from './Helper';
-import type { AuthUserType, KeyChangedCallback, ValueQueryCallback, PinInfoType, KeyType } from '../Types';
+import type {
+  AuthUserType,
+  KeyChangedCallback,
+  ValueQueryCallback,
+  PinType,
+  KeyType,
+  SuccessCallback, ErrorCallback,
+} from '../Types';
 
 export const listenForAllPinIDsOfUser = (
   authUser: AuthUserType, keyEntered: KeyChangedCallback, keyLeft: KeyChangedCallback,
@@ -18,14 +25,18 @@ export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
 export const detachPinListener = (pinId: KeyType) =>
   db.ref(dbRef.PINS + pinId).off();
 
-export const doCreatePin = (pinInfo: PinInfoType) => {
+export const CreatePin = (
+  pinInfo: PinType, callbackOnSuccess: SuccessCallback, callbackOnError: ErrorCallback,
+) => {
   const newPinId = db.ref(dbRef.PINS).push(pinInfo).key;
-  db.ref(`${dbRef.USER_PINS + pinInfo.userId}`).update({ [newPinId]: true });
+  db.ref(`${dbRef.USER_PINS + pinInfo.userId}`)
+    .update({ [newPinId]: true })
+    .then(callbackOnSuccess, callbackOnError);
 };
 
 export const listenForAllPinsOfUser = (userId: KeyType, callback: ValueQueryCallback) => {
-  const allUserPins = db.ref(dbRef.PINS);
-  allUserPins
+  const allPins = db.ref(dbRef.PINS);
+  allPins
     .orderByChild('userId')
     .equalTo(userId)
     .on('value', callback);

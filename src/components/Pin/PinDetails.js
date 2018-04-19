@@ -4,7 +4,7 @@ import React from 'react';
 import type Match from 'react-router';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
-import type { AreaType, SnapshotType, PinInfoType } from '../../Types';
+import type { AreaType, SnapshotType, PinType } from '../../Types';
 
 type State = {
   area: ?AreaType
@@ -32,7 +32,7 @@ export default class PinDetails extends React.Component<Props, State> {
     detachPinListener(this.props.match.params.pinId);
   }
 
-  updateData = (values: PinInfoType) => {
+  updateData = (values: PinType) => {
     const newState = {
       area: values.area,
     };

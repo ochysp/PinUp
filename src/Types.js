@@ -29,7 +29,7 @@ export type AreaType = {
   radius: number
 };
 
-export type PinInfoType = {
+export type PinType = {
   pinId?: KeyType,
   userId?: KeyType,
   title: string,
@@ -46,18 +46,11 @@ export type CategoryType = {
   name: string
 };
 
-export type PostInfoWithLocationType = {
+export type PostType = {
   postId?: KeyType,
   userId: KeyType,
   title: string,
   location: LocationType,
-  event?: EventType
-};
-
-export type PostInfoWithoutLocationType = {
-  postId?: KeyType,
-  userId: KeyType,
-  title: string,
   event?: EventType
 };
 
