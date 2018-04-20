@@ -10,7 +10,7 @@ type Props = {
   pinData: PinType
 };
 
-export default class PinDetails extends React.Component<Props, State> {
+export default class PostDetails extends React.Component<Props, State> {
 
 
 }
