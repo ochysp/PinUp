@@ -20,7 +20,7 @@ const MyPins = (props: Props) => (
         <ListPins {...innerProps} authUser={props.authUser} />
       )}
     />
-    <Route path={`${routes.PINS}/:pinId`} component={PinDetails} authUser={this.props.authUser} />
+    <Route path={`${routes.PINS}/:pinId`} component={PinDetails} authUser={props.authUser} />
   </div>
 );
 
