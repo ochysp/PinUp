@@ -130,10 +130,13 @@ class CreatePinForm extends React.Component<Props, State> {
                 input={<Input id="select-categories" />}
                 renderValue={selected => selected.map(category => (category.name)).join(', ')}
               >
-                {CATEGORIES.map(category => (
-                  <MenuItem key={category.value} value={category.value}>
-                    <Checkbox checked={this.state.categories.indexOf(category.value) > -1} />
-                    <ListItemText primary={category.name} />
+                {Object.entries(CATEGORIES).map(category => (
+
+                  <MenuItem key={category[0]} value={category[0]}>
+                    <Checkbox
+                      checked={this.state.categories.indexOf(category[0]) > -1}
+                    />
+                    <ListItemText primary={category[1]} />
                   </MenuItem>
                 ))}
               </Select>
