@@ -4,7 +4,13 @@ import React from 'react';
 import type Match from 'react-router';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
-import type { AreaType, SnapshotType, PinType, CategoriesType } from '../../business/Types';
+import type {
+  AreaType,
+  SnapshotType,
+  PinType,
+  CategoriesType,
+  AuthUserType,
+} from '../../business/Types';
 
 type State = {
   area: ?AreaType,
@@ -12,7 +18,8 @@ type State = {
 };
 
 type Props = {
-  match: Match
+  match: Match,
+  authUser: AuthUserType
 };
 
 export default class PinDetails extends React.Component<Props, State> {
@@ -46,7 +53,11 @@ export default class PinDetails extends React.Component<Props, State> {
     let matches = null;
     if (this.state.area) {
       matches = (
-        <Matches area={this.state.area} categories={this.state.categories} />
+        <Matches
+          area={this.state.area}
+          categories={this.state.categories}
+          authUser={this.props.authUser}
+        />
       );
     }
     return (

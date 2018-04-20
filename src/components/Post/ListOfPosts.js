@@ -3,11 +3,12 @@
 import React from 'react';
 import { List, withStyles } from 'material-ui';
 import PostListEntry from './PostListEntry';
-import type { KeyType } from '../../business/Types';
+import type { AuthUserType, KeyType } from '../../business/Types';
 
 type Props = {
   classes: any,
-  posts: KeyType[]
+  posts: KeyType[],
+  authUser: AuthUserType
 };
 
 const styles = theme => ({
@@ -20,7 +21,7 @@ const styles = theme => ({
 
 const ListOfPosts = (props: Props) => {
   const listItems = props.posts.map(postId => (
-    <PostListEntry postId={postId} />
+    <PostListEntry postId={postId} authUser={props.authUser} />
   ));
   return (
     <div className={props.classes.root}>

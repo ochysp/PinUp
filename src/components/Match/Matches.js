@@ -6,7 +6,7 @@ import listenForPostsIDsInArea from '../../business/Match';
 import PostListEntry from '../Post/PostListEntry';
 import type {
   KeyType,
-  ConnectionType, AreaType, CategoriesType,
+  ConnectionType, AreaType, CategoriesType, AuthUserType,
 } from '../../business/Types';
 
 type State = {
@@ -17,7 +17,8 @@ type State = {
 type Props = {
   classes: any,
   area: AreaType,
-  categories: CategoriesType
+  categories: CategoriesType,
+  authUser: AuthUserType
 };
 
 const styles = theme => ({
@@ -77,7 +78,7 @@ class Matches extends React.Component<Props, State> {
 
   render() {
     const listItems = this.state.posts.map(postId => (
-      <PostListEntry postId={postId} />
+      <PostListEntry postId={postId} authUser={this.props.authUser} />
     ));
     return (
       <div className={this.props.classes.root}>
