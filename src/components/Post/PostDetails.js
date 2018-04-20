@@ -1,12 +1,12 @@
+/* eslint-disable no-useless-constructor */
 // @flow
 
 import React from 'react';
-import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import Typography from 'material-ui/Typography';
-import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Button from 'material-ui/Button';
+import { doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
-import { CategoryType, EventType, KeyType, LocationType } from '../../business/Types';
+// import { CategoryType, EventType, KeyType, LocationType } from '../../business/Types';
 
 type State = {
   takesPart: boolean
@@ -20,33 +20,17 @@ type Props = {
 export default class PostDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      takesPart: false,
-    };
   }
 
-  handleClose = () => {
-
-  };
 
   handleNewParticipant = () => {
-
+    doSignUpForEvent(this.props.postData.postId, this.props.authUser);
   };
-  /*
-    export type PostType = {
-      postId?: KeyType,
-      userId: KeyType,
-      title: string,
-      location: LocationType,
-      category: CategoryType,
-      event?: EventType
-    };
-  */
+
   render() {
-    const eventButton = this.props.postData.event !== null ? (
+    const eventButton = this.props.postData.event ? (
       <Button onClick={this.handleNewParticipant}>Take Part in event</Button>
     ) : null;
-
     return (
       <div>
         <List>
