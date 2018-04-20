@@ -1,13 +1,13 @@
 // @flow
 
 import React from 'react';
-import type { PinType } from '../../business/Types';
+import type { PostType } from '../../business/Types';
 
 type State = {
 };
 
 type Props = {
-  pinData: PinType
+  pinData: PostType
 };
 
 export default class PostDetails extends React.Component<Props, State> {
