@@ -19,21 +19,21 @@ export default class MyPosts extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      dbHandles: null,
+      dbHandle: null,
     };
   }
 
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandles: listenForPostsIDsOfUser(
+      dbHandle: listenForPostsIDsOfUser(
         this.props.authUser, this.keyEntered, this.keyLeft,
       ),
     });
   }
 
   componentWillUnmount() {
-    if (this.state.dbHandles) this.state.dbHandles.detach();
+    if (this.state.dbHandle) this.state.dbHandle.detach();
   }
 
   keyEntered = (key: KeyType) => {
