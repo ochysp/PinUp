@@ -7,10 +7,11 @@ type State = {
 };
 
 type Props = {
-  pinData: PostType
+  postData: PostType
 };
 
 export default class PostDetails extends React.Component<Props, State> {
-
-
+  render() {
+    return null;
+  }
 }

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { listenForPostsIDsOfUser } from '../business/Post';
-import { PostNode } from './Post/PostNode';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
+import ListOfPosts from './Post/ListOfPosts';
 
 type State = {
   posts: KeyType[],
@@ -53,14 +53,8 @@ export default class MyPosts extends React.Component<Props, State> {
   };
 
   render() {
-    const listItems = this.state.posts.map(postId => (
-      <PostNode postId={postId} />
-    ));
     return (
-      <div>
-        <h1>My Posts</h1>
-        <ul>{listItems}</ul>
-      </div>
+      <ListOfPosts posts={this.state.posts} />
     );
   }
 }
