@@ -2,7 +2,7 @@
 // @flow
 
 import { db } from '../data/firebase/firebase';
-import type { ConnectionType, KeyChangedCallback } from '../Types';
+import type { ConnectionType, KeyChangedCallback } from './Types';
 
 export const attachChildListener = (
   keyEntered: KeyChangedCallback,

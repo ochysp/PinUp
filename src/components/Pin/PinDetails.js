@@ -4,7 +4,7 @@ import React from 'react';
 import type Match from 'react-router';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
-import type { AreaType, SnapshotType, PinType, CategoriesType } from '../../Types';
+import type { AreaType, SnapshotType, PinType, CategoriesType } from '../../business/Types';
 
 type State = {
   area: ?AreaType,

@@ -6,7 +6,7 @@ import { PostNode } from '../Post/PostNode';
 import type {
   KeyType,
   ConnectionType, AreaType, CategoriesType,
-} from '../../Types';
+} from '../../business/Types';
 
 type State = {
   posts: KeyType[],

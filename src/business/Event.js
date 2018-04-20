@@ -1,7 +1,7 @@
 // @flow
 
 import * as dbRef from '../constants/dbRef';
-import type { AuthUserType, ErrorCallback, SuccessCallback, KeyType } from '../Types';
+import type { AuthUserType, ErrorCallback, SuccessCallback, KeyType } from './Types';
 import { db } from '../data/firebase/firebase';
 
 export const doSignUpForEvent = (

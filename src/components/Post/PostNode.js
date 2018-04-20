@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { listenForPostData, detachPostListener } from '../../business/Post';
-import type { PostType, SnapshotType, KeyType } from '../../Types';
+import type { PostType, SnapshotType, KeyType } from '../../business/Types';
 
 type Props = {
   postId: KeyType

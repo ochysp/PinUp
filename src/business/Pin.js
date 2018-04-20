@@ -10,7 +10,7 @@ import type {
   PinType,
   KeyType,
   SuccessCallback, ErrorCallback, CategoriesType,
-} from '../Types';
+} from './Types';
 
 export const listenForAllPinIDsOfUser = (
   authUser: AuthUserType, keyEntered: KeyChangedCallback, keyLeft: KeyChangedCallback,
