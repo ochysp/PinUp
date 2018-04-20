@@ -9,7 +9,7 @@ import type {
   ValueQueryCallback,
   PinType,
   KeyType,
-  SuccessCallback, ErrorCallback,
+  SuccessCallback, ErrorCallback, CategoriesType,
 } from '../Types';
 
 export const listenForAllPinIDsOfUser = (
@@ -25,11 +25,15 @@ export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
 export const detachPinListener = (pinId: KeyType) =>
   db.ref(dbRef.PINS + pinId).off();
 
-export const CreatePin = (
-  pinInfo: PinType, callbackOnSuccess: SuccessCallback, callbackOnError: ErrorCallback,
+export const createPin = (
+  pinInfo: PinType,
+  callbackOnSuccess: SuccessCallback,
+  callbackOnError: ErrorCallback,
 ) => {
-  const newPinId = db.ref(dbRef.PINS).push(pinInfo).key;
-  db.ref(`${dbRef.USER_PINS + pinInfo.userId}`)
+  const newPinId = db.ref(dbRef.PINS)
+    .push(pinInfo).key;
+  db
+    .ref(`${dbRef.USER_PINS + pinInfo.userId}`)
     .update({ [newPinId]: true })
     .then(callbackOnSuccess, callbackOnError);
 };
@@ -46,7 +50,7 @@ export const detachAllPinListeners = () => {
   db.ref(dbRef.PINS).off();
 };
 
-export const doDeletePin = (authUser: AuthUserType, pinKey: KeyType) => {
+export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
   db
     .ref(dbRef.PINS)
     .child(pinKey)
@@ -55,4 +59,12 @@ export const doDeletePin = (authUser: AuthUserType, pinKey: KeyType) => {
     .ref(dbRef.USER_PINS + authUser.uid)
     .child(pinKey)
     .remove();
+};
+
+export const convertCategoryArrayToObject = (categoryArray: number[]): CategoriesType => {
+  const categoriesObject = {};
+  categoryArray.forEach((categoryNr) => {
+    categoriesObject[categoryNr] = true;
+  });
+  return categoriesObject;
 };

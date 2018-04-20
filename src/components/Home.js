@@ -6,7 +6,7 @@ import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import Drawer from 'material-ui/Drawer';
 import Button from 'material-ui/Button';
-import { detachAllPinListeners, listenForAllPinsOfUser, doDeletePin } from '../business/Pin';
+import { detachAllPinListeners, listenForAllPinsOfUser, deletePin } from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -115,7 +115,7 @@ export default class Home extends React.Component<Props, State> {
 
   handleDeletePin = (pin: PinType) => () => {
     if (pin.pinId) {
-      doDeletePin(this.props.authUser, pin.pinId);
+      deletePin(this.props.authUser, pin.pinId);
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'pin can not be deleted because no pinId was provided';
@@ -124,7 +124,7 @@ export default class Home extends React.Component<Props, State> {
 
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
-      deletePost(this.props.authUser, post.postId);
+      deletePost(this.props.authUser, post);
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'post can not be deleted because no postId was provided';

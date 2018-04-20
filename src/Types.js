@@ -29,22 +29,23 @@ export type AreaType = {
   radius: number
 };
 
-export type PinType = {
 export type CategoriesType = {
-  [number]: boolean
+  [string]: boolean
 };
 
-export type CategoryType = {
-  value: number,
-  name: string
-};
-
+export type PinType = {
   pinId?: KeyType,
   userId?: KeyType,
   title: string,
   area: AreaType,
   categories: CategoriesType
 };
+
+export type CategoryType = {
+  value: string,
+  name: string
+};
+
 
 export type EventType = {
   date: Date,
@@ -57,13 +58,6 @@ export type PostType = {
   title: string,
   location: LocationType,
   category: CategoryType,
-  event?: EventType
-};
-
-export type PostInfoWithoutLocationType = {
-  postId?: KeyType,
-  userId: KeyType,
-  title: string,
   event?: EventType
 };
 

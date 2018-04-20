@@ -9,8 +9,10 @@ import type {
   ValueQueryCallback, PostType, SuccessCallback, ErrorCallback,
 } from '../Types';
 
-const createPostLocation = (key: KeyType, position: LocationType) => {
-  const geoKey = db.ref(dbRef.POST_LOCATIONS);
+const createPostLocation = (
+  key: KeyType, category: number, position: LocationType,
+) => {
+  const geoKey = db.ref(dbRef.postLocations(category));
   const geoFire = new GeoFire(geoKey);
   geoFire.set(key, [position.latitude, position.longitude]);
 };
@@ -45,20 +47,22 @@ export const createPost = (
     .ref(`${dbRef.USER_POSTS + postInfo.userId}`)
     .update({ [newPostId]: true })
     .then(callbackOnSuccess, callbackOnError);
-  createPostLocation(newPostId, postInfo.location);
+  createPostLocation(
+    newPostId, postInfo.category, postInfo.location,
+  );
 };
 
-export const deletePost = (authUser: AuthUserType, postKey: KeyType) => {
+export const deletePost = (authUser: AuthUserType, postData: PostType) => {
   db
     .ref(dbRef.POSTS)
-    .child(postKey)
+    .child(postData.postId)
     .remove();
   db
     .ref(dbRef.USER_POSTS + authUser.uid)
-    .child(postKey)
+    .child(postData.postId)
     .remove();
   db
-    .ref(dbRef.POST_LOCATIONS + postKey)
+    .ref(dbRef.postLocations(postData.category) + postData.postId)
     .remove();
 };
 

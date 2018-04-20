@@ -16,10 +16,10 @@ import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CreatePin } from '../../business/Pin';
+import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
-import type { AuthUserType, LocationType, CategoryType } from '../../Types';
+import type { AuthUserType, LocationType } from '../../Types';
 
 
 const styles = theme => ({
@@ -40,7 +40,7 @@ const styles = theme => ({
 type State = {
   title: string,
   radius: number,
-  categories: CategoryType[],
+  categories: string[],
   invalidSubmit: boolean,
 };
 
@@ -64,7 +64,7 @@ class CreatePinForm extends React.Component<Props, State> {
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
       this.setState({ invalidSubmit: false });
-      CreatePin(
+      createPin(
         {
           userId: this.props.authUser.uid,
           title: this.state.title,
@@ -75,7 +75,7 @@ class CreatePinForm extends React.Component<Props, State> {
             },
             radius: parseFloat(this.state.radius),
           },
-          categories: this.state.categories,
+          categories: convertCategoryArrayToObject(this.state.categories),
         },
         () => { alert('Pin saved!'); },
         (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
