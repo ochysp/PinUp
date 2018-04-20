@@ -4,10 +4,11 @@ import React from 'react';
 import type Match from 'react-router';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
-import type { AreaType, SnapshotType, PinInfoType } from '../../Types';
+import type { AreaType, SnapshotType, PinType, CategoriesType } from '../../Types';
 
 type State = {
-  area: ?AreaType
+  area: ?AreaType,
+  categories: CategoriesType
 };
 
 type Props = {
@@ -19,6 +20,7 @@ export default class PinDetails extends React.Component<Props, State> {
     super(props);
     this.state = {
       area: null,
+      categories: null,
     };
   }
 
@@ -32,9 +34,10 @@ export default class PinDetails extends React.Component<Props, State> {
     detachPinListener(this.props.match.params.pinId);
   }
 
-  updateData = (values: PinInfoType) => {
+  updateData = (values: PinType) => {
     const newState = {
       area: values.area,
+      categories: values.categories,
     };
     this.setState(newState);
   };
@@ -43,7 +46,7 @@ export default class PinDetails extends React.Component<Props, State> {
     let matches = null;
     if (this.state.area) {
       matches = (
-        <Matches area={this.state.area} />
+        <Matches area={this.state.area} categories={this.state.categories} />
       );
     }
     return (

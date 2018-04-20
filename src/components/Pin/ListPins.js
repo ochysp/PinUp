@@ -19,21 +19,21 @@ export default class ListPins extends React.Component<Props, State> {
     super(props);
     this.state = {
       pins: [],
-      dbHandle: null,
+      dbHandles: null,
     };
   }
 
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandle: listenForAllPinIDsOfUser(
+      dbHandles: listenForAllPinIDsOfUser(
         this.props.authUser, this.keyEntered, this.keyLeft,
       ),
     });
   }
 
   componentWillUnmount() {
-    if (this.state.dbHandle) this.state.dbHandle.detach();
+    if (this.state.dbHandles) this.state.dbHandles.detach();
   }
 
   keyEntered = (key: KeyType) => {

@@ -5,16 +5,17 @@ import listenForPostsIDsInArea from '../../business/Match';
 import { PostNode } from '../Post/PostNode';
 import type {
   KeyType,
-  ConnectionType, AreaType,
+  ConnectionType, AreaType, CategoriesType,
 } from '../../Types';
 
 type State = {
   posts: KeyType[],
-  dbHandle: ?ConnectionType
+  dbHandles: ?ConnectionType
 };
 
 type Props = {
-  area: AreaType
+  area: AreaType,
+  categories: CategoriesType
 };
 
 export default class Matches extends React.Component<Props, State> {
@@ -22,14 +23,14 @@ export default class Matches extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      dbHandle: null,
+      dbHandles: [],
     };
   }
 
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandle: listenForPostsIDsInArea(
+      dbHandles: listenForPostsIDsInArea(
         {
           location: {
             latitude: this.props.area.location.latitude,
@@ -37,6 +38,7 @@ export default class Matches extends React.Component<Props, State> {
           },
           radius: this.props.area.radius,
         },
+        this.props.categories,
         this.keyEntered,
         this.keyLeft,
       ),
@@ -44,7 +46,7 @@ export default class Matches extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.state.dbHandle) this.state.dbHandle.detach();
+    this.state.dbHandles.forEach(handle => handle.detach());
   }
 
   keyEntered = (key: KeyType) => {

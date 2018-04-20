@@ -1,14 +1,15 @@
+/* eslint-disable no-console,no-alert */
 // @flow
 
 import React from 'react';
+import { FormControl, FormHelperText, Input, InputLabel, Select, Typography } from 'material-ui';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
-import { doCreatePost } from '../../business/Post';
+import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-import { CategoryType } from '../../Types';
 import type { AuthUserType, LocationType } from '../../Types';
 
 const styles = theme => ({
@@ -30,7 +31,7 @@ type State = {
   title: string,
   longitude: string,
   latitude: string,
-  category: CategoryType,
+  category: string,
   invalidSubmit: boolean
 };
 
@@ -45,24 +46,28 @@ class CreatePostForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
-      category: null,
+      category: '',
       invalidSubmit: false,
     };
   }
 
   handleSubmit = (event: any) => {
-    if (this.state.title !== '' && this.state.category) {
+    if (this.state.title !== '' && this.state.category !== '') {
       this.setState({ invalidSubmit: false });
       event.preventDefault();
-      doCreatePost({
-        userId: this.props.authUser.uid,
-        title: this.state.title,
-        location: {
-          latitude: parseFloat(this.props.position.lat),
-          longitude: parseFloat(this.props.position.lng),
+      createPost(
+        {
+          userId: this.props.authUser.uid,
+          title: this.state.title,
+          location: {
+            latitude: parseFloat(this.props.position.latitude),
+            longitude: parseFloat(this.props.position.longitude),
+          },
+          category: this.state.category,
         },
-      });
-      alert('Post sent to DB');
+        () => { alert('Post saved!'); },
+        (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
+      );
       event.preventDefault();
     } else {
       this.setState({ invalidSubmit: true });
@@ -84,43 +89,50 @@ class CreatePostForm extends React.Component<Props, State> {
           width: '-moz-fit-content',
         }}
       >
-        <CardMedia
-          className={classes.media}
-          title="Edit Post"
-        />
+        <Typography className={classes.title}>
+          Edit Post
+        </Typography>
         <CardContent>
-          <TextField
-            label="Title"
-            id="title"
-            onChange={this.handleChange('title')}
-            helperText="Eine Veranstaltung"
-            errorText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
-            value={this.state.title}
-            className={classes.textField}
-          />
-          <br />
+          <form className={classes.container} noValidate autoComplete="off">
 
-          <TextField
-            id="select-category"
-            select
-            label="Category"
-            errorText={this.state.invalidSubmit && this.state.category ? 'Requires a category' : ''}
-            className={classes.textField}
-            onChange={this.handleChange('category')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            margin="normal"
-          >
-            {CATEGORIES.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <br />
+            <TextField
+              label="Title"
+              id="title"
+              onChange={this.handleChange('title')}
+              helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
+              error={this.state.invalidSubmit && this.state.title === ''}
+              value={this.state.title}
+              className={classes.textField}
+            />
+            <br />
+
+            <FormControl
+              className={classes.formControl}
+              error={this.state.invalidSubmit && this.state.category === ''}
+            >
+              <InputLabel htmlFor="select-category">Category</InputLabel>
+              <Select
+                value={this.state.category}
+                onChange={this.handleChange('category')}
+                input={<Input name="category" id="select-category" />}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {CATEGORIES.map(category => (
+                  <MenuItem key={category.value} value={category.value}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+
+              </Select>
+              { this.state.invalidSubmit
+              && this.state.category !== ''
+              && (<FormHelperText>Requires a category</FormHelperText>)}
+            </FormControl>
+            <br />
+          </form>
+
         </CardContent>
 
         <CardActions>

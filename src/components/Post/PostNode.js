@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { listenForPostData, detachPostListener } from '../../business/Post';
-import type { PostInfoWithoutLocationType, SnapshotType, KeyType } from '../../Types';
+import type { PostType, SnapshotType, KeyType } from '../../Types';
 
 type Props = {
   postId: KeyType
@@ -31,7 +31,7 @@ export class PostNode extends React.Component<Props, State> {
     detachPostListener(this.props.postId);
   }
 
-  updateData = (values: PostInfoWithoutLocationType) => {
+  updateData = (values: PostType) => {
     const newState = { title: values.title };
     this.setState(newState);
   };

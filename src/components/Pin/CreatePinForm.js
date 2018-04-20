@@ -1,3 +1,4 @@
+/* eslint-disable no-console,no-alert */
 // @flow
 
 import React from 'react';
@@ -15,10 +16,10 @@ import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { doCreatePin } from '../../business/Pin';
+import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
-import type { AuthUserType, LocationType, CategoryType } from '../../Types';
+import type { AuthUserType, LocationType } from '../../Types';
 
 
 const styles = theme => ({
@@ -39,7 +40,7 @@ const styles = theme => ({
 type State = {
   title: string,
   radius: number,
-  categories: CategoryType[],
+  categories: string[],
   invalidSubmit: boolean,
 };
 
@@ -62,18 +63,23 @@ class CreatePinForm extends React.Component<Props, State> {
 
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
-      doCreatePin({
-        userId: this.props.authUser.uid,
-        title: this.state.title,
-        area: {
-          location: {
-            latitude: parseFloat(this.props.position.latitude),
-            longitude: parseFloat(this.props.position.longitude),
+      this.setState({ invalidSubmit: false });
+      createPin(
+        {
+          userId: this.props.authUser.uid,
+          title: this.state.title,
+          area: {
+            location: {
+              latitude: parseFloat(this.props.position.latitude),
+              longitude: parseFloat(this.props.position.longitude),
+            },
+            radius: parseFloat(this.state.radius),
           },
-          radius: parseFloat(this.state.radius),
+          categories: convertCategoryArrayToObject(this.state.categories),
         },
-      });
-      alert('Pin sent to DB');
+        () => { alert('Pin saved!'); },
+        (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
+      );
       event.preventDefault();
     } else {
       this.setState({ invalidSubmit: true });
@@ -81,9 +87,6 @@ class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleChange = name => (event) => {
-    console.log('handleChange');
-    console.log(event.target.value);
-
     this.setState({
       [name]: event.target.value,
     });

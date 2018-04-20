@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import * as routes from '../../constants/routes';
-import type { PinInfoType, SnapshotType, KeyType } from '../../Types';
+import type { PinType, SnapshotType, KeyType } from '../../Types';
 
 type Props = {
   pinId: KeyType
@@ -32,7 +32,7 @@ export default class PinNode extends React.Component<Props, State> {
     detachPinListener(this.props.pinId);
   }
 
-  updateData(values: PinInfoType) {
+  updateData(values: PinType) {
     const newState = { title: values.title };
     this.setState(newState);
   }
