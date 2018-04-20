@@ -7,7 +7,7 @@ import { attachChildListener } from './Helper';
 import type {
   KeyType, LocationType, AuthUserType, KeyChangedCallback,
   ValueQueryCallback, PostType, SuccessCallback, ErrorCallback,
-} from '../Types';
+} from './Types';
 
 const createPostLocation = (
   key: KeyType, category: number, position: LocationType,

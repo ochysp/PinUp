@@ -3,7 +3,7 @@
 import React from 'react';
 import { listenForAllPinIDsOfUser } from '../../business/Pin';
 import PinNode from './PinNode';
-import type { AuthUserType, ConnectionType, KeyType } from '../../Types';
+import type { AuthUserType, ConnectionType, KeyType } from '../../business/Types';
 
 type State = {
   pins: KeyType[],

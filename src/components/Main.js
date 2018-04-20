@@ -8,7 +8,7 @@ import MyPins from './MyPins';
 import MyPosts from './MyPosts';
 import SignIn from './Authentication/SignIn';
 import * as routes from '../constants/routes';
-import type { AuthUserType } from '../Types';
+import type { AuthUserType } from '../business/Types';
 
 type Props = {
   authUser: ?AuthUserType

@@ -9,7 +9,7 @@ import type {
   ConnectionType,
   CategoriesType,
   CategoryType,
-} from '../Types';
+} from './Types';
 
 const listenForPostsIDsInArea = (
   area: AreaType,

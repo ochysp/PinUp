@@ -5,7 +5,7 @@ import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
 import Main from './Main';
-import type { AuthUserType } from '../Types';
+import type { AuthUserType } from '../business/Types';
 
 type State = {
   authUser: ?AuthUserType

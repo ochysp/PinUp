@@ -19,7 +19,7 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
-import type { AuthUserType, LocationType } from '../../Types';
+import type { AuthUserType, LocationType } from '../../business/Types';
 
 
 const styles = theme => ({
