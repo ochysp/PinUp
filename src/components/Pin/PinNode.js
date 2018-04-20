@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import * as routes from '../../constants/routes';
-import type { PinType, SnapshotType, KeyType } from '../../Types';
+import type { PinType, SnapshotType, KeyType } from '../../business/Types';
 
 type Props = {
   pinId: KeyType

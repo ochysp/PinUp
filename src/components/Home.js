@@ -11,7 +11,7 @@ import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../Types';
+import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../business/Types';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }

@@ -10,7 +10,7 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-import type { AuthUserType, LocationType } from '../../Types';
+import type { AuthUserType, LocationType } from '../../business/Types';
 
 const styles = theme => ({
   container: {

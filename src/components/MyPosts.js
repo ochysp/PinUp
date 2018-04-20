@@ -3,7 +3,7 @@
 import React from 'react';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import { PostNode } from './Post/PostNode';
-import type { AuthUserType, ConnectionType, KeyType } from '../Types';
+import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
 
 type State = {
   posts: KeyType[],
