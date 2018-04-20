@@ -3,11 +3,12 @@
 import React from 'react';
 import { Dialog, DialogTitle, ListItem, ListItemText } from 'material-ui';
 import { listenForPostData, detachPostListener } from '../../business/Post';
-import type { PostType, SnapshotType, KeyType } from '../../business/Types';
+import type { PostType, SnapshotType, KeyType, AuthUserType } from '../../business/Types';
 import PostDetails from './PostDetails';
 
 type Props = {
-  postId: KeyType
+  postId: KeyType,
+  authUser: AuthUserType
 };
 
 type State = {
@@ -63,7 +64,7 @@ export default class PostListEntry extends React.Component<Props, State> {
             aria-labelledby="simple-dialog-title"
           >
             <DialogTitle id="simple-dialog-title">{this.state.postData.title}</DialogTitle>
-            <PostDetails postData={this.state.postData} />
+            <PostDetails postData={this.state.postData} authUser={this.props.authUser} />
           </Dialog>
         </div>
       </ListItem>
