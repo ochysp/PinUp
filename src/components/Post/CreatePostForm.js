@@ -119,9 +119,9 @@ class CreatePostForm extends React.Component<Props, State> {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {CATEGORIES.map(category => (
-                  <MenuItem key={category.value} value={category.value}>
-                    {category.name}
+                {Object.entries(CATEGORIES).map(category => (
+                  <MenuItem key={category[0]} value={category[0]}>
+                    {category[1]}
                   </MenuItem>
                 ))}
 

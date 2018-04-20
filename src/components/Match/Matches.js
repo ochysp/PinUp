@@ -1,11 +1,12 @@
 // @flow
 
 import React from 'react';
+import { List, withStyles } from 'material-ui';
 import listenForPostsIDsInArea from '../../business/Match';
-import { PostNode } from '../Post/PostNode';
+import PostListEntry from '../Post/PostListEntry';
 import type {
   KeyType,
-  ConnectionType, AreaType, CategoriesType,
+  ConnectionType, AreaType, CategoriesType, AuthUserType,
 } from '../../business/Types';
 
 type State = {
@@ -14,11 +15,21 @@ type State = {
 };
 
 type Props = {
+  classes: any,
   area: AreaType,
-  categories: CategoriesType
+  categories: CategoriesType,
+  authUser: AuthUserType
 };
 
-export default class Matches extends React.Component<Props, State> {
+const styles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
+
+class Matches extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -67,12 +78,16 @@ export default class Matches extends React.Component<Props, State> {
 
   render() {
     const listItems = this.state.posts.map(postId => (
-      <PostNode postId={postId} />
+      <PostListEntry postId={postId} authUser={this.props.authUser} />
     ));
     return (
-      <div>
-        <ul>{listItems}</ul>
+      <div className={this.props.classes.root}>
+        <List component="nav">
+          {listItems}
+        </List>
       </div>
     );
   }
 }
+
+export default withStyles(styles)(Matches);

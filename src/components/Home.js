@@ -195,9 +195,9 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   My Post #{index}
                   <br />
-                  <button onClick={this.handleDeletePost(post)}>
+                  <Button onClick={this.handleDeletePost(post)}>
                     Delete Post
-                  </button>
+                  </Button>
                 </span>
               </Popup>
             </Marker>

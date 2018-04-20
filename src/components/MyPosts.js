@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { listenForPostsIDsOfUser } from '../business/Post';
-import { PostNode } from './Post/PostNode';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
+import ListOfPosts from './Post/ListOfPosts';
 
 type State = {
   posts: KeyType[],
@@ -19,21 +19,21 @@ export default class MyPosts extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      dbHandles: null,
+      dbHandle: null,
     };
   }
 
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandles: listenForPostsIDsOfUser(
+      dbHandle: listenForPostsIDsOfUser(
         this.props.authUser, this.keyEntered, this.keyLeft,
       ),
     });
   }
 
   componentWillUnmount() {
-    if (this.state.dbHandles) this.state.dbHandles.detach();
+    if (this.state.dbHandle) this.state.dbHandle.detach();
   }
 
   keyEntered = (key: KeyType) => {
@@ -53,14 +53,8 @@ export default class MyPosts extends React.Component<Props, State> {
   };
 
   render() {
-    const listItems = this.state.posts.map(postId => (
-      <PostNode postId={postId} />
-    ));
     return (
-      <div>
-        <h1>My Posts</h1>
-        <ul>{listItems}</ul>
-      </div>
+      <ListOfPosts posts={this.state.posts} />
     );
   }
 }
