@@ -8,7 +8,6 @@ import type {
   GeoQuerryCallback,
   ConnectionType,
   CategoriesType,
-  CategoryType,
 } from './Types';
 
 const listenForPostsIDsInArea = (
@@ -18,8 +17,8 @@ const listenForPostsIDsInArea = (
   keyLeft: GeoQuerryCallback,
 ): ConnectionType => {
   const handles = [];
-  Object.keys(categories).forEach((category: CategoryType, i) => {
-    const geoKey = db.ref(dbRef.postLocations(category));
+  Object.keys(categories).forEach((categoryId: string, i) => {
+    const geoKey = db.ref(dbRef.postLocations(categoryId));
     const geoFire = new GeoFire(geoKey);
 
     const geoQuery = geoFire.query({
