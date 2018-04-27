@@ -3,7 +3,7 @@
 
 import React from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import Button from 'material-ui/Button';
+import { withStyles, Button } from 'material-ui';
 import { doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
 import { CATEGORIES } from '../../constants/categories';
@@ -17,7 +17,7 @@ type Props = {
   authUser: AuthUserType,
 };
 
-export default class PostDetails extends React.Component<Props, State> {
+class PostDetails extends React.Component<Props, State> {
   handleNewParticipant = () => {
     if (this.props.postData.postId) {
       doSignUpForEvent(
@@ -47,3 +47,5 @@ export default class PostDetails extends React.Component<Props, State> {
     );
   }
 }
+
+export default withStyles(PostDetails);
