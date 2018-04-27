@@ -6,7 +6,7 @@ import { Route, Redirect } from 'react-router-dom';
 import Home from './Home';
 import MyPins from './MyPins';
 import MyPosts from './MyPosts';
-import SignIn from './Authentication/SignIn';
+import SignIn from './Authentication/SignInScreen';
 import * as routes from '../constants/routes';
 import type { AuthUserType } from '../business/Types';
 
