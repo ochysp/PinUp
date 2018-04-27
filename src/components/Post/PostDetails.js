@@ -18,13 +18,13 @@ type Props = {
 };
 
 export default class PostDetails extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-
   handleNewParticipant = () => {
-    doSignUpForEvent(this.props.postData.postId, this.props.authUser);
+    if (this.props.postData.postId) {
+      doSignUpForEvent(
+        this.props.postData.postId, this.props.authUser,
+        () => { /* TODO: onSuccess */ }, () => { /* TODO: onSuccess */ },
+      );
+    }
   };
 
   render() {

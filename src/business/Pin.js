@@ -61,7 +61,7 @@ export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
     .remove();
 };
 
-export const convertCategoryArrayToObject = (categoryArray: number[]): CategoriesType => {
+export const convertCategoryArrayToObject = (categoryArray: string[]): CategoriesType => {
   const categoriesObject = {};
   categoryArray.forEach((categoryNr) => {
     categoriesObject[categoryNr] = true;
