@@ -11,6 +11,7 @@ import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
+import AlertDialog from '../MaterialComponents/AlertDialog';
 
 const styles = theme => ({
   container: {
@@ -29,10 +30,9 @@ const styles = theme => ({
 
 type State = {
   title: string,
-  longitude: string,
-  latitude: string,
   category: string,
-  invalidSubmit: boolean
+  invalidSubmit: boolean,
+  sentToDB: boolean,
 };
 
 type Props = {
@@ -48,6 +48,7 @@ class CreatePostForm extends React.Component<Props, State> {
       title: '',
       category: '',
       invalidSubmit: false,
+      sentToDB: false,
     };
   }
 
@@ -65,8 +66,8 @@ class CreatePostForm extends React.Component<Props, State> {
           },
           category: this.state.category,
         },
-        () => { alert('Post saved!'); },
-        (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
+        () => { this.setState({ sentToDB: true }); },
+        (error) => { console.log('error:'); console.log(error); },
       );
       event.preventDefault();
     } else {
@@ -83,66 +84,70 @@ class CreatePostForm extends React.Component<Props, State> {
   render() {
     const { classes } = this.props;
 
+    const savedAlert = this.state.sentToDB ? (<AlertDialog infoText="Post" />) : null;
+
     return (
-      <Card
-        style={{
+      <div>
+        {savedAlert}
+        <Card
+          style={{
           width: '-moz-fit-content',
         }}
-      >
-        <Typography className={classes.title}>
+        >
+          <Typography className={classes.title}>
           Edit Post
-        </Typography>
-        <CardContent>
-          <form className={classes.container} noValidate autoComplete="off">
+          </Typography>
+          <CardContent>
+            <form className={classes.container} noValidate autoComplete="off">
 
-            <TextField
-              label="Title"
-              id="title"
-              onChange={this.handleChange('title')}
-              helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
-              error={this.state.invalidSubmit && this.state.title === ''}
-              value={this.state.title}
-              className={classes.textField}
-            />
-            <br />
-
-            <FormControl
-              className={classes.formControl}
-              error={this.state.invalidSubmit && this.state.category === ''}
-            >
-              <InputLabel htmlFor="select-category">Category</InputLabel>
-              <Select
-                value={this.state.category}
-                onChange={this.handleChange('category')}
-                input={<Input name="category" id="select-category" />}
+              <TextField
+                label="Title"
+                id="title"
+                onChange={this.handleChange('title')}
+                helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
+                error={this.state.invalidSubmit && this.state.title === ''}
+                value={this.state.title}
+                className={classes.textField}
+              />
+              <br />
+              <FormControl
+                className={classes.formControl}
+                error={this.state.invalidSubmit && this.state.category === ''}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {Object.entries(CATEGORIES).map(category => (
-                  <MenuItem key={category[0]} value={category[0]}>
-                    {category[1]}
+                <InputLabel htmlFor="select-category">Category</InputLabel>
+                <Select
+                  value={this.state.category}
+                  onChange={this.handleChange('category')}
+                  input={<Input name="category" id="select-category" />}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
                   </MenuItem>
-                ))}
+                  {Object.entries(CATEGORIES).map(category => (
+                    <MenuItem key={category[0]} value={category[0]}>
+                      {category[1]}
+                    </MenuItem>
+                  ))}
 
-              </Select>
-              { this.state.invalidSubmit
-              && this.state.category !== ''
-              && (<FormHelperText>Requires a category</FormHelperText>)}
-            </FormControl>
-            <br />
-          </form>
+                </Select>
+                { this.state.invalidSubmit
+                && this.state.category !== ''
+                && (<FormHelperText>Requires a category</FormHelperText>)}
+              </FormControl>
+              <br />
+            </form>
 
-        </CardContent>
+          </CardContent>
 
-        <CardActions>
-          <Button
-            className={classes.button}
-            onClick={this.handleSubmit}
-          >Save
-          </Button>
-        </CardActions>
-      </Card>
+          <CardActions>
+            <Button
+              className={classes.button}
+              onClick={this.handleSubmit}
+            >Save
+            </Button>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

@@ -10,7 +10,8 @@ import type {
   CategoriesType,
 } from './Types';
 
-const listenForPostsIDsInArea = (
+//  Listens for Posts in a specific area
+const Match = (
   area: AreaType,
   categories: CategoriesType,
   keyEntered: GeoQuerryCallback,
@@ -39,4 +40,4 @@ const listenForPostsIDsInArea = (
   return handles;
 };
 
-export default listenForPostsIDsInArea;
+export default Match;

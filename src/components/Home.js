@@ -175,7 +175,11 @@ export default class Home extends React.Component<Props, State> {
             <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)}>
               <Popup>
                 <span>
-                  My Pin #{index}
+                  {pin.title}
+                  <br />
+                  #{index}
+                  <br />
+                  {pin.category}
                   <br />
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
@@ -193,7 +197,11 @@ export default class Home extends React.Component<Props, State> {
             <Marker key={post.postId} position={convertToLeafletLocation(post.location)}>
               <Popup>
                 <span>
-                  My Post #{index}
+                  {post.title}
+                  <br />
+                  #{index}
+                  <br />
+                  {post.category.name}
                   <br />
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post

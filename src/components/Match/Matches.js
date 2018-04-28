@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { List, withStyles } from 'material-ui';
-import listenForPostsIDsInArea from '../../business/Match';
+import Match from '../../business/Match';
 import PostListEntry from '../Post/PostListEntry';
 import type {
   KeyType,
@@ -41,7 +41,7 @@ class Matches extends React.Component<Props, State> {
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
-      dbHandles: listenForPostsIDsInArea(
+      dbHandles: Match(
         {
           location: {
             latitude: this.props.area.location.latitude,
