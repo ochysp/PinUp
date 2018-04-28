@@ -35,7 +35,7 @@ export type CategoriesType = {
 
 export type PinType = {
   pinId?: KeyType,
-  userId?: KeyType,
+  userId: KeyType,
   title: string,
   area: AreaType,
   categories: CategoriesType

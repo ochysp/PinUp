@@ -10,9 +10,9 @@ import type {
 } from './Types';
 
 const createPostLocation = (
-  key: KeyType, category: number, position: LocationType,
+  key: KeyType, categoryId: string, position: LocationType,
 ) => {
-  const geoKey = db.ref(dbRef.postLocations(category));
+  const geoKey = db.ref(dbRef.postLocations(categoryId));
   const geoFire = new GeoFire(geoKey);
   geoFire.set(key, [position.latitude, position.longitude]);
 };
@@ -48,22 +48,28 @@ export const createPost = (
     .update({ [newPostId]: true })
     .then(callbackOnSuccess, callbackOnError);
   createPostLocation(
-    newPostId, postInfo.category, postInfo.location,
+    newPostId, postInfo.category.value, postInfo.location,
   );
 };
 
 export const deletePost = (authUser: AuthUserType, postData: PostType) => {
-  db
-    .ref(dbRef.POSTS)
-    .child(postData.postId)
-    .remove();
-  db
-    .ref(dbRef.USER_POSTS + authUser.uid)
-    .child(postData.postId)
-    .remove();
-  db
-    .ref(dbRef.postLocations(postData.category) + postData.postId)
-    .remove();
+  if (postData.postId) {
+    const { postId } = postData;
+    db
+      .ref(dbRef.POSTS)
+      .child(postData.postId)
+      .remove();
+    db
+      .ref(dbRef.USER_POSTS + authUser.uid)
+      .child(postData.postId)
+      .remove();
+    db
+      .ref(dbRef.postLocations(postData.category.value) + postId)
+      .remove();
+  } else {
+    // eslint-disable-next-line no-throw-literal
+    throw 'Could not delete Post: No PostId provided';
+  }
 };
 
 export const detachAllPostListeners = () => {

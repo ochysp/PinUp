@@ -9,5 +9,5 @@ export const PINS = 'pins/';
 export const POSTS = 'posts/';
 
 export const GEOFIRE = 'GeoFire/';
-export const postLocations = (category: number) => `${GEOFIRE}${category}/`;
+export const postLocations = (categoryId: string) => `${GEOFIRE}${categoryId}/`;
 
