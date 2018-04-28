@@ -4,7 +4,6 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
-import Drawer from 'material-ui/Drawer';
 import Button from 'material-ui/Button';
 import { detachAllPinListeners, listenForAllPinsOfUser, deletePin } from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
@@ -12,6 +11,7 @@ import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../business/Types';
+import SelectionDrawer from './MaterialComponents/SelectionDrawer';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -102,15 +102,16 @@ export default class Home extends React.Component<Props, State> {
       markerIsSet: true,
       marker: position,
       drawer: true,
+      isPin: false,
+      isPost: false,
     });
   };
 
   handleSetPin = () => {
-    this.setState({ isPin: true, isPost: false });
+    this.setState({ isPin: true, isPost: false, drawer: false });
   };
-
   handleSetPost = () => {
-    this.setState({ isPost: true, isPin: false });
+    this.setState({ isPost: true, isPin: false, drawer: false });
   };
 
   handleDeletePin = (pin: PinType) => () => {
@@ -139,6 +140,7 @@ export default class Home extends React.Component<Props, State> {
     const pinForm = isPin ? (
       <CreatePinForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
     ) : null;
+
     const postForm = isPost ? (
       <CreatePostForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
     ) : null;
@@ -147,24 +149,16 @@ export default class Home extends React.Component<Props, State> {
       <Marker position={marker} ref="marker" />
     ) : null;
 
+    const selectionDrawer = markerIsSet ? (
+      <SelectionDrawer
+        handleSetPin={this.handleSetPin}
+        handleSetPost={this.handleSetPost}
+        drawer={this.state.drawer}
+      />
+    ) : null;
+
     return (
       <div>
-        <Drawer
-          anchor="bottom"
-          open={this.state.drawer}
-          onClose={() => this.setState({ drawer: false })}
-        >
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={() => this.setState({ drawer: false })}
-            onKeyDown={() => this.setState({ drawer: false })}
-          >
-            <Button onClick={this.handleSetPin}>Create a Pin</Button>
-            <Button onClick={this.handleSetPost}>Create a Post</Button>
-
-          </div>
-        </Drawer>
         <Map center={center} zoom={zoom} onClick={this.setMarker}>
           <TileLayer
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -175,7 +169,9 @@ export default class Home extends React.Component<Props, State> {
             <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)}>
               <Popup>
                 <span>
-                  My Pin #{index}
+                  {pin.title} #{index}
+                  <br />
+                  {pin.categories}
                   <br />
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
@@ -193,7 +189,9 @@ export default class Home extends React.Component<Props, State> {
             <Marker key={post.postId} position={convertToLeafletLocation(post.location)}>
               <Popup>
                 <span>
-                  My Post #{index}
+                  {post.title} #{index}
+                  <br />
+                  {post.category.name}
                   <br />
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post
@@ -202,7 +200,9 @@ export default class Home extends React.Component<Props, State> {
               </Popup>
             </Marker>
           ))}
+
           {currentMarker}
+          {selectionDrawer}
 
         </Map>
         {pinForm}
