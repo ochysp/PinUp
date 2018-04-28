@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import CssBaseline from 'material-ui/CssBaseline';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
@@ -21,7 +22,6 @@ export default class App extends React.Component<{}, State> {
 
   componentDidMount() {
     firebase.auth.onAuthStateChanged((authUser: AuthUserType) => {
-      console.log('auth user changed');
       if (authUser) {
         doCreateUser(
           authUser.uid,
@@ -29,10 +29,8 @@ export default class App extends React.Component<{}, State> {
           authUser.email,
           authUser.photoURL,
         );
-        console.log(`to: ${authUser.uid}`);
         this.setState(() => ({ authUser }));
       } else {
-        console.log('to null');
         this.setState(() => ({ authUser: null }));
       }
     });
@@ -41,6 +39,7 @@ export default class App extends React.Component<{}, State> {
   render() {
     return (
       <div>
+        <CssBaseline />
         <Header authUser={this.state.authUser} />
         <Main authUser={this.state.authUser} />
       </div>
