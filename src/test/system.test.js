@@ -1,23 +1,33 @@
 // TODO: Anpassung an eslint wenn Test geschrieben werden
 /*
 eslint-disable no-unused-vars,prefer-destructuring */
+
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
 
-const sinon = require('sinon');
+import { doCreateUser } from '../business/User';
+
 const expect = require('chai').use(require('sinon-chai')).expect;
+const proxyquire = require('proxyquire');
 
-// Tests the login functionality of firebase
-/* TODO System Test
-    Creates several Posts and Pins and saves them on
-    the Firebase (most likely local copy of Firebase DB)
-    Tests the matching algorithm if it gives back the Posts
-    which matches the parameter of the Pins.
- */
-test(true);
-/*
-describe("Test a complete run with different Elements",function () {
-    it('should work', function () {
+const firebasemock = require('firebase-mock');
 
-    });
-}); */
+const mockdatabase = new firebasemock.MockFirebase();
+const mockauth = new firebasemock.MockFirebase();
+const mocksdk = new firebasemock.MockFirebaseSdk(path =>
+  (path ? mockdatabase.child(path) : mockdatabase), () => mockauth);
+const firebase = mocksdk.initializeApp(); // can take a path arg to database url
+
+const mysource = proxyquire('../data/firebase/firebase.js', {
+  firebase: mocksdk,
+});
+
+mockdatabase.autoFlush();
+
+describe('#System Test', () => {
+  it('should create valid Pin', () => {
+    doCreateUser(
+      '123', 'Max Muster', 'maxmuster@gmail.com', 'xyz',
+    );
+    expect(mockdatabase.child('userData').child('userInfo').child('123').getData());// .to.equal({'123'});
+  });
+});
