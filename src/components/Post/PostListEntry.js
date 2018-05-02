@@ -56,20 +56,24 @@ class PostListEntry extends React.Component<Props, State> {
   render() {
     return (
       this.state.postData &&
-
+      <div>
         <ListItem button onClick={this.handleClickOpen}>
           <ListItemText primary={this.state.postData.title} />
-          <div className={style}>
-            <Dialog
-              open={this.state.isDetailViewOpen}
-              onClose={this.handleClose}
-              aria-labelledby="simple-dialog-title"
-            >
-              <DialogTitle id="simple-dialog-title">{this.state.postData.title}</DialogTitle>
-              <PostDetails postData={this.state.postData} authUser={this.props.authUser} />
-            </Dialog>
-          </div>
+          <div className={style} />
         </ListItem>
+        <Dialog
+          open={this.state.isDetailViewOpen}
+          onClose={this.handleClose}
+          aria-labelledby="simple-dialog-title"
+        >
+          <DialogTitle id="simple-dialog-title">{this.state.postData.title}</DialogTitle>
+          <PostDetails
+            postData={this.state.postData}
+            authUser={this.props.authUser}
+            onCloseClicked={this.handleClose}
+          />
+        </Dialog>
+      </div>
     );
   }
 }
