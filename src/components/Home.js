@@ -10,7 +10,7 @@ import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../business/Types';
+import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
@@ -69,30 +69,12 @@ export default class Home extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      if (snapshot.val() === null) {
-        this.setState({ pins: [] });
-      } else {
-        this.setState({
-          pins: Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
-            pinId: key,
-            ...value,
-          })),
-        });
-      }
+    listenForAllPinsOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
+      this.setState({ pins: newPins });
     });
 
-    listenForAllPostsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      if (snapshot.val() === null) {
-        this.setState({ posts: [] });
-      } else {
-        this.setState({
-          posts: Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
-            postId: key,
-            ...value,
-          })),
-        });
-      }
+    listenForAllPostsOfUser(this.props.authUser.uid, (newPosts: PostType[]) => {
+      this.setState({ posts: newPosts });
     });
   }
 
