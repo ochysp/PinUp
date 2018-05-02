@@ -13,6 +13,7 @@ type Props = {
 
 const MyPins = (props: Props) => (
   <div>
+    <h1>My Pins</h1>
     <Route
       exact
       path={routes.PINS}

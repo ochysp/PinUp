@@ -21,6 +21,26 @@ const formStyles = theme => ({
     marginLeft: theme.spacing.unit + 10,
     marginRight: theme.spacing.unit + 10,
   },
+  button: {
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  buttonPin: {
+    color: 'white',
+    backgroundColor: 'coral',
+  },
+  buttonPost: {
+    color: 'grey()',
+    backgroundColor: 'lightblue',
+  },
+  buttonSave: {
+    color: 'white',
+    backgroundColor: 'green',
+  },
+  buttonCancle: {
+    color: 'white',
+    backgroundColor: 'red',
+  },
 });
 
 export default formStyles;

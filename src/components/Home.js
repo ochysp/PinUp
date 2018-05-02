@@ -11,7 +11,7 @@ import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../business/Types';
-import SelectionDrawer from './MaterialComponents/SelectionDrawer';
+import SelectionDrawer from './MaterialComponents/SelectionDialog';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -38,7 +38,7 @@ type State = {
 
   pins: Array<PinType>,
 
-  drawer: boolean,
+  dialogIsActive: boolean,
   posts: Array<PostType>,
 };
 
@@ -64,7 +64,7 @@ export default class Home extends React.Component<Props, State> {
       pins: [],
       posts: [],
 
-      drawer: false,
+      dialogIsActive: false,
     };
   }
 
@@ -101,17 +101,17 @@ export default class Home extends React.Component<Props, State> {
     this.setState({
       markerIsSet: true,
       marker: position,
-      drawer: true,
+      dialogIsActive: true,
       isPin: false,
       isPost: false,
     });
   };
 
   handleSetPin = () => {
-    this.setState({ isPin: true, isPost: false, drawer: false });
+    this.setState({ isPin: true, isPost: false, dialogIsActive: false });
   };
   handleSetPost = () => {
-    this.setState({ isPost: true, isPin: false, drawer: false });
+    this.setState({ isPost: true, isPin: false, dialogIsActive: false });
   };
   unsetMarker = () => {
     this.setState({ markerIsSet: false });
@@ -158,7 +158,7 @@ export default class Home extends React.Component<Props, State> {
       <SelectionDrawer
         handleSetPin={this.handleSetPin}
         handleSetPost={this.handleSetPost}
-        drawer={this.state.drawer}
+        dialogIsActive={this.state.dialogIsActive}
       />
     ) : null;
 
