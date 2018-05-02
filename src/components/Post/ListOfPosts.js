@@ -21,7 +21,7 @@ const styles = theme => ({
 
 const ListOfPosts = (props: Props) => {
   const listItems = props.posts.map(postId => (
-    <PostListEntry postId={postId} authUser={props.authUser} />
+    <PostListEntry postId={postId} authUser={props.authUser} key={postId} />
   ));
   return (
     <div className={props.classes.root}>
