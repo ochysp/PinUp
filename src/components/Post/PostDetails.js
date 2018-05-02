@@ -14,6 +14,7 @@ type State = {
 type Props = {
   postData: PostType,
   authUser: AuthUserType,
+  onCloseClicked: () => void;
 };
 
 class PostDetails extends React.Component<Props, State> {
@@ -40,7 +41,7 @@ class PostDetails extends React.Component<Props, State> {
             <ListItemText primary="Description" secondary="Some more Info about event" />
           </ListItem>
           {eventButton}
-          <Button>Close</Button>
+          <Button onClick={this.props.onCloseClicked}>Close</Button>
         </List>
       </div>
     );
