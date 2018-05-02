@@ -14,7 +14,7 @@ type State = {
   redirect: false
 }
 
-export default class PinNode extends React.Component<Props, State> {
+export default class PinListEntry extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

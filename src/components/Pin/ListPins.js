@@ -3,7 +3,7 @@
 import React from 'react';
 import { List, withStyles } from 'material-ui';
 import { detachAllPinListeners, listenForAllPinsOfUser } from '../../business/Pin';
-import PinNode from './PinNode';
+import PinListEntry from './PinListEntry';
 import type { AuthUserType, PinType } from '../../business/Types';
 
 type State = {
@@ -43,7 +43,7 @@ class ListPins extends React.Component<Props, State> {
 
   render() {
     const listItems = this.state.pins.map(pin => (
-      <PinNode pinData={pin} authUser={this.props.authUser} key={pin.pinId} />
+      <PinListEntry pinData={pin} authUser={this.props.authUser} key={pin.pinId} />
     ));
     return (
       <div>
