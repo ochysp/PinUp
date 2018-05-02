@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Dialog, DialogTitle, ListItem, ListItemText, withStyles } from 'material-ui';
+import { Dialog, DialogTitle, ListItem, ListItemText } from 'material-ui';
 import { listenForPostData, detachPostListener } from '../../business/Post';
 import type { PostType, SnapshotType, KeyType, AuthUserType } from '../../business/Types';
 import PostDetails from './PostDetails';
@@ -74,4 +74,4 @@ class PostListEntry extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(PostListEntry);
+export default PostListEntry;
