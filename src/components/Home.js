@@ -113,10 +113,14 @@ export default class Home extends React.Component<Props, State> {
   handleSetPost = () => {
     this.setState({ isPost: true, isPin: false, drawer: false });
   };
+  unsetMarker = () => {
+    this.setState({ markerIsSet: false });
+  }
 
   handleDeletePin = (pin: PinType) => () => {
     if (pin.pinId) {
       deletePin(this.props.authUser, pin.pinId);
+      this.unsetMarker();
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'pin can not be deleted because no pinId was provided';
@@ -126,6 +130,7 @@ export default class Home extends React.Component<Props, State> {
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
       deletePost(this.props.authUser, post);
+      this.unsetMarker();
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'post can not be deleted because no postId was provided';
@@ -200,11 +205,9 @@ export default class Home extends React.Component<Props, State> {
               </Popup>
             </Marker>
           ))}
-
           {currentMarker}
-          {selectionDrawer}
-
         </Map>
+        {selectionDrawer}
         {pinForm}
         {postForm}
       </div>

@@ -22,28 +22,7 @@ import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
 import type { AuthUserType, LocationType } from '../../business/Types';
 import AlertDialog from '../MaterialComponents/AlertDialog';
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  titleField: {
-    marginTop: 20,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-  categoryField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginBottom: 20,
-    width: 200,
-  },
-  menu: {
-    width: 200,
-  },
-});
+import formStyles from '../../style/styles';
 
 type State = {
   title: string,
@@ -117,12 +96,11 @@ class CreatePinForm extends React.Component<Props, State> {
           open={this.state.drawer}
           onClose={() => this.setState({ drawer: false })}
         >
-          <Typography className={classes.title}>
-          Edit Pin
-          </Typography>
-
           <form className={classes.container} noValidate autoComplete="off">
-            <Grid container spacing={36}>
+            <Grid container spacing={36} className={classes.grid}>
+              <Typography className={classes.title}>
+                Edit Pin
+              </Typography>
 
               <Grid item xs={12}>
                 <TextField
@@ -166,19 +144,19 @@ class CreatePinForm extends React.Component<Props, State> {
 
                 <Grid item xs={12}>
                   <p>Set Search-Radius</p>
-                  <CompoundSlider
-                    min={0.1}
-                    max={20}
-                    step={0.1}
-                    value={this.state.radius}
-                    onUpdate={this.handleChange('radius')}
-                    onChange={() => {}}
-                    className={classes.categoryField}
-                  />
                   <p>
                     <span>Current set Radius </span>
                     <span>{`${this.state.radius}km`}</span>
                   </p>
+                  <CompoundSlider
+                    min={0.1}
+                    max={10}
+                    step={0.1}
+                    value={this.state.radius}
+                    onUpdate={this.handleChange('radius')}
+                    onChange={() => {}}
+                    className={classes.slider}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -210,4 +188,4 @@ class CreatePinForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(CreatePinForm);
+export default withStyles(formStyles)(CreatePinForm);

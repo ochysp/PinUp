@@ -13,28 +13,7 @@ import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
 import AlertDialog from '../MaterialComponents/AlertDialog';
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  titleField: {
-    marginTop: 20,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-  categoryField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginBottom: 20,
-    width: 200,
-  },
-  menu: {
-    width: 200,
-  },
-});
+import formStyles from '../../style/styles';
 
 type State = {
   title: string,
@@ -103,11 +82,11 @@ class CreatePostForm extends React.Component<Props, State> {
           open={this.state.drawer}
           onClose={() => this.setState({ drawer: false })}
         >
-          <Typography className={classes.title}>
-          Edit Post
-          </Typography>
           <form className={classes.container} noValidate autoComplete="off">
-            <Grid container spacing={24}>
+            <Grid container spacing={36} className={classes.grid}>
+              <Typography className={classes.title}>
+                Edit Post
+              </Typography>
               <Grid item xs={12}>
                 <TextField
                   label="Title"
@@ -177,4 +156,4 @@ class CreatePostForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(CreatePostForm);
+export default withStyles(formStyles)(CreatePostForm);
