@@ -1,63 +1,61 @@
 // @flow
 
 import React from 'react';
-import { listenForAllPinIDsOfUser } from '../../business/Pin';
+import { List, withStyles } from 'material-ui';
+import { detachAllPinListeners, listenForAllPinsOfUser } from '../../business/Pin';
 import PinNode from './PinNode';
-import type { AuthUserType, ConnectionType, KeyType } from '../../business/Types';
+import type { AuthUserType, PinType } from '../../business/Types';
 
 type State = {
-  pins: KeyType[],
-  dbHandle: ?ConnectionType
+  pins: PinType[],
 };
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
-export default class ListPins extends React.Component<Props, State> {
+const styles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
+
+class ListPins extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       pins: [],
-      dbHandles: null,
     };
   }
 
   componentDidMount() {
-    // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({
-      dbHandles: listenForAllPinIDsOfUser(
-        this.props.authUser, this.keyEntered, this.keyLeft,
-      ),
+    listenForAllPinsOfUser(this.props.authUser.uid, (newData: PinType[]) => {
+      this.setState({ pins: newData });
     });
   }
 
   componentWillUnmount() {
-    if (this.state.dbHandles) this.state.dbHandles.detach();
+    detachAllPinListeners();
   }
 
-  keyEntered = (key: KeyType) => {
-    this.setState((prevState) => {
-      const updatedNearbyPinKeys = prevState.pins.slice();
-      updatedNearbyPinKeys.push(key);
-      return { pins: updatedNearbyPinKeys };
-    });
-  };
-
-  keyLeft = (key: KeyType) => {
-    this.setState((prevState) => {
-      const updatedNearbyPinKeys = prevState.pins.slice();
-      updatedNearbyPinKeys.splice(updatedNearbyPinKeys.indexOf(key), 1);
-      return { pins: updatedNearbyPinKeys };
-    });
-  };
-
   render() {
-    const listItems = this.state.pins.map(pinId => <PinNode pinId={pinId} key={pinId} />);
+    const listItems = this.state.pins.map(pin => (
+      <PinNode pinData={pin} authUser={this.props.authUser} key={pin.pinId} />
+    ));
     return (
       <div>
-        <ul>{listItems}</ul>
+        <h1>My Pins</h1>
+        <div className={this.props.classes.root}>
+          <List component="nav">
+            {listItems}
+          </List>
+        </div>
       </div>
     );
   }
 }
+
+export default withStyles(styles)(ListPins);

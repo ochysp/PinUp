@@ -1,49 +1,42 @@
 // @flow
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { listenForPinData, detachPinListener } from '../../business/Pin';
+import { ListItem, ListItemText } from 'material-ui';
+import { Redirect } from 'react-router';
 import * as routes from '../../constants/routes';
-import type { PinType, SnapshotType, KeyType } from '../../business/Types';
+import type { PinType } from '../../business/Types';
 
 type Props = {
-  pinId: KeyType
+  pinData: PinType
 };
 
 type State = {
-  title: string
-};
+  redirect: false
+}
 
 export default class PinNode extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: '',
+      redirect: false,
     };
   }
 
-  componentDidMount() {
-    listenForPinData(this.props.pinId, (snapshot: SnapshotType) => {
-      this.updateData(snapshot.val());
-    });
-  }
-
-  componentWillUnmount() {
-    detachPinListener(this.props.pinId);
-  }
-
-  updateData(values: PinType) {
-    const newState = { title: values.title };
-    this.setState(newState);
-  }
+  handleClick = () => {
+    this.setState({ redirect: true });
+  };
 
   render() {
+    const { redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to={`${routes.PINS}/${this.props.pinData.pinId}`} />;
+    }
+
     return (
-      <li>
-        <Link className="item" to={`${routes.PINS}/${this.props.pinId}`}>
-          {this.state.title}
-        </Link>
-      </li>
+      <ListItem button onClick={this.handleClick}>
+        <ListItemText primary={this.props.pinData.title} />
+      </ListItem>
     );
   }
 }
