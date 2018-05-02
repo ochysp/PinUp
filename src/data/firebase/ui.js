@@ -1,6 +1,6 @@
 // @flow
 
-import firebase from 'firebase';
+const firebase = require('firebase');
 
 export default {
   credentialHelper: 'none',
