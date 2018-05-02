@@ -1,9 +1,8 @@
-/* eslint-disable no-useless-constructor */
 // @flow
 
 import React from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import { withStyles, Button } from 'material-ui';
+import { Button } from 'material-ui';
 import { doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
 import { CATEGORIES } from '../../constants/categories';
@@ -48,4 +47,4 @@ class PostDetails extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(PostDetails);
+export default PostDetails;
