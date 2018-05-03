@@ -5,10 +5,21 @@ import { withRouter } from 'react-router-dom';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { uiConfig, firebase } from '../../data/firebase';
 
+const divStyle = {
+  display: 'block',
+  maxWidth: '500px',
+  margin: 'auto',
+};
+
+const imgStyle = {
+  width: '100%',
+  marginTop: '50px',
+  marginBottom: '30px',
+};
+
 const SignInScreen = () => (
-  <div>
-    <h1 className="signInTitle">Pin Up</h1>
-    <img src="/public/img/PinUp_logo_full_horizontal.png" alt="Pin Up" />
+  <div style={divStyle}>
+    <img src="/img/PinUp_logo_full_horizontal.png" alt="Pin Up" style={imgStyle} />
     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth} />
   </div>
 );
