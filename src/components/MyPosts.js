@@ -54,7 +54,10 @@ export default class MyPosts extends React.Component<Props, State> {
 
   render() {
     return (
-      <ListOfPosts posts={this.state.posts} />
+      <div>
+        <h1>My Posts</h1>
+        <ListOfPosts posts={this.state.posts} />
+      </div>
     );
   }
 }

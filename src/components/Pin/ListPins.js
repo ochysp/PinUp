@@ -56,10 +56,7 @@ export default class ListPins extends React.Component<Props, State> {
     const listItems = this.state.pins.map(pinId => <PinNode pinId={pinId} />);
     return (
       <div>
-        <h1>My Pins</h1>
-        <div>
-          <ul>{listItems}</ul>
-        </div>
+        <ul>{listItems}</ul>
       </div>
     );
   }

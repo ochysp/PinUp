@@ -7,8 +7,8 @@ import { uiConfig, firebase } from '../../data/firebase';
 
 const SignInScreen = () => (
   <div>
-    <h1>Pin Up</h1>
-    <p>Please sign-in:</p>
+    <h1 className="signInTitle">Pin Up</h1>
+    <img src="/public/img/PinUp_logo_full_horizontal.png" alt="Pin Up" />
     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth} />
   </div>
 );
