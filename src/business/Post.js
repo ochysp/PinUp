@@ -75,10 +75,6 @@ export const deletePost = (authUser: AuthUserType, postData: PostType) => {
       .child(postData.postId)
       .remove();
     db
-      .ref(dbRef.USER_POSTS + authUser.uid)
-      .child(postData.postId)
-      .remove();
-    db
       .ref(dbRef.postLocations(postData.category) + postId)
       .remove();
   } else {

@@ -52,10 +52,6 @@ export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
     .ref(dbRef.PINS)
     .child(pinKey)
     .remove();
-  db
-    .ref(dbRef.USER_PINS + authUser.uid)
-    .child(pinKey)
-    .remove();
 };
 
 export const convertCategoryArrayToObject = (categoryArray: string[]): CategoriesType => {
