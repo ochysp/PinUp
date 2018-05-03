@@ -12,6 +12,7 @@ type Props = {
   dialogIsActive: boolean,
   handleSetPin: any,
   handleSetPost: any,
+  onClose: () => void,
 };
 
 type State = {
@@ -36,7 +37,10 @@ class SelectionDialog extends React.Component<Props, State> {
       <div>
         <Dialog
           open={this.state.dialogIsActive}
-          onClose={() => this.setState({ dialogIsActive: false })}
+          onClose={() => {
+            this.props.onClose();
+            this.setState({ dialogIsActive: false });
+          }}
         >
           <div
             tabIndex={0}

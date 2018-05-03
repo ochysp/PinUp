@@ -13,6 +13,7 @@ import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
+import { pinIcon, postIcon } from '../img/LeafletIcons';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -134,16 +135,24 @@ export default class Home extends React.Component<Props, State> {
     ) : null;
 
     const currentMarker = markerIsSet ? (
-      <Marker position={marker} ref="marker" />
+      <Marker
+        position={marker}
+        ref="marker"
+        color="white"
+      />
     ) : null;
 
-    const selectionDrawer = markerIsSet ? (
+    const selectionDrawer = (
       <SelectionDrawer
         handleSetPin={this.handleSetPin}
         handleSetPost={this.handleSetPost}
         dialogIsActive={this.state.dialogIsActive}
+        onClose={() => (this.setState({
+          markerIsSet: false,
+          dialogIsActive: false,
+        }))}
       />
-    ) : null;
+    );
 
     return (
       <div>
@@ -154,7 +163,11 @@ export default class Home extends React.Component<Props, State> {
           />
 
           {this.state.pins.map((pin: PinType, index) => (
-            <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)}>
+            <Marker
+              key={pin.pinId}
+              position={convertToLeafletLocation(pin.area.location)}
+              icon={pinIcon}
+            >
               <Popup>
                 <span>
                   {pin.title} #{index}
@@ -169,12 +182,17 @@ export default class Home extends React.Component<Props, State> {
               <Circle
                 center={convertToLeafletLocation(pin.area.location)}
                 radius={convertToLeafletRadius(pin.area.radius)}
+                color="white"
               />
             </Marker>
           ))}
 
           {this.state.posts.map((post: PostType, index) => (
-            <Marker key={post.postId} position={convertToLeafletLocation(post.location)}>
+            <Marker
+              key={post.postId}
+              position={convertToLeafletLocation(post.location)}
+              icon={postIcon}
+            >
               <Popup>
                 <span>
                   {post.title} #{index}
