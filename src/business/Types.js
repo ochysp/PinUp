@@ -41,11 +41,6 @@ export type PinType = {
   categories: CategoriesType
 };
 
-export type CategoryType = {
-  value: string,
-  name: string
-};
-
 
 export type EventType = {
   date: Date,
@@ -57,7 +52,7 @@ export type PostType = {
   userId: KeyType,
   title: string,
   location: LocationType,
-  category: CategoryType,
+  category: string,
   event?: EventType
 };
 

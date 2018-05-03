@@ -16,7 +16,7 @@ const Match = (
   categories: CategoriesType,
   keyEntered: GeoQuerryCallback,
   keyLeft: GeoQuerryCallback,
-): ConnectionType => {
+): ConnectionType[] => {
   const handles = [];
   Object.keys(categories).forEach((categoryId: string, i) => {
     const geoKey = db.ref(dbRef.postLocations(categoryId));

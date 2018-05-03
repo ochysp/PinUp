@@ -12,6 +12,7 @@ import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
+import { CATEGORIES } from '../constants/categories';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -97,7 +98,7 @@ export default class Home extends React.Component<Props, State> {
   };
   unsetMarker = () => {
     this.setState({ markerIsSet: false });
-  }
+  };
 
   handleDeletePin = (pin: PinType) => () => {
     if (pin.pinId) {
@@ -158,7 +159,7 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   {pin.title} #{index}
                   <br />
-                  {pin.categories}
+                  {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')}
                   <br />
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
@@ -178,7 +179,7 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   {post.title} #{index}
                   <br />
-                  {post.category.name}
+                  {CATEGORIES[post.category]}
                   <br />
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post

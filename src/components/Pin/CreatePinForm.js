@@ -108,7 +108,6 @@ class CreatePinForm extends React.Component<Props, State> {
                     id="title"
                     label="Title"
                     onChange={this.handleChange('title')}
-                    helperText="Rapperswil"
                     margin="normal"
                     className={classes.titleField}
                   />
@@ -124,7 +123,7 @@ class CreatePinForm extends React.Component<Props, State> {
                         value={this.state.categories}
                         onChange={this.handleChange('categories')}
                         input={<Input id="select-categories" />}
-                        renderValue={selected => selected.map(category => (category.name)).join(', ')}
+                        renderValue={selected => selected.map(category => (CATEGORIES[category])).join(', ')}
                         className={classes.categoryField}
                       >
                         {Object.entries(CATEGORIES).map(category => (
@@ -173,9 +172,9 @@ class CreatePinForm extends React.Component<Props, State> {
               <Button
                 color="secondary"
                 variant="raised"
-                className={classes.buttonCancle}
+                className={classes.buttonCancel}
                 onClick={() => this.setState({ dialogIsActive: false })}
-              >Cancle
+              >Cancel
               </Button>
               <Button
                 color="primary"

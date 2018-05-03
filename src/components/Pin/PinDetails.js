@@ -28,7 +28,7 @@ export default class PinDetails extends React.Component<Props, State> {
     super(props);
     this.state = {
       area: null,
-      categories: null,
+      categories: {},
     };
   }
 

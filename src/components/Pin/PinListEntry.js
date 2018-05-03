@@ -11,7 +11,7 @@ type Props = {
 };
 
 type State = {
-  redirect: false
+  redirect: boolean
 }
 
 export default class PinListEntry extends React.Component<Props, State> {
@@ -30,7 +30,7 @@ export default class PinListEntry extends React.Component<Props, State> {
     const { redirect } = this.state;
 
     if (redirect) {
-      return <Redirect to={`${routes.PINS}/${this.props.pinData.pinId}`} />;
+      return <Redirect to={`${routes.PINS}/${this.props.pinData.pinId ? this.props.pinData.pinId : ''}`} />;
     }
 
     return (

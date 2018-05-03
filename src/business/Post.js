@@ -58,7 +58,7 @@ export const createPost = (
     .update({ [newPostId]: true })
     .then(callbackOnSuccess, callbackOnError);
   createPostLocation(
-    newPostId, postInfo.category.value, postInfo.location,
+    newPostId, postInfo.category, postInfo.location,
   );
 };
 
@@ -74,7 +74,7 @@ export const deletePost = (authUser: AuthUserType, postData: PostType) => {
       .child(postData.postId)
       .remove();
     db
-      .ref(dbRef.postLocations(postData.category.value) + postId)
+      .ref(dbRef.postLocations(postData.category) + postId)
       .remove();
   } else {
     // eslint-disable-next-line no-throw-literal

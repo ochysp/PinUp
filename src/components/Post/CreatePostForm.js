@@ -142,9 +142,9 @@ class CreatePostForm extends React.Component<Props, State> {
               <Button
                 color="secondary"
                 variant="raised"
-                className={classes.buttonCancle}
+                className={classes.buttonCancel}
                 onClick={() => this.setState({ dialogIsActive: false })}
-              >Cancle
+              >Cancel
               </Button>
               <Button
                 color="primary"

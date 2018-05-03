@@ -11,7 +11,7 @@ import type {
 
 type State = {
   posts: KeyType[],
-  dbHandles: ?ConnectionType
+  dbHandles: ConnectionType[]
 };
 
 type Props = {
