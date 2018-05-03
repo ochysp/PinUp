@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { Typography } from 'material-ui';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
 import ListOfPosts from './Post/ListOfPosts';
@@ -55,7 +56,9 @@ export default class MyPosts extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <h1>My Posts</h1>
+        <Typography variant="title" gutterBottom>
+          My Posts
+        </Typography>
         <ListOfPosts posts={this.state.posts} />
       </div>
     );

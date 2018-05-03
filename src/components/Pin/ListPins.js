@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { List, withStyles } from 'material-ui';
+import { List, Typography, withStyles } from 'material-ui';
 import { detachAllPinListeners, listenForAllPinsOfUser } from '../../business/Pin';
 import PinListEntry from './PinListEntry';
 import type { AuthUserType, PinType } from '../../business/Types';
@@ -47,7 +47,9 @@ class ListPins extends React.Component<Props, State> {
     ));
     return (
       <div>
-        <h1>My Pins</h1>
+        <Typography variant="title" gutterBottom>
+          My Pins
+        </Typography>
         <div className={this.props.classes.root}>
           <List component="nav">
             {listItems}
