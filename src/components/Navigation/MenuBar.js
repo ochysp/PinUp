@@ -19,6 +19,7 @@ const styles = {
 type Props = {
   history: any,
   classes: any,
+  theme: any,
 };
 
 type State = {
@@ -52,14 +53,21 @@ class MenuBar extends React.Component<Props, State> {
 
   render() {
     const { classes } = this.props;
-
+    const { theme } = this.props;
+    const primaryColor = theme.palette.primary.main;
+    const menuBarStyles = {
+      primaryColor: {
+        backgroundColor: primaryColor,
+        color: theme.palette.common.white,
+      },
+    };
     return (
       <Paper className={classes.root}>
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
-          indicatorColor="primary"
-          textColor="primary"
+          style={menuBarStyles.primaryColor}
+          centered
         >
           <Tab label="Home" />
           <Tab label="My Pins" />
@@ -72,4 +80,4 @@ class MenuBar extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withStyles(styles)(MenuBar));
+export default withRouter(withStyles(styles, { withTheme: true })(MenuBar));
