@@ -62,6 +62,14 @@ export const styles = theme => ({
     height: '100%',
     maxWidth: 1080,
     margin: 'auto',
+    backgroundColor: '#F9F5ED',
+  },
+  loginScreenRoot: {
+    background: 'white',
+    height: '100%',
+  },
+  main: {
+    height: '100%',
   },
 });
 
