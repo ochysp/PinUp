@@ -6,7 +6,7 @@ import { db } from '../data/firebase/firebase';
 import { attachChildListener } from './Helper';
 import type {
   KeyType, LocationType, AuthUserType, KeyChangedCallback,
-  ValueQueryCallback, PostType, SuccessCallback, ErrorCallback,
+  ValueQueryCallback, PostType, SuccessCallback, ErrorCallback, SnapshotType,
 } from './Types';
 
 const createPostLocation = (
@@ -24,12 +24,22 @@ export const listenForPostsIDsOfUser = (
     keyEntered, keyLeft, dbRef.USER_POSTS + authUser.uid,
   );
 
-export const listenForAllPostsOfUser = (userId: KeyType, callback: ValueQueryCallback) => {
+const convertPostsSnapshotToArray = (snapshot: SnapshotType) => {
+  if (snapshot.val() === null) {
+    return [];
+  }
+  return Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
+    postId: key,
+    ...value,
+  }));
+};
+
+export const listenForAllPostsOfUser = (userId: KeyType, callback: (PostType[]) => void) => {
   const allPosts = db.ref(dbRef.POSTS);
   allPosts
     .orderByChild('userId')
     .equalTo(userId)
-    .on('value', callback);
+    .on('value', (snapshot: SnapshotType) => callback(convertPostsSnapshotToArray(snapshot)));
 };
 
 export const listenForPostData = (postId: KeyType, callback: ValueQueryCallback) =>
@@ -48,7 +58,7 @@ export const createPost = (
     .update({ [newPostId]: true })
     .then(callbackOnSuccess, callbackOnError);
   createPostLocation(
-    newPostId, postInfo.category.value, postInfo.location,
+    newPostId, postInfo.category, postInfo.location,
   );
 };
 
@@ -64,7 +74,7 @@ export const deletePost = (authUser: AuthUserType, postData: PostType) => {
       .child(postData.postId)
       .remove();
     db
-      .ref(dbRef.postLocations(postData.category.value) + postId)
+      .ref(dbRef.postLocations(postData.category) + postId)
       .remove();
   } else {
     // eslint-disable-next-line no-throw-literal

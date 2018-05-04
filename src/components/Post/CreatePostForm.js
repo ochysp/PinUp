@@ -2,46 +2,29 @@
 // @flow
 
 import React from 'react';
-import { FormControl, FormHelperText, Input, InputLabel, Select, Typography } from 'material-ui';
+import { FormControl, FormHelperText, Input, InputLabel, Select } from 'material-ui';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
-import Drawer from 'material-ui/Drawer';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
 import AlertDialog from '../MaterialComponents/AlertDialog';
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  titleField: {
-    marginTop: 20,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-  categoryField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginBottom: 20,
-    width: 200,
-  },
-  menu: {
-    width: 200,
-  },
-});
+import formStyles from '../../style/styles';
 
 type State = {
   title: string,
   category: string,
   invalidSubmit: boolean,
   sentToDB: boolean,
-  drawer: boolean,
+  dialogIsActive: boolean,
 };
 
 type Props = {
@@ -58,13 +41,13 @@ class CreatePostForm extends React.Component<Props, State> {
       category: '',
       invalidSubmit: false,
       sentToDB: false,
-      drawer: true,
+      dialogIsActive: true,
     };
   }
 
   handleSubmit = (event: any) => {
     if (this.state.title !== '' && this.state.category !== '') {
-      this.setState({ invalidSubmit: false, drawer: false });
+      this.setState({ invalidSubmit: false, dialogIsActive: false });
       event.preventDefault();
       createPost(
         {
@@ -98,83 +81,84 @@ class CreatePostForm extends React.Component<Props, State> {
     return (
       <div>
         {savedAlert}
-        <Drawer
-          anchor="bottom"
-          open={this.state.drawer}
-          onClose={() => this.setState({ drawer: false })}
+        <Dialog
+          open={this.state.dialogIsActive}
+          onClose={() => this.setState({ dialogIsActive: false })}
+          aria-labelledby="form-dialog-title"
         >
-          <Typography className={classes.title}>
-          Edit Post
-          </Typography>
           <form className={classes.container} noValidate autoComplete="off">
-            <Grid container spacing={24}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Title"
-                  id="title"
-                  onChange={this.handleChange('title')}
-                  helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
-                  error={this.state.invalidSubmit && this.state.title === ''}
-                  value={this.state.title}
-                  className={classes.titleField}
-                />
-              </Grid>
+            <Grid container spacing={36} className={classes.grid}>
+              <DialogTitle id="form-dialog-title">Edit Post</DialogTitle>
 
-              <Grid item xs={12}>
-                <FormControl
-                  className={classes.formControl}
-                  error={this.state.invalidSubmit && this.state.category === ''}
-                >
-                  <InputLabel htmlFor="select-category">Category</InputLabel>
-                  <Select
-                    value={this.state.category}
-                    onChange={this.handleChange('category')}
-                    input={<Input name="category" id="select-category" />}
-                    className={classes.categoryField}
+              <DialogContent>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Title"
+                    id="title"
+                    onChange={this.handleChange('title')}
+                    helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
+                    error={this.state.invalidSubmit && this.state.title === ''}
+                    value={this.state.title}
+                    className={classes.titleField}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControl
+                    className={classes.formControl}
+                    error={this.state.invalidSubmit && this.state.category === ''}
                   >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    {Object.entries(CATEGORIES).map(category => (
-                      <MenuItem key={category[0]} value={category[0]}>
-                        {category[1]}
+                    <InputLabel htmlFor="select-category">Category</InputLabel>
+                    <Select
+                      value={this.state.category}
+                      onChange={this.handleChange('category')}
+                      input={<Input name="category" id="select-category" />}
+                      className={classes.categoryField}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
                       </MenuItem>
+                      {Object.entries(CATEGORIES).map(category => (
+                        <MenuItem key={category[0]} value={category[0]}>
+                          {category[1]}
+                        </MenuItem>
                   ))}
 
-                  </Select>
-                  { this.state.invalidSubmit
+                    </Select>
+                    { this.state.invalidSubmit
                 && this.state.category !== ''
                 && (<FormHelperText>Requires a category</FormHelperText>)}
-                </FormControl>
-              </Grid>
+                  </FormControl>
+                </Grid>
+              </DialogContent>
             </Grid>
-
           </form>
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={() => this.setState({ drawer: false })}
+            onKeyDown={() => this.setState({ dialogIsActive: false })}
           >
-            <Button
-              color="primary"
-              variant="raised"
-              className={classes.button}
-              onClick={this.handleSubmit}
-            >Save
-            </Button>
-
-            <Button
-              color="secondary"
-              variant="raised"
-              className={classes.button}
-              onClick={() => this.setState({ drawer: false })}
-            >Cancle
-            </Button>
+            <DialogActions>
+              <Button
+                color="secondary"
+                variant="raised"
+                className={classes.buttonCancel}
+                onClick={() => this.setState({ dialogIsActive: false })}
+              >Cancel
+              </Button>
+              <Button
+                color="primary"
+                variant="raised"
+                className={classes.buttonSave}
+                onClick={this.handleSubmit}
+              >Save
+              </Button>
+            </DialogActions>
           </div>
-        </Drawer>
+        </Dialog>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(CreatePostForm);
+export default withStyles(formStyles)(CreatePostForm);

@@ -10,8 +10,9 @@ import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinType, PostType, SnapshotType } from '../business/Types';
-import SelectionDrawer from './MaterialComponents/SelectionDrawer';
+import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
+import SelectionDrawer from './MaterialComponents/SelectionDialog';
+import { CATEGORIES } from '../constants/categories';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -38,7 +39,7 @@ type State = {
 
   pins: Array<PinType>,
 
-  drawer: boolean,
+  dialogIsActive: boolean,
   posts: Array<PostType>,
 };
 
@@ -64,35 +65,17 @@ export default class Home extends React.Component<Props, State> {
       pins: [],
       posts: [],
 
-      drawer: false,
+      dialogIsActive: false,
     };
   }
 
   componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      if (snapshot.val() === null) {
-        this.setState({ pins: [] });
-      } else {
-        this.setState({
-          pins: Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
-            pinId: key,
-            ...value,
-          })),
-        });
-      }
+    listenForAllPinsOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
+      this.setState({ pins: newPins });
     });
 
-    listenForAllPostsOfUser(this.props.authUser.uid, (snapshot: SnapshotType) => {
-      if (snapshot.val() === null) {
-        this.setState({ posts: [] });
-      } else {
-        this.setState({
-          posts: Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
-            postId: key,
-            ...value,
-          })),
-        });
-      }
+    listenForAllPostsOfUser(this.props.authUser.uid, (newPosts: PostType[]) => {
+      this.setState({ posts: newPosts });
     });
   }
 
@@ -101,22 +84,26 @@ export default class Home extends React.Component<Props, State> {
     this.setState({
       markerIsSet: true,
       marker: position,
-      drawer: true,
+      dialogIsActive: true,
       isPin: false,
       isPost: false,
     });
   };
 
   handleSetPin = () => {
-    this.setState({ isPin: true, isPost: false, drawer: false });
+    this.setState({ isPin: true, isPost: false, dialogIsActive: false });
   };
   handleSetPost = () => {
-    this.setState({ isPost: true, isPin: false, drawer: false });
+    this.setState({ isPost: true, isPin: false, dialogIsActive: false });
+  };
+  unsetMarker = () => {
+    this.setState({ markerIsSet: false });
   };
 
   handleDeletePin = (pin: PinType) => () => {
     if (pin.pinId) {
       deletePin(this.props.authUser, pin.pinId);
+      this.unsetMarker();
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'pin can not be deleted because no pinId was provided';
@@ -126,6 +113,7 @@ export default class Home extends React.Component<Props, State> {
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
       deletePost(this.props.authUser, post);
+      this.unsetMarker();
     } else {
       // eslint-disable-next-line no-throw-literal
       throw 'post can not be deleted because no postId was provided';
@@ -153,7 +141,7 @@ export default class Home extends React.Component<Props, State> {
       <SelectionDrawer
         handleSetPin={this.handleSetPin}
         handleSetPost={this.handleSetPost}
-        drawer={this.state.drawer}
+        dialogIsActive={this.state.dialogIsActive}
       />
     ) : null;
 
@@ -171,7 +159,7 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   {pin.title} #{index}
                   <br />
-                  {pin.categories}
+                  {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')}
                   <br />
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
@@ -191,7 +179,7 @@ export default class Home extends React.Component<Props, State> {
                 <span>
                   {post.title} #{index}
                   <br />
-                  {post.category.name}
+                  {CATEGORIES[post.category]}
                   <br />
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post
@@ -200,11 +188,9 @@ export default class Home extends React.Component<Props, State> {
               </Popup>
             </Marker>
           ))}
-
           {currentMarker}
-          {selectionDrawer}
-
         </Map>
+        {selectionDrawer}
         {pinForm}
         {postForm}
       </div>

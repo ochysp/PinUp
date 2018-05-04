@@ -11,7 +11,7 @@ import type {
 
 type State = {
   posts: KeyType[],
-  dbHandles: ?ConnectionType
+  dbHandles: ConnectionType[]
 };
 
 type Props = {
@@ -78,7 +78,7 @@ class Matches extends React.Component<Props, State> {
 
   render() {
     const listItems = this.state.posts.map(postId => (
-      <PostListEntry postId={postId} authUser={this.props.authUser} />
+      <PostListEntry postId={postId} authUser={this.props.authUser} key={postId} />
     ));
     return (
       <div className={this.props.classes.root}>
