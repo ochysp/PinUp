@@ -2,18 +2,21 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { Paper, Typography, withStyles } from 'material-ui';
 import * as routes from '../constants/routes';
 import ListPins from './Pin/ListPins';
 import PinDetails from './Pin/PinDetails';
 import type { AuthUserType } from '../business/Types';
+import { styles } from '../style/styles';
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
 const MyPins = (props: Props) => (
-  <div>
-    <h1>My Pins</h1>
+  <Paper className={props.classes.paper} elevation={4}>
+    <Typography variant="headline" className={props.classes.typographyTitle} >My Pins</Typography>
     <Route
       exact
       path={routes.PINS}
@@ -22,7 +25,7 @@ const MyPins = (props: Props) => (
       )}
     />
     <Route path={`${routes.PINS}/:pinId`} component={PinDetails} authUser={props.authUser} />
-  </div>
+  </Paper>
 );
 
-export default MyPins;
+export default withStyles(styles)(MyPins);

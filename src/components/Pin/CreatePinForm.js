@@ -25,7 +25,7 @@ import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../MaterialComponents/CompoundSlider';
 import type { AuthUserType, LocationType } from '../../business/Types';
 import AlertDialog from '../MaterialComponents/AlertDialog';
-import formStyles from '../../style/styles';
+import { formStyles } from '../../style/styles';
 
 type State = {
   title: string,
