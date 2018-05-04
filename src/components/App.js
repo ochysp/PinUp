@@ -2,13 +2,14 @@
 
 import React from 'react';
 import CssBaseline from 'material-ui/CssBaseline';
-import { MuiThemeProvider } from 'material-ui';
+import { MuiThemeProvider, Paper, withStyles } from 'material-ui';
 import { createMuiTheme } from 'material-ui/styles';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
 import Main from './Main';
 import type { AuthUserType } from '../business/Types';
+import { styles } from '../style/styles';
 
 const theme = createMuiTheme({
   palette: {
@@ -24,11 +25,15 @@ const theme = createMuiTheme({
   },
 });
 
+type Props = {
+  classes: any,
+};
+
 type State = {
   authUser: ?AuthUserType
 };
 
-export default class App extends React.Component<{}, State> {
+class App extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -55,12 +60,14 @@ export default class App extends React.Component<{}, State> {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <div>
+        <Paper className={this.props.classes.masterPaper}>
           <CssBaseline />
           <Header authUser={this.state.authUser} />
           <Main authUser={this.state.authUser} />
-        </div>
+        </Paper>
       </MuiThemeProvider>
     );
   }
 }
+
+export default withStyles(styles)(App);

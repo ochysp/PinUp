@@ -46,6 +46,7 @@ export const formStyles = theme => ({
 export const styles = theme => ({
   paper: {
     maxWidth: '500px',
+    minWidth: '400px',
     margin: 'auto',
     backgroundColor: theme.palette.background.paper,
     paddingTop: 16,
@@ -53,6 +54,14 @@ export const styles = theme => ({
   },
   typographyTitle: {
     marginLeft: theme.spacing.unit * 3,
+  },
+  flexContainer: {
+    display: 'flex',
+  },
+  masterPaper: {
+    height: '100%',
+    maxWidth: 1080,
+    margin: 'auto',
   },
 });
 
