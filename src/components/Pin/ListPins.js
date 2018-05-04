@@ -2,51 +2,33 @@
 
 import React from 'react';
 import { List } from 'material-ui';
-import { detachAllPinListeners, listenForAllPinsOfUser } from '../../business/Pin';
 import PinListEntry from './PinListEntry';
 import type { AuthUserType, PinType } from '../../business/Types';
 
-type State = {
-  pins: PinType[],
-};
-
 type Props = {
   authUser: AuthUserType,
-  classes: any,
+  pins: PinType[],
+  onSelect: (PinType) => void,
 };
 
 
-class ListPins extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      pins: [],
-    };
-  }
+const ListPins = (props: Props) => {
+  const listItems = props.pins.map(pin => (
+    <PinListEntry
+      pinData={pin}
+      onListEntryClick={() => { props.onSelect(pin); }}
+      authUser={props.authUser}
+      key={pin.pinId}
+    />
+  ));
+  return (
+    <div>
+      <List component="nav">
+        {listItems}
+      </List>
 
-  componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (newData: PinType[]) => {
-      this.setState({ pins: newData });
-    });
-  }
-
-  componentWillUnmount() {
-    detachAllPinListeners();
-  }
-
-  render() {
-    const listItems = this.state.pins.map(pin => (
-      <PinListEntry pinData={pin} authUser={this.props.authUser} key={pin.pinId} />
-    ));
-    return (
-      <div>
-        <List component="nav">
-          {listItems}
-        </List>
-
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default (ListPins);

@@ -60,7 +60,7 @@ class MyPosts extends React.Component<Props, State> {
     return (
       <Paper className={this.props.classes.paper} elevation={4}>
         <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
-        <ListOfPosts posts={this.state.posts} />
+        <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
       </Paper>
     );
   }
