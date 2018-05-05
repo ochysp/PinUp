@@ -1,24 +1,26 @@
 /* eslint-disable no-unused-vars,prefer-destructuring */
 import React from 'react';
-import { doCreateUser } from '../business/User';
+import Enzyme, { shallow, render, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+import CreatePinForm from '../components/Pin/CreatePinForm';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
 const proxyquire = require('proxyquire');
 
-const firebasemock = require('firebase-mock');
+const testDBconfig = {
+  apiKey: 'AIzaSyDD3ijy2I9WtWAPJ_v4wzaXV2VnwwB2R0Q',
+  authDomain: 'pinup-testingdb.firebaseapp.com',
+  databaseURL: 'https://pinup-testingdb.firebaseio.com',
+  projectId: 'pinup-testingdb',
+  storageBucket: 'pinup-testingdb.appspot.com',
+  messagingSenderId: '233425895846',
+};
 
-const mockauth = new firebasemock.MockAuthentication();
-const mockdatabase = new firebasemock.MockFirebase();
-const mocksdk = new firebasemock.MockFirebaseSdk(path =>
-  (path ? mockdatabase.child(path) : mockdatabase), () => mockauth);
-mocksdk.initializeApp();
-
-
-proxyquire('../data/firebase/firebase.js', {
-  db: mockdatabase,
-});
-mockdatabase.autoFlush(true);
+let pinForm;
 const authUser = {
   uid: '123',
   displayName: 'Max Muster',
@@ -30,17 +32,22 @@ const location = {
   longitude: 8.81714,
 };
 
+proxyquire('../data/firebase/firebaseconfig.js', {
+  config: testDBconfig,
+});
+
 describe('Test a complete run with different Elements', () => {
-  it('should go fuck itself', () => {
-    doCreateUser(
-      '123', 'Max Muster', 'maxmuster@gmail.com', null,
-    );
-    /*
-    expect(mockdatabase.child('userData').child('userInfo').getData()).to.equal({
-      123: {
-        email: 'maxmuster@gmail.com',
-        username: 'Max Muster',
-      },
-    }); */
+  it('should render correctly', () => {
+    // eslint-disable-next-line no-undef
+    pinForm = mount(<CreatePinForm authUser={authUser} position={location} />);
+    pinForm.setState({
+      title: 'TestPin1',
+      radius: 10,
+      categories: [0, 2],
+    });
+    console.log(pinForm.);
+  });
+  it('', () => {
+    pinForm.setState();
   });
 });
