@@ -69,6 +69,7 @@ export const styles = theme => ({
   loginScreenRoot: {
     background: 'white',
     height: '100vh',
+    padding: theme.spacing.unit * 3,
   },
   main: {
     height: 'calc(100% - 48px)',
