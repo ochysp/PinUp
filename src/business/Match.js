@@ -5,6 +5,7 @@ import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import type {
   AreaType,
+  KeyType,
   GeoQuerryCallback,
   ConnectionType,
   CategoriesType,
@@ -42,6 +43,33 @@ const Match = (
     };
   });
   return handles;
+};
+
+export const getMatchesOnce = (
+  area: AreaType,
+  categories: CategoriesType,
+  callback: (KeyType[]) => void,
+) => {
+  const matches = [];
+  let categoriesNotReady: number = Object.keys(categories).length;
+  Object.keys(categories).forEach((categoryId: string) => {
+    const geoKey = db.ref(dbRef.postLocations(categoryId));
+    const geoFire = new GeoFire(geoKey);
+
+    const geoQuery = geoFire.query({
+      center: [area.location.latitude, area.location.longitude],
+      radius: area.radius,
+    });
+
+    const keyEnteredQuery = geoQuery.on('key_entered', (key) => { matches.push(key); });
+    geoQuery.on('ready', () => {
+      keyEnteredQuery.cancel();
+      categoriesNotReady -= 1;
+      if (categoriesNotReady <= 0) {
+        callback(matches);
+      }
+    });
+  });
 };
 
 export default Match;

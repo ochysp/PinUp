@@ -5,7 +5,11 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import { withStyles, Button } from 'material-ui';
-import { detachAllPinListeners, listenForAllPinsOfUser, deletePin } from '../business/Pin';
+import {
+  detachAllPinListeners,
+  deletePin,
+  listenForAllPinsWithMatchesOfUser,
+} from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -13,7 +17,7 @@ import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
-import { pinIcon, postIcon } from '../img/LeafletIcons';
+import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
@@ -73,7 +77,7 @@ class Home extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
+    listenForAllPinsWithMatchesOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
       this.setState({ pins: newPins });
     });
 
@@ -173,7 +177,7 @@ class Home extends React.Component<Props, State> {
             <Marker
               key={pin.pinId}
               position={convertToLeafletLocation(pin.area.location)}
-              icon={pinIcon}
+              icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
             >
               <Popup>
                 <span>

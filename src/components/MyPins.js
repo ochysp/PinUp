@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 // @flow
 
 import React from 'react';
@@ -56,6 +57,7 @@ class MyPins extends React.Component<Props, State> {
   updateMatchDataListener = () => {
     this.detachListeners();
     this.setState({ PostsDbReady: false }, () => {
+      if (!this.state.pinSelected) { throw 'noPinSelected'; }
       this.dbHandles = Match(
         {
           location: {

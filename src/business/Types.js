@@ -34,6 +34,7 @@ export type CategoriesType = {
 };
 
 export type PinType = {
+  matches?: KeyType[],
   pinId?: KeyType,
   userId: KeyType,
   title: string,
