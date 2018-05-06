@@ -20,7 +20,6 @@ const testDBconfig = {
   messagingSenderId: '233425895846',
 };
 
-let pinForm;
 const authUser = {
   uid: '123',
   displayName: 'Max Muster',
@@ -36,18 +35,20 @@ proxyquire('../data/firebase/firebaseconfig.js', {
   config: testDBconfig,
 });
 
+const pinForm = mount(<CreatePinForm authUser={authUser} position={location} />);
+
 describe('Test a complete run with different Elements', () => {
   it('should render correctly', () => {
     // eslint-disable-next-line no-undef
-    pinForm = mount(<CreatePinForm authUser={authUser} position={location} />);
+    // browserRouter = mount(<App />);
     pinForm.setState({
       title: 'TestPin1',
       radius: 10,
       categories: [0, 2],
     });
-    console.log(pinForm.);
+    console.log(pinForm.find('button'));
+    pinForm.find('button').simulate('click');
   });
   it('', () => {
-    pinForm.setState();
   });
 });

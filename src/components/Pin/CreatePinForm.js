@@ -167,6 +167,7 @@ class CreatePinForm extends React.Component<Props, State> {
 
         <CardActions>
           <Button
+            id="Save"
             className={classes.button}
             onClick={this.handleSubmit}
           >Save
