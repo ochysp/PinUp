@@ -62,7 +62,7 @@ export const styles = theme => ({
     height: '100%',
     maxWidth: 1080,
     margin: 'auto',
-    backgroundColor: '#F9F5ED',
+    backgroundColor: 'whitesmoke',
     overflowY: 'auto',
     overflowX: 'hidden',
   },
