@@ -58,10 +58,14 @@ class MyPosts extends React.Component<Props, State> {
 
   render() {
     return (
-      <Paper className={this.props.classes.paper} elevation={4}>
-        <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
-        <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
-      </Paper>
+      <div className={this.props.classes.flexContainer}>
+
+        <Paper className={this.props.classes.paper} elevation={4}>
+          <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
+          <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
+        </Paper>
+
+      </div>
     );
   }
 }

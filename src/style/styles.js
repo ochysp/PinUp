@@ -63,13 +63,38 @@ export const styles = theme => ({
     maxWidth: 1080,
     margin: 'auto',
     backgroundColor: '#F9F5ED',
+    overflowY: 'auto',
+    overflowX: 'hidden',
   },
   loginScreenRoot: {
     background: 'white',
-    height: '100%',
+    height: '100vh',
   },
   main: {
+    height: 'calc(100% - 48px)',
+  },
+  progress: {
+    marginTop: '32px',
+  },
+  typographyEmptyList: {
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+  },
+  mapRoot: {
     height: '100%',
+  },
+  map: {
+    height: '100%',
+  },
+  invisible: {
+    visibility: 'hidden',
+  },
+  iconStyle: {
+    color: 'white',
+  },
+  backButton: {
+    marginLeft: -theme.spacing.unit,
   },
 });
 

@@ -74,3 +74,5 @@ export type SuccessCallback = (data: any) => void;
 
 export type ErrorCallback = (error: Error) => void;
 
+export type NotificationCallback = () => void;
+

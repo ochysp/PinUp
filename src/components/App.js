@@ -10,6 +10,7 @@ import Header from './Navigation/Header';
 import Main from './Main';
 import type { AuthUserType } from '../business/Types';
 import { styles } from '../style/styles';
+import style from '../style/style1.css';
 
 const theme = createMuiTheme({
   palette: {
@@ -62,6 +63,7 @@ class App extends React.Component<Props, State> {
       <MuiThemeProvider theme={theme}>
         <Paper className={this.props.classes.masterPaper}>
           <CssBaseline />
+          <div className={style} />
           <Header authUser={this.state.authUser} />
           <Main authUser={this.state.authUser} />
         </Paper>

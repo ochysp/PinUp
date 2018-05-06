@@ -8,6 +8,7 @@ import type {
   GeoQuerryCallback,
   ConnectionType,
   CategoriesType,
+  NotificationCallback,
 } from './Types';
 
 //  Listens for Posts in a specific area
@@ -16,6 +17,7 @@ const Match = (
   categories: CategoriesType,
   keyEntered: GeoQuerryCallback,
   keyLeft: GeoQuerryCallback,
+  ready: NotificationCallback,
 ): ConnectionType[] => {
   const handles = [];
   Object.keys(categories).forEach((categoryId: string, i) => {
@@ -29,11 +31,13 @@ const Match = (
 
     const keyEnteredQuery = geoQuery.on('key_entered', keyEntered);
     const keyExitedQuery = geoQuery.on('key_exited', keyLeft);
+    const readyQuerry = geoQuery.on('ready', ready);
 
     handles[i] = {
       detach: () => {
         keyEnteredQuery.cancel();
         keyExitedQuery.cancel();
+        readyQuerry.cancel();
       },
     };
   });

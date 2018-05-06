@@ -4,7 +4,7 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
-import Button from 'material-ui/Button';
+import { withStyles, Button } from 'material-ui';
 import { detachAllPinListeners, listenForAllPinsOfUser, deletePin } from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
@@ -14,6 +14,7 @@ import type { AuthUserType, LocationType, PinType, PostType } from '../business/
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { pinIcon, postIcon } from '../img/LeafletIcons';
+import { styles } from '../style/styles';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -45,10 +46,11 @@ type State = {
 };
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
-export default class Home extends React.Component<Props, State> {
+class Home extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -155,8 +157,13 @@ export default class Home extends React.Component<Props, State> {
     );
 
     return (
-      <div>
-        <Map center={center} zoom={zoom} onClick={this.setMarker}>
+      <div className={this.props.classes.mapRoot}>
+        <Map
+          center={center}
+          zoom={zoom}
+          onClick={this.setMarker}
+          className={this.props.classes.map}
+        >
           <TileLayer
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -220,3 +227,5 @@ export default class Home extends React.Component<Props, State> {
     detachAllPostListeners();
   }
 }
+
+export default withStyles(styles)(Home);
