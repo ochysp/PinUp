@@ -44,10 +44,14 @@ describe('Test a complete run with different Elements', () => {
     pinForm.setState({
       title: 'TestPin1',
       radius: 10,
-      categories: [0, 2],
+      categories: ['Day-Trip', 'Happening'],
+      invalidSubmit: true,
     });
     console.log(pinForm.find('button'));
     pinForm.find('button').simulate('click');
+    // console.log(pinForm.debug());
+    console.log(pinForm.state());
+
   });
   it('', () => {
   });
