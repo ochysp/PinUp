@@ -3,19 +3,22 @@
 
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { withStyles } from 'material-ui';
 import Home from './Home';
 import MyPins from './MyPins';
 import MyPosts from './MyPosts';
 import SignIn from './Authentication/SignInScreen';
 import * as routes from '../constants/routes';
 import type { AuthUserType } from '../business/Types';
+import { styles } from '../style/styles';
 
 type Props = {
-  authUser: ?AuthUserType
+  authUser: ?AuthUserType,
+  classes: any,
 };
 
 const Main = (props: Props) => (
-  <main>
+  <main className={props.classes.main} >
     <PrivateRoute
       authUser={props.authUser}
       exact
@@ -46,7 +49,7 @@ const Main = (props: Props) => (
 );
 
 
-export default Main;
+export default withStyles(styles)(Main);
 
 function PrivateRoute({ component: Component, authUser, ...rest }) {
   return (

@@ -1,9 +1,12 @@
 // @flow
 
 import React from 'react';
+import { Paper, Typography, withStyles } from 'material-ui';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
 import ListOfPosts from './Post/ListOfPosts';
+import { styles } from '../style/styles';
+
 
 type State = {
   posts: KeyType[],
@@ -11,10 +14,11 @@ type State = {
 };
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
-export default class MyPosts extends React.Component<Props, State> {
+class MyPosts extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -54,7 +58,16 @@ export default class MyPosts extends React.Component<Props, State> {
 
   render() {
     return (
-      <ListOfPosts posts={this.state.posts} />
+      <div className={this.props.classes.flexContainer}>
+
+        <Paper className={this.props.classes.paper} elevation={4}>
+          <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
+          <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
+        </Paper>
+
+      </div>
     );
   }
 }
+
+export default withStyles(styles)(MyPosts);

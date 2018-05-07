@@ -18,8 +18,8 @@ const style = () => ({
 
 type Props = {
   classes: any,
-  onUpdate?: (update) => void,
-  onChange?: (update) => void,
+  onUpdate: (any) => void,
+  onChange: (any) => void,
   defaultValue: number,
   min: number,
   max: number,

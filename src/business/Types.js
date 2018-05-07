@@ -34,16 +34,12 @@ export type CategoriesType = {
 };
 
 export type PinType = {
+  matches?: KeyType[],
   pinId?: KeyType,
   userId: KeyType,
   title: string,
   area: AreaType,
   categories: CategoriesType
-};
-
-export type CategoryType = {
-  value: string,
-  name: string
 };
 
 
@@ -57,7 +53,7 @@ export type PostType = {
   userId: KeyType,
   title: string,
   location: LocationType,
-  category: CategoryType,
+  category: string,
   event?: EventType
 };
 
@@ -78,4 +74,6 @@ export type GeoQuerryCallback = (key: KeyType,
 export type SuccessCallback = (data: any) => void;
 
 export type ErrorCallback = (error: Error) => void;
+
+export type NotificationCallback = () => void;
 
