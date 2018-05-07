@@ -17,7 +17,7 @@ import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
 import AlertDialog from '../MaterialComponents/AlertDialog';
-import formStyles from '../../style/styles';
+import { formStyles } from '../../style/styles';
 
 type State = {
   title: string,

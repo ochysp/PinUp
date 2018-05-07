@@ -1,60 +1,41 @@
 // @flow
 
 import React from 'react';
-import { List, withStyles } from 'material-ui';
-import { detachAllPinListeners, listenForAllPinsOfUser } from '../../business/Pin';
+import { List, Typography, withStyles } from 'material-ui';
 import PinListEntry from './PinListEntry';
 import type { AuthUserType, PinType } from '../../business/Types';
-
-type State = {
-  pins: PinType[],
-};
+import { styles } from '../../style/styles';
 
 type Props = {
   authUser: AuthUserType,
+  pins: PinType[],
+// eslint-disable-next-line react/no-unused-prop-types
+  onSelect: (PinType) => void,
   classes: any,
 };
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
 
-class ListPins extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      pins: [],
-    };
-  }
+const ListPins = (props: Props) => {
+  const listItems = props.pins.map(pin => (
+    <PinListEntry
+      pinData={pin}
+      onListEntryClick={() => { props.onSelect(pin); }}
+      authUser={props.authUser}
+      key={pin.pinId}
+    />
+  ));
+  return (
+    <div>
+      <List component="nav">
+        {props.pins.length > 0 ?
+          listItems
+          : <Typography variant="caption" className={props.classes.typographyEmptyList}>
+              There are currently no Pins available.
+            </Typography>}
+      </List>
 
-  componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (newData: PinType[]) => {
-      this.setState({ pins: newData });
-    });
-  }
-
-  componentWillUnmount() {
-    detachAllPinListeners();
-  }
-
-  render() {
-    const listItems = this.state.pins.map(pin => (
-      <PinListEntry pinData={pin} authUser={this.props.authUser} key={pin.pinId} />
-    ));
-    return (
-      <div>
-        <div className={this.props.classes.root}>
-          <List component="nav">
-            {listItems}
-          </List>
-        </div>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default withStyles(styles)(ListPins);

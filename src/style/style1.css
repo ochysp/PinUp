@@ -1,11 +1,11 @@
 body{
     background: lightblue;
 }
-h1{
-    color: coral;
-    text-align: center;
-
+html, body
+{
+    height: 100%;
 }
-.signInTitle{
-    padding-top: 100px;
+#root{
+    height: 100%;
+    background: lightgray;
 }

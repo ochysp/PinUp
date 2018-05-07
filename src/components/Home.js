@@ -4,8 +4,12 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
-import Button from 'material-ui/Button';
-import { detachAllPinListeners, listenForAllPinsOfUser, deletePin } from '../business/Pin';
+import { withStyles, Button } from 'material-ui';
+import {
+  detachAllPinListeners,
+  deletePin,
+  listenForAllPinsWithMatchesOfUser,
+} from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -13,6 +17,8 @@ import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './MaterialComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
+import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
+import { styles } from '../style/styles';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -44,10 +50,11 @@ type State = {
 };
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
-export default class Home extends React.Component<Props, State> {
+class Home extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -70,7 +77,7 @@ export default class Home extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    listenForAllPinsOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
+    listenForAllPinsWithMatchesOfUser(this.props.authUser.uid, (newPins: PinType[]) => {
       this.setState({ pins: newPins });
     });
 
@@ -134,27 +141,44 @@ export default class Home extends React.Component<Props, State> {
     ) : null;
 
     const currentMarker = markerIsSet ? (
-      <Marker position={marker} ref="marker" />
+      <Marker
+        position={marker}
+        ref="marker"
+        color="white"
+      />
     ) : null;
 
-    const selectionDrawer = markerIsSet ? (
+    const selectionDrawer = (
       <SelectionDrawer
         handleSetPin={this.handleSetPin}
         handleSetPost={this.handleSetPost}
         dialogIsActive={this.state.dialogIsActive}
+        onClose={() => (this.setState({
+          markerIsSet: false,
+          dialogIsActive: false,
+        }))}
       />
-    ) : null;
+    );
 
     return (
-      <div>
-        <Map center={center} zoom={zoom} onClick={this.setMarker}>
+      <div className={this.props.classes.mapRoot}>
+        <Map
+          center={center}
+          zoom={zoom}
+          onClick={this.setMarker}
+          className={this.props.classes.map}
+        >
           <TileLayer
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
 
           {this.state.pins.map((pin: PinType, index) => (
-            <Marker key={pin.pinId} position={convertToLeafletLocation(pin.area.location)}>
+            <Marker
+              key={pin.pinId}
+              position={convertToLeafletLocation(pin.area.location)}
+              icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
+            >
               <Popup>
                 <span>
                   {pin.title} #{index}
@@ -169,12 +193,17 @@ export default class Home extends React.Component<Props, State> {
               <Circle
                 center={convertToLeafletLocation(pin.area.location)}
                 radius={convertToLeafletRadius(pin.area.radius)}
+                color="white"
               />
             </Marker>
           ))}
 
           {this.state.posts.map((post: PostType, index) => (
-            <Marker key={post.postId} position={convertToLeafletLocation(post.location)}>
+            <Marker
+              key={post.postId}
+              position={convertToLeafletLocation(post.location)}
+              icon={postIcon}
+            >
               <Popup>
                 <span>
                   {post.title} #{index}
@@ -202,3 +231,5 @@ export default class Home extends React.Component<Props, State> {
     detachAllPostListeners();
   }
 }
+
+export default withStyles(styles)(Home);

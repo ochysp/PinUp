@@ -9,6 +9,7 @@ import type {
   KeyType,
   SuccessCallback, ErrorCallback, CategoriesType, SnapshotType,
 } from './Types';
+import { getMatchesOnce } from './Match';
 
 export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
   db.ref(dbRef.PINS + pinId).on('value', callback);
@@ -35,6 +36,26 @@ const convertPinsSnapshotToArray = (snapshot: SnapshotType) => {
   }));
 };
 
+export const listenForAllPinsWithMatchesOfUser =
+  (userId: KeyType, callback: (PinType[]) => void) => {
+    const allPins = db.ref(dbRef.PINS);
+    allPins
+      .orderByChild('userId')
+      .equalTo(userId)
+      .on('value', (snapshot: SnapshotType) => {
+        const pinArray = convertPinsSnapshotToArray(snapshot);
+        pinArray.forEach((pin) => {
+          getMatchesOnce(
+            pin.area, pin.categories, (pinIds) => {
+              // eslint-disable-next-line no-param-reassign
+              pin.matches = pinIds;
+              callback(pinArray);
+            },
+          );
+        });
+      });
+  };
+
 export const listenForAllPinsOfUser = (userId: KeyType, callback: (PinType[]) => void) => {
   const allPins = db.ref(dbRef.PINS);
   allPins
@@ -50,10 +71,6 @@ export const detachAllPinListeners = () => {
 export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
   db
     .ref(dbRef.PINS)
-    .child(pinKey)
-    .remove();
-  db
-    .ref(dbRef.USER_PINS + authUser.uid)
     .child(pinKey)
     .remove();
 };

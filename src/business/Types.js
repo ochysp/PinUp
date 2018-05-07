@@ -34,6 +34,7 @@ export type CategoriesType = {
 };
 
 export type PinType = {
+  matches?: KeyType[],
   pinId?: KeyType,
   userId: KeyType,
   title: string,
@@ -73,4 +74,6 @@ export type GeoQuerryCallback = (key: KeyType,
 export type SuccessCallback = (data: any) => void;
 
 export type ErrorCallback = (error: Error) => void;
+
+export type NotificationCallback = () => void;
 
