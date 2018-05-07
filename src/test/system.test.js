@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars,prefer-destructuring */
+import { setTestrun } from '../data/firebase/setTestRun';
 import React from 'react';
 import Enzyme, { shallow, render, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -9,16 +10,6 @@ Enzyme.configure({ adapter: new Adapter() });
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
-const proxyquire = require('proxyquire');
-
-const testDBconfig = {
-  apiKey: 'AIzaSyDD3ijy2I9WtWAPJ_v4wzaXV2VnwwB2R0Q',
-  authDomain: 'pinup-testingdb.firebaseapp.com',
-  databaseURL: 'https://pinup-testingdb.firebaseio.com',
-  projectId: 'pinup-testingdb',
-  storageBucket: 'pinup-testingdb.appspot.com',
-  messagingSenderId: '233425895846',
-};
 
 const authUser = {
   uid: '123',
@@ -31,27 +22,33 @@ const location = {
   longitude: 8.81714,
 };
 
-proxyquire('../data/firebase/firebaseconfig.js', {
-  config: testDBconfig,
-});
-
-const pinForm = mount(<CreatePinForm authUser={authUser} position={location} />);
+const pinForm = shallow(<CreatePinForm authUser={authUser} position={location} />);
 
 describe('Test a complete run with different Elements', () => {
-  it('should render correctly', () => {
+  it('should render correctly', (done) => {
     // eslint-disable-next-line no-undef
-    // browserRouter = mount(<App />);
-    pinForm.setState({
-      title: 'TestPin1',
-      radius: 10,
-      categories: ['Day-Trip', 'Happening'],
-      invalidSubmit: true,
-    });
-    console.log(pinForm.find('button'));
-    pinForm.find('button').simulate('click');
-    // console.log(pinForm.debug());
-    console.log(pinForm.state());
 
+    function callback(data) {
+      expect(data).toBe('peanut butter');
+    }
+
+
+    const pf = pinForm.find('CreatePinForm').dive();
+    pf.setState({
+      title: "testpost",
+      radius: 5,
+      categories: ['2'],
+      invalidSubmit: false,
+    });
+    const state1 = pf.state;
+    const button = pf.find('[id="Save"]');
+    button.simulate('click');
+
+
+    const state2 = pf.state;
+
+    // console.log(pinForm.debug());
+    const x = 0;
   });
   it('', () => {
   });

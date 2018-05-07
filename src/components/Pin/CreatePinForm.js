@@ -80,7 +80,7 @@ class CreatePinForm extends React.Component<Props, State> {
         () => { alert('Pin saved!'); },
         (error) => { console.log('error:'); console.log(error); alert('An error occurred'); },
       );
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
     } else {
       this.setState({ invalidSubmit: true });
     }
