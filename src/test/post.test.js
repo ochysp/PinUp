@@ -9,6 +9,7 @@ import { listenForAllPinsOfUser } from '../business/Pin';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
 
 

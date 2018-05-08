@@ -1,17 +1,13 @@
 // TODO: Anpassung an eslint wenn Test geschrieben werden
 import React from 'react';
-import Adapter from "enzyme-adapter-react-16";
-import Enzyme from "enzyme";
-import { shallow, mount, render } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme, { shallow } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import { listenForAllPinsOfUser } from '../business/Pin'
+import { listenForAllPinsOfUser } from '../business/Pin';
 import CreatePinForm from '../components/Pin/CreatePinForm';
 
 Enzyme.configure({ adapter: new Adapter() });
-
-const sinon = require('sinon');
-const expect = require('chai').use(require('sinon-chai')).expect;
 
 const authUser = {
   uid: '123',
