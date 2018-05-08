@@ -4,13 +4,20 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import { CATEGORIES } from '../constants/categories';
-import CreatePostForm from '../components/Post/CreatePostForm';
-import { listenForAllPostsOfUser } from '../business/Post';
+import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Test the functions of Post', () => {
+afterEach(() => {
+  deleteTestDbOnRootLevel();
+});
+
+beforeEach(() => {
+  haltIfLiveDB();
+  deleteTestDbOnRootLevel();
+});
+
+describe('Test a complete run with different Elements', () => {
   it('should render correctly', (done) => {
     const authUser = {
       uid: '123',
