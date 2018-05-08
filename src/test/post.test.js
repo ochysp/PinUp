@@ -6,12 +6,21 @@ import Adapter from 'enzyme-adapter-react-16';
 import '../data/firebase/setTestRun';
 import CreatePinForm from '../components/Pin/CreatePinForm';
 import { listenForAllPinsOfUser } from '../business/Pin';
+import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
 
+afterEach(() => {
+  deleteTestDbOnRootLevel();
+});
+
+beforeEach(() => {
+  haltIfLiveDB();
+  deleteTestDbOnRootLevel();
+});
 
 describe('Test a complete run with different Elements', () => {
   it('should render correctly', (done) => {

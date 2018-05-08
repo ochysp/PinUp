@@ -5,9 +5,19 @@ import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
+import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
+
+afterEach(() => {
+  deleteTestDbOnRootLevel();
+});
+
+beforeEach(() => {
+  haltIfLiveDB();
+  deleteTestDbOnRootLevel();
+});
 
 // Tests the login functionality of firebase
 describe('Test Pin creating', () => {

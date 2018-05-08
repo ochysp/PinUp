@@ -6,6 +6,7 @@ import Enzyme, { shallow } from 'enzyme';
 import '../data/firebase/setTestRun';
 import { listenForAllPinsOfUser } from '../business/Pin';
 import CreatePinForm from '../components/Pin/CreatePinForm';
+import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -19,6 +20,15 @@ const location = {
   latitude: 47.22354,
   longitude: 8.81714,
 };
+
+afterEach(() => {
+  deleteTestDbOnRootLevel();
+});
+
+beforeEach(() => {
+  haltIfLiveDB();
+  deleteTestDbOnRootLevel();
+});
 
 describe('Test Pin', () => {
   describe('#creatPin', () => {
