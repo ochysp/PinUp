@@ -13,7 +13,7 @@ const expect = require('chai').use(require('sinon-chai')).expect;
 
 describe('Test a complete run with different Elements', () => {
   it('should render correctly', () => {
-    assert(true);
+    // Content
   });
 });
 
