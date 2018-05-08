@@ -1,5 +1,5 @@
 // @flow
-function Testing() {}
+export function Testing() {}
 
 export const setTestrunStaticVar = () => {
   Testing.testRun = true;
