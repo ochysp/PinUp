@@ -147,6 +147,7 @@ class CreatePostForm extends React.Component<Props, State> {
               >Cancel
               </Button>
               <Button
+                id="Save"
                 color="primary"
                 variant="raised"
                 className={classes.buttonSave}

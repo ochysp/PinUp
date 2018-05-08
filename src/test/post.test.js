@@ -4,14 +4,12 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import CreatePinForm from '../components/Pin/CreatePinForm';
-import { listenForAllPinsOfUser } from '../business/Pin';
+import { CATEGORIES } from '../constants/categories';
+import CreatePostForm from '../components/Post/CreatePostForm';
+import { listenForAllPostsOfUser } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
-
-const sinon = require('sinon');
-const expect = require('chai').use(require('sinon-chai')).expect;
 
 afterEach(() => {
   deleteTestDbOnRootLevel();
@@ -34,20 +32,21 @@ describe('Test a complete run with different Elements', () => {
       latitude: 47.22354,
       longitude: 8.81714,
     };
-    const pinForm = shallow(<CreatePinForm authUser={authUser} position={location} />);
+    const postForm = shallow(<CreatePostForm authUser={authUser} position={location} />);
 
 
     function callback(data) {
-      expect(data).toBe('peanut butter');
+      expect(data).toBe('peanut butter jelly time');
+      done();
     }
 
-
-    const pf = pinForm.find('CreatePinForm').dive();
+    const pf = postForm.find('CreatePostForm').dive();
     pf.setState({
-      title: 'testpost',
-      radius: 5,
-      categories: ['2'],
+      title: 'testpost1234',
+      category: CATEGORIES[0],
       invalidSubmit: false,
+      sentToDB: false,
+      dialogIsActive: true,
     });
     const state1 = pf.state;
     const button = pf.find('[id="Save"]');
@@ -56,7 +55,8 @@ describe('Test a complete run with different Elements', () => {
 
     const state2 = pf.state;
 
-    // console.log(pinForm.debug());
+    expect();
+    // console.log(postForm.debug());
     const x = 0;
   });
   it('', () => {
