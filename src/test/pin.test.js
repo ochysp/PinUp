@@ -20,6 +20,17 @@ const location = {
   latitude: 47.22354,
   longitude: 8.81714,
 };
+const pinData = {
+  userId: authUser.uid,
+  title: 'testpin456',
+  area: {
+    radius: 2,
+    location,
+  },
+  categories: {
+    2: true,
+  },
+};
 
 afterEach(() => {
   deleteTestDbOnRootLevel();
@@ -30,28 +41,43 @@ beforeEach(() => {
   deleteTestDbOnRootLevel();
 });
 
+const createPin = () => {
+  const root = shallow(<CreatePinForm authUser={authUser} position={location} />);
+  const pinForm = root.find('CreatePinForm').dive();
+
+  pinForm.setState({
+    title: 'testpin456',
+    radius: 2,
+    categories: ['2'],
+    invalidSubmit: false,
+  });
+  const button = pinForm.find('[id="Save"]');
+  button.simulate('click');
+  return pinForm;
+};
+
+const doAfterPinCreation = (toDo) => {
+  const pinForm = createPin();
+  function callback(data) {
+    if (data.length && data.length > 0) {
+      toDo(pinForm, data);
+    }
+  }
+  listenForAllPinsOfUser(authUser.uid, callback);
+};
+
 describe('Test Pin', () => {
   describe('#creatPin', () => {
-    it('should create valid Pin', () => {
-      function callback(data) {
-        if (data.length) {
-          expect(data.title).toBe('testpin456');
-        }
-      }
-
-      const root = shallow(<CreatePinForm authUser={authUser} position={location} />);
-      const pinForm = root.find('CreatePinForm').dive();
-      pinForm.setState({
-        title: 'testpin456',
-        radius: 2,
-        categories: ['2'],
-        invalidSubmit: false,
-      });
-      const button = pinForm.find('[id="Save"]');
-      button.simulate('click');
-
-      listenForAllPinsOfUser(authUser.uid, callback);
+    it('should create valid Pin', (done) => {
+      const checkData = (pinForm, data) => {
+        // eslint-disable-next-line no-param-reassign
+        delete data[0].pinId;
+        expect(data[0]).toEqual(pinData);
+        done();
+      };
+      doAfterPinCreation(checkData);
     });
+
     it('should request Client to fill out missing Input / Informations', () => {
       // Content
     });
@@ -74,7 +100,7 @@ describe('Test Pin', () => {
       // Content
     });
     it('should get deleted after the "survival" Date', () => {
-      // Might not that good testable due to "cleaning" function
+      // Might be hard to test here due to "cleaning" function
       // which might just runs once every 24h
     });
   });
