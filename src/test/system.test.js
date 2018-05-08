@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars,prefer-destructuring */
 import { setTestrun } from '../data/firebase/setTestRun';
 import React from 'react';
-import Enzyme, { shallow, render, mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import { createShallow } from 'material-ui/test-utils';
 import Adapter from 'enzyme-adapter-react-16';
 
 import CreatePinForm from '../components/Pin/CreatePinForm';
+import { createPin } from '../business/Pin';
 
 Enzyme.configure({ adapter: new Adapter() });
 
