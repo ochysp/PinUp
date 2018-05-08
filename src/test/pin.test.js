@@ -1,18 +1,50 @@
 // TODO: Anpassung an eslint wenn Test geschrieben werden
-/*
-eslint-disable no-unused-vars,prefer-destructuring */
 import React from 'react';
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
 import { shallow, mount, render } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
+import { listenForAllPinsOfUser } from '../business/Pin'
+import CreatePinForm from '../components/Pin/CreatePinForm';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
 
+const authUser = {
+  uid: '123',
+  displayName: 'Max Muster',
+  email: 'maxmuster@gmail.com',
+  photoURL: null,
+};
+const location = {
+  latitude: 47.22354,
+  longitude: 8.81714,
+};
+
 describe('Test Pin', () => {
   describe('#creatPin', () => {
     it('should create valid Pin', () => {
-      // Content
+      function callback(data) {
+        if (data.length) {
+          expect(data.title).toBe('testpin456');
+        }
+      }
+
+      const root = shallow(<CreatePinForm authUser={authUser} position={location} />);
+      const pinForm = root.find('CreatePinForm').dive();
+      pinForm.setState({
+        title: 'testpin456',
+        radius: 2,
+        categories: ['2'],
+        invalidSubmit: false,
+      });
+      const button = pinForm.find('[id="Save"]');
+      button.simulate('click');
+
+      listenForAllPinsOfUser(authUser.uid, callback);
     });
     it('should request Client to fill out missing Input / Informations', () => {
       // Content
