@@ -1,66 +1,41 @@
 // @flow
 
 import React from 'react';
-import { listenForAllPinIDsOfUser } from '../../business/Pin';
-import PinNode from './PinNode';
-import type { AuthUserType, ConnectionType, KeyType } from '../../business/Types';
-
-type State = {
-  pins: KeyType[],
-  dbHandle: ?ConnectionType
-};
+import { List, Typography, withStyles } from 'material-ui';
+import PinListEntry from './PinListEntry';
+import type { AuthUserType, PinType } from '../../business/Types';
+import { styles } from '../../style/styles';
 
 type Props = {
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  pins: PinType[],
+// eslint-disable-next-line react/no-unused-prop-types
+  onSelect: (PinType) => void,
+  classes: any,
 };
 
-export default class ListPins extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      pins: [],
-      dbHandles: null,
-    };
-  }
 
-  componentDidMount() {
-    // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({
-      dbHandles: listenForAllPinIDsOfUser(
-        this.props.authUser, this.keyEntered, this.keyLeft,
-      ),
-    });
-  }
+const ListPins = (props: Props) => {
+  const listItems = props.pins.map(pin => (
+    <PinListEntry
+      pinData={pin}
+      onListEntryClick={() => { props.onSelect(pin); }}
+      authUser={props.authUser}
+      key={pin.pinId}
+    />
+  ));
+  return (
+    <div>
+      <List component="nav">
+        {props.pins.length > 0 ?
+          listItems
+          : <Typography variant="caption" className={props.classes.typographyEmptyList}>
+              There are currently no Pins available.
+            </Typography>}
+      </List>
 
-  componentWillUnmount() {
-    if (this.state.dbHandles) this.state.dbHandles.detach();
-  }
+    </div>
+  );
+};
 
-  keyEntered = (key: KeyType) => {
-    this.setState((prevState) => {
-      const updatedNearbyPinKeys = prevState.pins.slice();
-      updatedNearbyPinKeys.push(key);
-      return { pins: updatedNearbyPinKeys };
-    });
-  };
-
-  keyLeft = (key: KeyType) => {
-    this.setState((prevState) => {
-      const updatedNearbyPinKeys = prevState.pins.slice();
-      updatedNearbyPinKeys.splice(updatedNearbyPinKeys.indexOf(key), 1);
-      return { pins: updatedNearbyPinKeys };
-    });
-  };
-
-  render() {
-    const listItems = this.state.pins.map(pinId => <PinNode pinId={pinId} />);
-    return (
-      <div>
-        <h1>My Pins</h1>
-        <div>
-          <ul>{listItems}</ul>
-        </div>
-      </div>
-    );
-  }
-}
+export default withStyles(styles)(ListPins);

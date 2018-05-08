@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type Match from 'react-router';
+import { Typography } from 'material-ui';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
 import type {
@@ -27,7 +28,7 @@ export default class PinDetails extends React.Component<Props, State> {
     super(props);
     this.state = {
       area: null,
-      categories: null,
+      categories: {},
     };
   }
 
@@ -62,7 +63,9 @@ export default class PinDetails extends React.Component<Props, State> {
     }
     return (
       <div>
-        <h1>Matches</h1>
+        <Typography variant="title" gutterBottom>
+          Matches
+        </Typography>
         {matches}
       </div>
     );

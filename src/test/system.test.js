@@ -12,6 +12,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
+const proxyquire = require('proxyquire');
 
 const authUser = {
   uid: '123',

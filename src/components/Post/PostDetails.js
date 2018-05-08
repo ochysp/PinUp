@@ -1,12 +1,11 @@
-/* eslint-disable no-useless-constructor */
 // @flow
 
 import React from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import Button from 'material-ui/Button';
+import { Button } from 'material-ui';
 import { doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
-// import { CategoryType, EventType, KeyType, LocationType } from '../../business/Types';
+import { CATEGORIES } from '../../constants/categories';
 
 type State = {
   takesPart: boolean
@@ -15,16 +14,17 @@ type State = {
 type Props = {
   postData: PostType,
   authUser: AuthUserType,
+  onCloseClicked: () => void;
 };
 
-export default class PostDetails extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-
+class PostDetails extends React.Component<Props, State> {
   handleNewParticipant = () => {
-    doSignUpForEvent(this.props.postData.postId, this.props.authUser);
+    if (this.props.postData.postId) {
+      doSignUpForEvent(
+        this.props.postData.postId, this.props.authUser,
+        () => { /* TODO: onSuccess */ }, () => { /* TODO: onSuccess */ },
+      );
+    }
   };
 
   render() {
@@ -35,15 +35,17 @@ export default class PostDetails extends React.Component<Props, State> {
       <div>
         <List>
           <ListItem>
-            <ListItemText primary="Category" secondary={this.props.postData.category} />
+            <ListItemText primary="Category" secondary={CATEGORIES[this.props.postData.category]} />
           </ListItem>
           <ListItem>
             <ListItemText primary="Description" secondary="Some more Info about event" />
           </ListItem>
           {eventButton}
-          <Button>Close</Button>
+          <Button onClick={this.props.onCloseClicked}>Close</Button>
         </List>
       </div>
     );
   }
 }
+
+export default PostDetails;

@@ -1,23 +1,37 @@
 // @flow
 
 import React from 'react';
-import { Dialog, DialogTitle, ListItem, ListItemText } from 'material-ui';
+import {
+  Avatar,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  ListItem,
+  ListItemText,
+  Typography,
+  withStyles,
+} from 'material-ui';
 import { listenForPostData, detachPostListener } from '../../business/Post';
 import type { PostType, SnapshotType, KeyType, AuthUserType } from '../../business/Types';
 import PostDetails from './PostDetails';
+import { styles } from '../../style/styles';
+import { CATEGORIES } from '../../constants/categories';
+
 
 type Props = {
   postId: KeyType,
-  authUser: AuthUserType
+  authUser: AuthUserType,
+  classes: any,
 };
 
 type State = {
   postData: ?PostType,
   isDetailViewOpen: boolean,
+  dbReady: boolean,
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export default class PostListEntry extends React.Component<Props, State> {
+class PostListEntry extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -27,9 +41,10 @@ export default class PostListEntry extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    listenForPostData(this.props.postId, (snapshot: SnapshotType) => {
-      this.updateData(snapshot.val());
-    });
+    listenForPostData(this.props.postId,
+      (snapshot: SnapshotType) => {
+        this.updateData(snapshot.val());
+      });
   }
 
   componentWillUnmount() {
@@ -53,22 +68,35 @@ export default class PostListEntry extends React.Component<Props, State> {
 
   render() {
     return (
-      this.state.postData &&
-      <ListItem button onClick={this.handleClickOpen}>
+      <div>
+        <ListItem button onClick={this.handleClickOpen}>
+          <Avatar>
+            {this.state.postData ?
+              <Typography variant="headline" className={this.props.classes.iconStyle}>
+                {CATEGORIES[this.state.postData.category].charAt(0)}
+              </Typography>
+              : <CircularProgress />}
 
-        <ListItemText primary={this.state.postData.title} />
-        <div>
+          </Avatar>
+          <ListItemText primary={this.state.postData ? this.state.postData.title : ''} />
+
+        </ListItem>
+        {this.state.postData &&
           <Dialog
             open={this.state.isDetailViewOpen}
             onClose={this.handleClose}
             aria-labelledby="simple-dialog-title"
           >
             <DialogTitle id="simple-dialog-title">{this.state.postData.title}</DialogTitle>
-            <PostDetails postData={this.state.postData} authUser={this.props.authUser} />
-          </Dialog>
-        </div>
-      </ListItem>
+            <PostDetails
+              postData={this.state.postData}
+              authUser={this.props.authUser}
+              onCloseClicked={this.handleClose}
+            />
+          </Dialog>}
+      </div>
     );
   }
 }
 
+export default withStyles(styles)(PostListEntry);
