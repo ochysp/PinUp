@@ -1,12 +1,14 @@
 // @flow
 
-import * as GeoFire from 'geofire';
+// import * as GeoFire from 'geofire';
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import type {
   KeyType, LocationType, AuthUserType, KeyChangedCallback,
   ValueQueryCallback, PostType, SuccessCallback, ErrorCallback, SnapshotType,
 } from './Types';
+
+const GeoFire = require('geofire');
 
 const createPostLocation = (
   key: KeyType,

@@ -43,7 +43,7 @@ describe('Test a complete run with different Elements', () => {
     const pf = postForm.find('CreatePostForm').dive();
     pf.setState({
       title: 'testpost1234',
-      category: CATEGORIES[0],
+      category: '0',
       invalidSubmit: false,
       sentToDB: false,
       dialogIsActive: true,
