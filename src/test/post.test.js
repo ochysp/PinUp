@@ -52,10 +52,9 @@ describe('Test a complete run with different Elements', () => {
     const button = pf.find('[id="Save"]');
     button.simulate('click');
 
-
     const state2 = pf.state;
 
-    expect();
+    console.log(state2);
     // console.log(postForm.debug());
     const x = 0;
   });
