@@ -153,6 +153,7 @@ class CreatePinForm extends React.Component<Props, State> {
                       max={10}
                       step={0.1}
                       value={this.state.radius}
+                      defaultValue={5}
                       onUpdate={this.handleChange('radius')}
                       onChange={() => {}}
                       className={classes.slider}

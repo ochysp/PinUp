@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars,prefer-destructuring */
+/* eslint-disable no-unused-vars,prefer-destructuring,import/first */
 import { setTestrun } from '../data/firebase/setTestRun';
 import React from 'react';
-import Enzyme from 'enzyme';
-import { createShallow } from 'material-ui/test-utils';
+import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 import CreatePinForm from '../components/Pin/CreatePinForm';
@@ -37,7 +36,7 @@ describe('Test a complete run with different Elements', () => {
 
     const pf = pinForm.find('CreatePinForm').dive();
     pf.setState({
-      title: "testpost",
+      title: 'testpost',
       radius: 5,
       categories: ['2'],
       invalidSubmit: false,

@@ -7,7 +7,13 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config());
 }
 
-const auth = firebase.auth();
-const db = firebase.database();
+const fb = firebase;
+
+
+export { fb };
+
+
+const auth = fb.auth();
+const db = fb.database();
 
 export { auth, db };
