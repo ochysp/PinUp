@@ -8,25 +8,23 @@ import CreatePinForm from '../components/Pin/CreatePinForm';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
 
-const authUser = {
-  uid: '123',
-  displayName: 'Max Muster',
-  email: 'maxmuster@gmail.com',
-  photoURL: null,
-};
-const location = {
-  latitude: 47.22354,
-  longitude: 8.81714,
-};
-
-const pinForm = shallow(<CreatePinForm authUser={authUser} position={location} />);
 
 describe('Test a complete run with different Elements', () => {
   it('should render correctly', (done) => {
-    // eslint-disable-next-line no-undef
+    const authUser = {
+      uid: '123',
+      displayName: 'Max Muster',
+      email: 'maxmuster@gmail.com',
+      photoURL: null,
+    };
+    const location = {
+      latitude: 47.22354,
+      longitude: 8.81714,
+    };
+    const pinForm = shallow(<CreatePinForm authUser={authUser} position={location} />);
+
 
     function callback(data) {
       expect(data).toBe('peanut butter');

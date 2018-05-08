@@ -2,7 +2,9 @@
 /*
 eslint-disable no-unused-vars,prefer-destructuring */
 import React from 'react';
-// import { shallow, mount, render } from 'enzyme';
+import { shallow, mount, render } from 'enzyme';
+// setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
+import '../data/firebase/setTestRun';
 
 const sinon = require('sinon');
 const expect = require('chai').use(require('sinon-chai')).expect;
