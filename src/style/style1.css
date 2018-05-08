@@ -1,0 +1,11 @@
+body{
+    background: lightblue;
+}
+html, body
+{
+    height: 100%;
+}
+#root{
+    height: 100%;
+    background: lightgray;
+}

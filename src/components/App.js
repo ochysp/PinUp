@@ -1,17 +1,40 @@
 // @flow
 
 import React from 'react';
+import CssBaseline from 'material-ui/CssBaseline';
+import { MuiThemeProvider, Paper, withStyles } from 'material-ui';
+import { createMuiTheme } from 'material-ui/styles';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
 import Main from './Main';
 import type { AuthUserType } from '../business/Types';
+import { styles } from '../style/styles';
+import style from '../style/style1.css';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      // light: will be calculated from palette.primary.main,
+      main: '#f16254',
+      // dark: will be calculated from palette.primary.main,
+      // contrastText: will be calculated to contast with palette.primary.main
+    },
+    secondary: {
+      main: '#fbb03b',
+    },
+  },
+});
+
+type Props = {
+  classes: any,
+};
 
 type State = {
   authUser: ?AuthUserType
 };
 
-export default class App extends React.Component<{}, State> {
+class App extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -21,7 +44,6 @@ export default class App extends React.Component<{}, State> {
 
   componentDidMount() {
     firebase.auth.onAuthStateChanged((authUser: AuthUserType) => {
-      console.log('auth user changed');
       if (authUser) {
         doCreateUser(
           authUser.uid,
@@ -29,10 +51,8 @@ export default class App extends React.Component<{}, State> {
           authUser.email,
           authUser.photoURL,
         );
-        console.log(`to: ${authUser.uid}`);
         this.setState(() => ({ authUser }));
       } else {
-        console.log('to null');
         this.setState(() => ({ authUser: null }));
       }
     });
@@ -40,10 +60,16 @@ export default class App extends React.Component<{}, State> {
 
   render() {
     return (
-      <div>
-        <Header authUser={this.state.authUser} />
-        <Main authUser={this.state.authUser} />
-      </div>
+      <MuiThemeProvider theme={theme}>
+        <Paper className={this.props.classes.masterPaper}>
+          <CssBaseline />
+          <div className={style} />
+          <Header authUser={this.state.authUser} />
+          <Main authUser={this.state.authUser} />
+        </Paper>
+      </MuiThemeProvider>
     );
   }
 }
+
+export default withStyles(styles)(App);

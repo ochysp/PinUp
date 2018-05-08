@@ -2,22 +2,14 @@
 
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
-import { attachChildListener } from './Helper';
 import type {
   AuthUserType,
-  KeyChangedCallback,
   ValueQueryCallback,
   PinType,
   KeyType,
-  SuccessCallback, ErrorCallback, CategoriesType,
+  SuccessCallback, ErrorCallback, CategoriesType, SnapshotType,
 } from './Types';
-
-export const listenForAllPinIDsOfUser = (
-  authUser: AuthUserType, keyEntered: KeyChangedCallback, keyLeft: KeyChangedCallback,
-) =>
-  attachChildListener(
-    keyEntered, keyLeft, dbRef.USER_PINS + authUser.uid,
-  );
+import { getMatchesOnce } from './Match';
 
 export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
   db.ref(dbRef.PINS + pinId).on('value', callback);
@@ -30,20 +22,46 @@ export const createPin = (
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
 ) => {
-  const newPinId = db.ref(dbRef.PINS)
-    .push(pinInfo).key;
-  db
-    .ref(`${dbRef.USER_PINS + pinInfo.userId}`)
-    .update({ [newPinId]: true })
-    .then(callbackOnSuccess, callbackOnError);
+  db.ref(dbRef.PINS)
+    .push(pinInfo).then(callbackOnSuccess, callbackOnError);
 };
 
-export const listenForAllPinsOfUser = (userId: KeyType, callback: ValueQueryCallback) => {
+const convertPinsSnapshotToArray = (snapshot: SnapshotType) => {
+  if (snapshot.val() === null) {
+    return [];
+  }
+  return Object.entries(snapshot.val()).map(([key, value]: [string, any]) => ({
+    pinId: key,
+    ...value,
+  }));
+};
+
+export const listenForAllPinsWithMatchesOfUser =
+  (userId: KeyType, callback: (PinType[]) => void) => {
+    const allPins = db.ref(dbRef.PINS);
+    allPins
+      .orderByChild('userId')
+      .equalTo(userId)
+      .on('value', (snapshot: SnapshotType) => {
+        const pinArray = convertPinsSnapshotToArray(snapshot);
+        pinArray.forEach((pin) => {
+          getMatchesOnce(
+            pin.area, pin.categories, (pinIds) => {
+              // eslint-disable-next-line no-param-reassign
+              pin.matches = pinIds;
+              callback(pinArray);
+            },
+          );
+        });
+      });
+  };
+
+export const listenForAllPinsOfUser = (userId: KeyType, callback: (PinType[]) => void) => {
   const allPins = db.ref(dbRef.PINS);
   allPins
     .orderByChild('userId')
     .equalTo(userId)
-    .on('value', callback);
+    .on('value', (snapshot: SnapshotType) => callback(convertPinsSnapshotToArray(snapshot)));
 };
 
 export const detachAllPinListeners = () => {
@@ -55,13 +73,9 @@ export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
     .ref(dbRef.PINS)
     .child(pinKey)
     .remove();
-  db
-    .ref(dbRef.USER_PINS + authUser.uid)
-    .child(pinKey)
-    .remove();
 };
 
-export const convertCategoryArrayToObject = (categoryArray: number[]): CategoriesType => {
+export const convertCategoryArrayToObject = (categoryArray: string[]): CategoriesType => {
   const categoriesObject = {};
   categoryArray.forEach((categoryNr) => {
     categoriesObject[categoryNr] = true;
