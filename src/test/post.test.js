@@ -23,7 +23,7 @@ const location = {
 const expectedPostData = {
   category: '0',
   location,
-  title: 'testpost_1234',
+  title: 'default_testpost_1234',
   userId: authUser.uid,
 };
 
@@ -36,17 +36,18 @@ beforeEach(() => {
   deleteTestDbOnRootLevel();
 });
 
-const createPost = () => {
+const createPost = (modifiedStateValue) => {
   const root = shallow(<CreatePostForm authUser={authUser} position={location} />);
   const postForm = root.find('CreatePostForm').dive();
 
-  postForm.setState({
-    title: 'testpost_1234',
-    category: '0',
-    invalidSubmit: false,
-    sentToDB: false,
-    dialogIsActive: true,
-  });
+  if (modifiedStateValue === undefined) {
+    postForm.setState({
+      category: '0',
+      title: 'default_testpost_1234',
+    });
+  } else {
+    postForm.setState(modifiedStateValue);
+  }
   const button = postForm.find('[id="Save"]');
   button.simulate('click');
   return postForm;
@@ -72,7 +73,12 @@ describe('Test Post', () => {
     };
     doAfterPostCreation(checkData);
   });
-  it('no Post created due to missing Entries', () => {
-
+  it('should refuse to create Post and set invalidSubmit', () => {
+    const incompleteState = {
+      category: '0',
+    };
+    const incompletePostForm = createPost(incompleteState);
+    expect(incompletePostForm.state().sentToDB).toEqual(false);
+    expect(incompletePostForm.state().invalidSubmit).toEqual(true);
   });
 });
