@@ -62,8 +62,8 @@ const doAfterPostCreation = (toDo) => {
   listenForAllPostsOfUser(authUser.uid, callback);
 };
 
-describe('Test a complete run with different Elements', () => {
-  it('create valid Post', (done) => {
+describe('Test Post', () => {
+  it('should create valid Post', (done) => {
     const checkData = (postForm, data) => {
       // eslint-disable-next-line no-param-reassign
       delete data[0].postId;
@@ -72,6 +72,7 @@ describe('Test a complete run with different Elements', () => {
     };
     doAfterPostCreation(checkData);
   });
-  it('', () => {
+  it('no Post created due to missing Entries', () => {
+
   });
 });
