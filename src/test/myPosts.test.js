@@ -6,13 +6,55 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import CreatePinForm from '../components/Pin/CreatePinForm';
-import { listenForAllPinsOfUser } from '../business/Pin';
+import MyPosts from '../components/MyPosts';
+import { createPost } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const expect = require('chai').use(require('sinon-chai')).expect;
+const postInfo1OfOwner1 = {
+  userId: '123',
+  title: 'Post_1',
+  location: {
+    latitude: parseFloat(47.23563352505248),
+    longitude: parseFloat(8.845367431640627),
+  },
+  category: '1',
+};
+const postInfo2OfOwner1 = {
+  userId: '123',
+  title: 'Post_2',
+  location: {
+    latitude: parseFloat(47.23563352505211),
+    longitude: parseFloat(8.845367431395730),
+  },
+  category: '2',
+};
+const postInfo1OfOwner2 = {
+  userId: '573',
+  title: 'Post_1',
+  location: {
+    latitude: parseFloat(47.23563352505248),
+    longitude: parseFloat(8.845367431640627),
+  },
+  category: '0',
+};
+const status = { ready1: false, ready2: false, ready3: false };
+
+const setUpForUse = () => {
+  createPost(
+    postInfo1OfOwner1, () => { status.ready1 = true; },
+    (error) => { console.log('error:'); console.log(error); },
+  );
+  createPost(
+    postInfo2OfOwner1, () => { status.ready2 = true; },
+    (error) => { console.log('error:'); console.log(error); },
+  );
+  createPost(
+    postInfo1OfOwner2, () => { status.ready3 = true; },
+    (error) => { console.log('error:'); console.log(error); },
+  );
+};
 
 afterEach(() => {
   deleteTestDbOnRootLevel();
@@ -21,80 +63,21 @@ afterEach(() => {
 beforeEach(() => {
   haltIfLiveDB();
   deleteTestDbOnRootLevel();
+  setUpForUse();
 });
 
 describe('Test a complete run with different Elements', () => {
-  it('should render correctly', (done) => {
+  it('should render correctly', () => {
     const authUser = {
       uid: '123',
       displayName: 'Max Muster',
       email: 'maxmuster@gmail.com',
       photoURL: null,
     };
-    const location = {
-      latitude: 47.22354,
-      longitude: 8.81714,
-    };
-    const pinForm = shallow(<CreatePinForm authUser={authUser} position={location} />);
-
-
-    function callback(data) {
-      expect(data).toBe('peanut butter');
-    }
-
-
-    const pf = pinForm.find('CreatePinForm').dive();
-    pf.setState({
-      title: 'testpost',
-      radius: 5,
-      categories: ['2'],
-      invalidSubmit: false,
-    });
-    const state1 = pf.state;
-    const button = pf.find('[id="Save"]');
-    button.simulate('click');
-
-
-    const state2 = pf.state;
-
-    // console.log(pinForm.debug());
-    const x = 0;
+    const root = shallow(<MyPosts authUser={authUser} />);
+    const myPosts = root.find('MyPosts').dive();
+    console.log(myPosts.debug());
   });
   it('', () => {
   });
 });
-
-/*
-describe('Test Pin', () => {
-  describe('#createPost', () => {
-    it('should create valid Post', () => {
-      // Content
-    });
-    it('should request Client to fill out missing Input / Informations', () => {
-      // Content
-    });
-    it('should request Client to change Input to valid Values', () => {
-      // Content
-    });
-  });
-
-  describe('#changePost', () => {
-    it('should update Pin with new Information', () => {
-      // Content
-    });
-    it('should deny update and ask Client to add valid Input', () => {
-      // Content
-    });
-  });
-
-  describe('#deletePost', () => {
-    it('should be deleted after Request from Client', () => {
-      // Content
-    });
-    it('should get deleted after the "survival" Date', () => {
-      // Might not that good testable due to "cleaning" function
-      // which might just runs once every 24h
-    });
-  });
-});
-*/
