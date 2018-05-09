@@ -22,10 +22,10 @@ import Dialog, {
 import { withStyles } from 'material-ui/styles';
 import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
-import CompoundSlider from '../MaterialComponents/CompoundSlider';
+import CompoundSlider from '../FormComponents/CompoundSlider';
 import type { AuthUserType, LocationType } from '../../business/Types';
-import AlertDialog from '../MaterialComponents/AlertDialog';
-import { formStyles } from '../../style/styles';
+import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
+import { formStyle } from '../../style/styles';
 
 type State = {
   title: string,
@@ -89,7 +89,7 @@ class CreatePinForm extends React.Component<Props, State> {
 
   render() {
     const { classes } = this.props;
-    const savedAlert = this.state.sentToDB ? (<AlertDialog infoText="Pin" />) : null;
+    const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Pin" />) : null;
 
     return (
       <div>
@@ -191,4 +191,4 @@ class CreatePinForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(formStyles)(CreatePinForm);
+export default withStyles(formStyle)(CreatePinForm);

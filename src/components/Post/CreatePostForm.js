@@ -16,8 +16,8 @@ import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
-import AlertDialog from '../MaterialComponents/AlertDialog';
-import { formStyles } from '../../style/styles';
+import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
+import { formStyle } from '../../style/styles';
 
 type State = {
   title: string,
@@ -76,7 +76,7 @@ class CreatePostForm extends React.Component<Props, State> {
 
   render() {
     const { classes } = this.props;
-    const savedAlert = this.state.sentToDB ? (<AlertDialog infoText="Post" />) : null;
+    const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Post" />) : null;
 
     return (
       <div>
@@ -161,4 +161,4 @@ class CreatePostForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(formStyles)(CreatePostForm);
+export default withStyles(formStyle)(CreatePostForm);

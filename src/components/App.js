@@ -3,28 +3,14 @@
 import React from 'react';
 import CssBaseline from 'material-ui/CssBaseline';
 import { MuiThemeProvider, Paper, withStyles } from 'material-ui';
-import { createMuiTheme } from 'material-ui/styles';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';
 import Main from './Main';
 import type { AuthUserType } from '../business/Types';
 import { styles } from '../style/styles';
-import style from '../style/style1.css';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      // light: will be calculated from palette.primary.main,
-      main: '#f16254',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contast with palette.primary.main
-    },
-    secondary: {
-      main: '#fbb03b',
-    },
-  },
-});
+import style from '../style/styles.css';
+import {theme} from '../style/theme'
 
 type Props = {
   classes: any,

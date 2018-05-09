@@ -9,3 +9,9 @@ html, body
     height: 100%;
     background: lightgray;
 }
+#logout{
+    background: whitesmoke;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
