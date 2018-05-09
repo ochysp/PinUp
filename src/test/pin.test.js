@@ -80,16 +80,13 @@ describe('Test Pin', () => {
       doAfterPinCreation(checkData);
     });
 
-    it('should request Client to fill out missing Input / Informations', () => {
+    it('should request Client to fill out missing Input / Information', () => {
       const incompleteState = {
         title: 'pin_without_categories',
       };
-      const incompletePostForm = createPin(incompleteState);
-      expect(incompletePostForm.state().sentToDB).toEqual(false);
-      expect(incompletePostForm.state().invalidSubmit).toEqual(true);
-    });
-    it('should request Client to change Input to valid Values', () => {
-      // Content
+      const incompletePinForm = createPin(incompleteState);
+      expect(incompletePinForm.state().sentToDB).toEqual(false);
+      expect(incompletePinForm.state().invalidSubmit).toEqual(true);
     });
   });
 
