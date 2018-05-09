@@ -1,4 +1,4 @@
-import {theme} from "./theme";
+import globalTheme from './theme';
 
 export const formStyle = theme => ({
   container: {
@@ -99,22 +99,12 @@ export const styles = theme => ({
   backButton: {
     marginLeft: -theme.spacing.unit,
   },
-  logout:{
-    color: 'black',
+  menuBar: {
+    backgroundColor: globalTheme.palette.primary.main,
+    color: globalTheme.palette.common.white,
+  },
+  logout: {
+    background: globalTheme.palette.secondary.main,
   },
 });
-
-const primaryColor = theme.palette.primary.main;
-const secondaryColor = theme.palette.secondary.main;
-
-export const menuBarStyle = {
-  primaryColor: {
-    backgroundColor: primaryColor,
-    color: theme.palette.common.white,
-  },
-};
-
-export const logoutStyle = {
-  background: secondaryColor,
-};
 

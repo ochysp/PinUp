@@ -8,18 +8,12 @@ import Paper from 'material-ui/Paper';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import * as routes from '../../constants/routes';
 import { authentication } from '../../data/firebase';
-import {menuBarStyle, logoutStyle} from '../../style/styles';
+import { styles } from '../../style/styles';
 
-const styles = {
-  root: {
-    flexGrow: 1,
-  },
-};
 
 type Props = {
   history: any,
   classes: any,
-  theme: any,
 };
 
 type State = {
@@ -59,13 +53,13 @@ class MenuBar extends React.Component<Props, State> {
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
-          style={menuBarStyle.primaryColor}
+          className={classes.menuBar}
           centered
         >
           <Tab label="Home" />
           <Tab label="My Pins" />
           <Tab label="My Posts" />
-          <Tab style={logoutStyle} label="Log Out" />
+          <Tab className={classes.logout} label="Log Out" />
         </Tabs>
 
       </Paper>
@@ -73,4 +67,4 @@ class MenuBar extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withStyles(styles, { withTheme: true })(MenuBar));
+export default withRouter(withStyles(styles)(MenuBar));
