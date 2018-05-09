@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars,prefer-destructuring,flowtype/no-types-missing-file-annotation */
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -7,8 +6,7 @@ import '../data/firebase/setTestRun';
 import CreatePostForm from '../components/Post/CreatePostForm';
 import { listenForAllPostsOfUser } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
-import { PostType } from '../business/Types';
-import { listenForAllPinsOfUser } from '../business/Pin';
+// import { PostType } from '../business/Types';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -22,7 +20,6 @@ const location = {
   latitude: 47.22354,
   longitude: 8.81714,
 };
-const state = { posts: [] };
 const expectedPostData = {
   category: '0',
   location,
