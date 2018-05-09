@@ -64,21 +64,23 @@ const doAfterPostCreation = (toDo) => {
 };
 
 describe('Test Post', () => {
-  it('should create valid Post', (done) => {
-    const checkData = (postForm, data) => {
+  describe('#createPin', () => {
+    it('should create valid Post', (done) => {
+      const checkData = (postForm, data) => {
       // eslint-disable-next-line no-param-reassign
-      delete data[0].postId;
-      expect(data[0]).toEqual(expectedPostData);
-      done();
-    };
-    doAfterPostCreation(checkData);
-  });
-  it('should refuse to create Post and set invalidSubmit', () => {
-    const incompleteState = {
-      category: '0',
-    };
-    const incompletePostForm = createPost(incompleteState);
-    expect(incompletePostForm.state().sentToDB).toEqual(false);
-    expect(incompletePostForm.state().invalidSubmit).toEqual(true);
+        delete data[0].postId;
+        expect(data[0]).toEqual(expectedPostData);
+        done();
+      };
+      doAfterPostCreation(checkData);
+    });
+    it('should refuse to create Post and set invalidSubmit', () => {
+      const incompleteState = {
+        category: '0',
+      };
+      const incompletePostForm = createPost(incompleteState);
+      expect(incompletePostForm.state().sentToDB).toEqual(false);
+      expect(incompletePostForm.state().invalidSubmit).toEqual(true);
+    });
   });
 });

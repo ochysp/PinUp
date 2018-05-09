@@ -40,16 +40,19 @@ beforeEach(() => {
   deleteTestDbOnRootLevel();
 });
 
-const createPin = () => {
+const createPin = (modifiedStateValue) => {
   const root = shallow(<CreatePinForm authUser={authUser} position={location} />);
   const pinForm = root.find('CreatePinForm').dive();
-
-  pinForm.setState({
-    title: 'testpin456',
-    radius: 2,
-    categories: ['2'],
-    invalidSubmit: false,
-  });
+  if (modifiedStateValue === undefined) {
+    pinForm.setState({
+      title: 'testpin456',
+      radius: 2,
+      categories: ['2'],
+      invalidSubmit: false,
+    });
+  } else {
+    pinForm.setState(modifiedStateValue);
+  }
   const button = pinForm.find('[id="Save"]');
   button.simulate('click');
   return pinForm;
@@ -78,7 +81,12 @@ describe('Test Pin', () => {
     });
 
     it('should request Client to fill out missing Input / Informations', () => {
-      // Content
+      const incompleteState = {
+        title: 'pin_without_categories',
+      };
+      const incompletePostForm = createPin(incompleteState);
+      expect(incompletePostForm.state().sentToDB).toEqual(false);
+      expect(incompletePostForm.state().invalidSubmit).toEqual(true);
     });
     it('should request Client to change Input to valid Values', () => {
       // Content
