@@ -2,8 +2,6 @@
 
 const USERDATA = 'userData/';
 export const USER_INFO = `${USERDATA}userInfo/`;
-export const USER_POSTS = `${USERDATA}userPosts/`;
-export const USER_PINS = `${USERDATA}userPins/`;
 
 export const PINS = 'pins/';
 export const POSTS = 'posts/';

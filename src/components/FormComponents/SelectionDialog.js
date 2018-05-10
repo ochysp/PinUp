@@ -4,7 +4,7 @@ import React from 'react';
 import Button from 'material-ui/Button';
 import Dialog, { DialogActions } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
-import { formStyles } from '../../style/styles';
+import { formStyle } from '../../style/styles';
 
 
 type Props = {
@@ -60,5 +60,5 @@ class SelectionDialog extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(formStyles)(SelectionDialog);
+export default withStyles(formStyle)(SelectionDialog);
 
