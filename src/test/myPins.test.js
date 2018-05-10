@@ -12,6 +12,18 @@ import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+const authUser123 = {
+  uid: '123',
+  displayName: 'Max Muster',
+  email: 'maxmuster@gmail.com',
+  photoURL: null,
+};
+const authUser573 = {
+  uid: '573',
+  displayName: 'Nicole Master',
+  email: 'nicolemaster@gmail.com',
+  photoURL: null,
+};
 const pinInfo1OfOwner1 = {
   userId: '123',
   title: 'Pin_1',
@@ -85,18 +97,6 @@ beforeEach(() => {
 describe('Test myPosts', () => {
   describe('#checks Listing', () => {
     it('should create two different Lists of myPins for Users', () => {
-      const authUser123 = {
-        uid: '123',
-        displayName: 'Max Muster',
-        email: 'maxmuster@gmail.com',
-        photoURL: null,
-      };
-      const authUser573 = {
-        uid: '573',
-        displayName: 'Nicole Master',
-        email: 'nicolemaster@gmail.com',
-        photoURL: null,
-      };
       const root = shallow(<MyPins authUser={authUser123} />);
       const myPins = root.find('MyPins').dive();
       const root2 = shallow(<MyPins authUser={authUser573} />);
