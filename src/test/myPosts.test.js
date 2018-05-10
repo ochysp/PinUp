@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import MyPosts from '../components/MyPosts';
-import { createPost } from '../business/Post';
+import { createPost, listenForPostData } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -66,18 +66,27 @@ beforeEach(() => {
   setUpForUse();
 });
 
-describe('Test a complete run with different Elements', () => {
-  it('should render correctly', () => {
-    const authUser = {
-      uid: '123',
-      displayName: 'Max Muster',
-      email: 'maxmuster@gmail.com',
-      photoURL: null,
-    };
-    const root = shallow(<MyPosts authUser={authUser} />);
-    const myPosts = root.find('MyPosts').dive();
-    console.log(myPosts.debug());
-  });
-  it('', () => {
+describe('Test myPosts', () => {
+  describe('#checks Listing', () => {
+    it('should create two different Lists of myPosts for Users', () => {
+      const authUser123 = {
+        uid: '123',
+        displayName: 'Max Muster',
+        email: 'maxmuster@gmail.com',
+        photoURL: null,
+      };
+      const authUser573 = {
+        uid: '573',
+        displayName: 'Nicole Master',
+        email: 'nicolemaster@gmail.com',
+        photoURL: null,
+      };
+      const root = shallow(<MyPosts authUser={authUser123} />);
+      const myPosts = root.find('MyPosts').dive();
+      const root2 = shallow(<MyPosts authUser={authUser573} />);
+      const myPosts2 = root2.find('MyPosts').dive();
+      expect(myPosts.state().posts.length).toEqual(2);
+      expect(myPosts2.state().posts.length).toEqual(1);
+    });
   });
 });
