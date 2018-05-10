@@ -1,13 +1,10 @@
-// TODO: Anpassung an eslint wenn Test geschrieben werden
-
-/* eslint-disable no-unused-vars,prefer-destructuring */
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import MyPosts from '../components/MyPosts';
-import { createPost, listenForPostData } from '../business/Post';
+import { createPost } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
