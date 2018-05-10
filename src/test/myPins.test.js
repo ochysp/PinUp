@@ -21,8 +21,8 @@ const authUser573 = {
   email: 'nicolemaster@gmail.com',
   photoURL: null,
 };
-const pinInfo1OfOwner1 = {
-  userId: '123',
+const pinInfo1User123 = {
+  userId: authUser123.uid,
   title: 'Pin_1',
   area: {
     radius: 2,
@@ -36,8 +36,8 @@ const pinInfo1OfOwner1 = {
     2: true,
   },
 };
-const pinInfo2OfOwner1 = {
-  userId: '123',
+const pinInfo2User123 = {
+  userId: authUser123.uid,
   title: 'Pin_2',
   area: {
     radius: 5,
@@ -50,8 +50,8 @@ const pinInfo2OfOwner1 = {
     1: true,
   },
 };
-const pinInfo1OfOwner2 = {
-  userId: '573',
+const pinInfo1User573 = {
+  userId: authUser573.uid,
   title: 'Pin_1',
   area: {
     radius: 3,
@@ -68,15 +68,15 @@ const status = { ready1: false, ready2: false, ready3: false };
 
 const setUpForUse = () => {
   createPin(
-    pinInfo1OfOwner1, () => { status.ready1 = true; },
+    pinInfo1User123, () => { status.ready1 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPin(
-    pinInfo2OfOwner1, () => { status.ready2 = true; },
+    pinInfo2User123, () => { status.ready2 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPin(
-    pinInfo1OfOwner2, () => { status.ready3 = true; },
+    pinInfo1User573, () => { status.ready3 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
 };
@@ -98,8 +98,6 @@ describe('Test myPosts', () => {
       const myPins = root.find('MyPins').dive();
       const root2 = shallow(<MyPins authUser={authUser573} />);
       const myPins2 = root2.find('MyPins').dive();
-      console.log(myPins.state().pins);
-      console.log(myPins2.state().pins);
       expect(myPins.state().pins.length).toEqual(2);
       expect(myPins2.state().pins.length).toEqual(1);
     });

@@ -21,7 +21,7 @@ const authUser573 = {
   email: 'nicolemaster@gmail.com',
   photoURL: null,
 };
-const postInfo1OfOwner1 = {
+const postInfo1User123 = {
   userId: authUser123.uid,
   title: 'Post_1',
   location: {
@@ -30,7 +30,7 @@ const postInfo1OfOwner1 = {
   },
   category: '1',
 };
-const postInfo2OfOwner1 = {
+const postInfo2User123 = {
   userId: authUser123.uid,
   title: 'Post_2',
   location: {
@@ -39,7 +39,7 @@ const postInfo2OfOwner1 = {
   },
   category: '2',
 };
-const postInfo1OfOwner2 = {
+const postInfo1User573 = {
   userId: authUser573.uid,
   title: 'Post_1',
   location: {
@@ -52,15 +52,15 @@ const status = { ready1: false, ready2: false, ready3: false };
 
 const setUpForUse = () => {
   createPost(
-    postInfo1OfOwner1, () => { status.ready1 = true; },
+    postInfo1User123, () => { status.ready1 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfo2OfOwner1, () => { status.ready2 = true; },
+    postInfo2User123, () => { status.ready2 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfo1OfOwner2, () => { status.ready3 = true; },
+    postInfo1User573, () => { status.ready3 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
 };
