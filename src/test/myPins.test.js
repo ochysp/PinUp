@@ -91,7 +91,7 @@ beforeEach(() => {
   setUpForUse();
 });
 
-describe('Test myPosts', () => {
+describe('Test myPins', () => {
   describe('#checks Listing', () => {
     it('should create two different Lists of myPins for Users', () => {
       const root = shallow(<MyPins authUser={authUser123} />);
