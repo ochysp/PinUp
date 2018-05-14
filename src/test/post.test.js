@@ -22,6 +22,7 @@ const location = {
 };
 const expectedPostData = {
   category: '0',
+  description: 'Text Sample',
   location,
   title: 'default_testpost_1234',
   userId: authUser.uid,
@@ -43,6 +44,7 @@ const createPost = (modifiedStateValue) => {
   if (modifiedStateValue === undefined) {
     postForm.setState({
       category: '0',
+      description: 'Text Sample',
       title: 'default_testpost_1234',
     });
   } else {
