@@ -4,7 +4,7 @@ import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import CreatePostForm from '../components/Post/CreatePostForm';
-import { listenForAllPostsOfUser } from '../business/Post';
+import { deletePost, listenForAllPostsOfUser } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 // import { PostType } from '../business/Types';
 
@@ -81,6 +81,23 @@ describe('Test Post', () => {
       const incompletePostForm = createPost(incompleteState);
       expect(incompletePostForm.state().sentToDB).toEqual(false);
       expect(incompletePostForm.state().invalidSubmit).toEqual(true);
+    });
+  });
+  describe('#deletePost', () => {
+    it('should be deleted after Request from Client', () => {
+      createPost();
+      const myPost = { postId: '' };
+      function callbackThatContainsPin(data) {
+        if (data.length && data.length > 0) {
+          myPost.postId = data[0].postId;
+        }
+      }
+      listenForAllPostsOfUser(authUser.uid, callbackThatContainsPin);
+      deletePost(authUser.uid, myPost);
+      function callbackWithoutPin(data) {
+        expect(data.length).toEqual(0);
+      }
+      listenForAllPostsOfUser(authUser.uid, callbackWithoutPin);
     });
   });
 });
