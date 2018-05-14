@@ -67,6 +67,10 @@ export const createPost = (
   );
 };
 
+export const updatePost = (postInfo: postType) =>  {
+  db.ref(dbRef.POSTS + postInfo.uid).update(postInfo);
+};
+
 export const deletePost = (authUser: AuthUserType, postData: PostType) => {
   if (postData.postId) {
     const { postId } = postData;

@@ -10,7 +10,7 @@ import {
   deletePin,
   listenForAllPinsWithMatchesOfUser,
 } from '../business/Pin';
-import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
+import { detachAllPostListeners, listenForAllPostsOfUser, deletePost, updatePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
@@ -44,9 +44,13 @@ type State = {
   isPost: boolean,
 
   pins: Array<PinType>,
-
-  dialogIsActive: boolean,
   posts: Array<PostType>,
+
+  editablePost: PostType,
+  editablePin: PinType,
+
+  dialogIsActive: boolean
+
 };
 
 type Props = {
@@ -72,6 +76,9 @@ class Home extends React.Component<Props, State> {
       pins: [],
       posts: [],
 
+      editablePost: null,
+      editablePin: null,
+
       dialogIsActive: false,
     };
   }
@@ -94,6 +101,8 @@ class Home extends React.Component<Props, State> {
       dialogIsActive: true,
       isPin: false,
       isPost: false,
+      editablePost: null,
+      editablePin: null,
     });
   };
 
@@ -127,17 +136,30 @@ class Home extends React.Component<Props, State> {
     }
   };
 
+  handleEditPost = (post: PostType) => () => {
+    this.handleSetPost();
+    this.setState({ editablePost: post });
+  }
+
   render() {
     const {
       marker, center, zoom, markerIsSet, isPin, isPost,
     } = this.state;
 
     const pinForm = isPin ? (
-      <CreatePinForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
+      <CreatePinForm
+        authUser={this.props.authUser}
+        position={convertToLocationType(marker)}
+        editablePin={this.state.editablePin}
+      />
     ) : null;
 
     const postForm = isPost ? (
-      <CreatePostForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
+      <CreatePostForm
+        authUser={this.props.authUser}
+        position={convertToLocationType(marker)}
+        editablePost={this.state.editablePost}
+      />
     ) : null;
 
     const currentMarker = markerIsSet ? (
@@ -210,6 +232,9 @@ class Home extends React.Component<Props, State> {
                   <br />
                   {CATEGORIES[post.category]}
                   <br />
+                  <Button onClick={this.handleEditPost(post)}>
+                    Edit Post
+                  </Button>
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post
                   </Button>

@@ -15,7 +15,7 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-import type { AuthUserType, LocationType } from '../../business/Types';
+import type { AuthUserType, LocationType, PostType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
@@ -31,6 +31,7 @@ type Props = {
   classes: any,
   authUser: AuthUserType,
   position: LocationType,
+  editablePost?: PostType,
 };
 
 class CreatePostForm extends React.Component<Props, State> {
@@ -43,6 +44,20 @@ class CreatePostForm extends React.Component<Props, State> {
       sentToDB: false,
       dialogIsActive: true,
     };
+  }
+
+  componentDidMount() {
+    if (this.props.editablePost) {
+      this.setState({
+        userId: this.props.editablePost.userId,
+        title: this.props.editablePost.title,
+        location: {
+          latitude: parseFloat(this.props.editablePost.location.latitude),
+          longitude: parseFloat(this.props.editablePost.location.longitude),
+        },
+        category: this.props.editablePost.category,
+      });
+    }
   }
 
   handleSubmit = (event: any) => {
