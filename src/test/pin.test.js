@@ -89,7 +89,6 @@ describe('Test Pin', () => {
       expect(incompletePinForm.state().invalidSubmit).toEqual(true);
     });
   });
-
   describe('#changePin', () => {
     it('should update Pin with new Information', () => {
       // Content
