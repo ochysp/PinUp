@@ -16,11 +16,12 @@ import { withStyles } from 'material-ui/styles';
 import { createPost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType } from '../../business/Types';
-import AlertDialog from '../MaterialComponents/AlertDialog';
-import { formStyles } from '../../style/styles';
+import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
+import { formStyle } from '../../style/styles';
 
 type State = {
   title: string,
+  description: string,
   category: string,
   invalidSubmit: boolean,
   sentToDB: boolean,
@@ -38,6 +39,7 @@ class CreatePostForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
+      description: '',
       category: '',
       invalidSubmit: false,
       sentToDB: false,
@@ -53,6 +55,7 @@ class CreatePostForm extends React.Component<Props, State> {
         {
           userId: this.props.authUser.uid,
           title: this.state.title,
+          description: this.state.description,
           location: {
             latitude: parseFloat(this.props.position.latitude),
             longitude: parseFloat(this.props.position.longitude),
@@ -76,7 +79,7 @@ class CreatePostForm extends React.Component<Props, State> {
 
   render() {
     const { classes } = this.props;
-    const savedAlert = this.state.sentToDB ? (<AlertDialog infoText="Post" />) : null;
+    const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Post" />) : null;
 
     return (
       <div>
@@ -100,6 +103,18 @@ class CreatePostForm extends React.Component<Props, State> {
                     error={this.state.invalidSubmit && this.state.title === ''}
                     value={this.state.title}
                     className={classes.titleField}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="Description"
+                    id="description"
+                    onChange={this.handleChange('description')}
+                    helperText={this.state.invalidSubmit && this.state.description === '' ? 'Requires a description' : ''}
+                    error={this.state.invalidSubmit && this.state.description === ''}
+                    value={this.state.description}
+                    className={classes.descriptionField}
                   />
                 </Grid>
 
@@ -162,4 +177,4 @@ class CreatePostForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(formStyles)(CreatePostForm);
+export default withStyles(formStyle)(CreatePostForm);

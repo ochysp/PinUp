@@ -15,7 +15,7 @@ import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
-import SelectionDrawer from './MaterialComponents/SelectionDialog';
+import SelectionDrawer from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
@@ -24,9 +24,22 @@ const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
 );
 
+const convertToValidLocation = (location: LatLng): LocationType => {
+  const newLocation = { lat: location.lat, lng: location.lng };
+  if (newLocation.lng > 180) {
+    newLocation.lng -= 360;
+    return convertToValidLocation(newLocation);
+  } else if (newLocation.lng < -180) {
+    newLocation.lng += 360;
+    return convertToValidLocation(newLocation);
+  }
+  return location;
+};
+
 const convertToLocationType = (location: LatLng): LocationType => {
   if (location.lat && location.lng && typeof location.lat === 'number' && typeof location.lng === 'number') {
-    return { latitude: location.lat, longitude: location.lng };
+    const validLocation = convertToValidLocation(location);
+    return { latitude: validLocation.lat, longitude: validLocation.lng };
   }
   // eslint-disable-next-line no-throw-literal
   throw 'unknown leaflet location type';
@@ -165,6 +178,8 @@ class Home extends React.Component<Props, State> {
         <Map
           center={center}
           zoom={zoom}
+          minZoom={2}
+          maxBounds={[[-90, -180], [90, 180]]}
           onClick={this.setMarker}
           className={this.props.classes.map}
         >

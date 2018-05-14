@@ -1,10 +1,15 @@
-export const formStyles = theme => ({
+import globalTheme from './theme';
+
+export const formStyle = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
   },
   titleField: {
     marginTop: 20,
+    width: 200,
+  },
+  descriptionField: {
     width: 200,
   },
   categoryField: {
@@ -97,5 +102,11 @@ export const styles = theme => ({
   backButton: {
     marginLeft: -theme.spacing.unit,
   },
+  menuBar: {
+    backgroundColor: globalTheme.palette.primary.main,
+    color: globalTheme.palette.common.white,
+  },
+  logout: {
+    background: globalTheme.palette.secondary.main,
+  },
 });
-
