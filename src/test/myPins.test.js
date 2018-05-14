@@ -92,7 +92,7 @@ beforeEach(() => {
 });
 
 describe('Test myPins', () => {
-  describe('#checks Listing', () => {
+  describe('checks Listing', () => {
     it('should create two different Lists of myPins for Users', () => {
       const root = shallow(<MyPins authUser={authUser123} />);
       const myPins = root.find('MyPins').dive();

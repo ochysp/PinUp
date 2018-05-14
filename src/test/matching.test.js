@@ -147,7 +147,7 @@ beforeEach(() => {
 });
 
 describe('Test matching', () => {
-  describe('#checks Listing', () => {
+  describe('checks Listing', () => {
     it('should get matches of two different categories', () => {
       const PinsOfUser123 = mount(<MyPins authUser={authUser123} />);
       PinsOfUser123.find('ListItem').first().simulate('click');

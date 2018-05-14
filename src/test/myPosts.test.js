@@ -76,7 +76,7 @@ beforeEach(() => {
 });
 
 describe('Test myPosts', () => {
-  describe('#checks Listing', () => {
+  describe('checks Listing', () => {
     it('should create two different Lists of myPosts for Users', () => {
       const root = shallow(<MyPosts authUser={authUser123} />);
       const myPosts = root.find('MyPosts').dive();

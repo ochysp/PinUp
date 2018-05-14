@@ -66,7 +66,7 @@ const doAfterPostCreation = (toDo) => {
 };
 
 describe('Test Post', () => {
-  describe('#createPin', () => {
+  describe('createPin', () => {
     it('should create valid Post', (done) => {
       const checkData = (postForm, data) => {
       // eslint-disable-next-line no-param-reassign
@@ -85,7 +85,7 @@ describe('Test Post', () => {
       expect(incompletePostForm.state().invalidSubmit).toEqual(true);
     });
   });
-  describe('#deletePost', () => {
+  describe('deletePost', () => {
     it('should be deleted after Request from Client', () => {
       createPost();
       const myPost = { postId: '' };
