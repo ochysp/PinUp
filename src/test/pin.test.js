@@ -3,7 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import { listenForAllPinsOfUser } from '../business/Pin';
+import { listenForAllPinsOfUser, deletePin, convertCategoryArrayToObject } from '../business/Pin';
 import CreatePinForm from '../components/Pin/CreatePinForm';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
@@ -79,7 +79,6 @@ describe('Test Pin', () => {
       };
       doAfterPinCreation(checkData);
     });
-
     it('should request Client to fill out missing Input / Information', () => {
       const incompleteState = {
         title: 'pin_without_categories',
@@ -97,14 +96,28 @@ describe('Test Pin', () => {
       // Content
     });
   });
-
   describe('#deletePin', () => {
     it('should be deleted after Request from Client', () => {
-      // Content
+      createPin();
+      const myPin = { pinId: '' };
+      function callbackThatContainsPin(data) {
+        if (data.length && data.length > 0) {
+          myPin.pinId = data[0].pinId;
+        }
+      }
+      listenForAllPinsOfUser(authUser.uid, callbackThatContainsPin);
+      deletePin(authUser.uid, myPin.pinId);
+      function callbackWithoutPin(data) {
+        expect(data.length).toEqual(0);
+      }
+      listenForAllPinsOfUser(authUser.uid, callbackWithoutPin);
     });
-    it('should get deleted after the "survival" Date', () => {
-      // Might be hard to test here due to "cleaning" function
-      // which might just runs once every 24h
+  });
+  describe('#convertCategoryToObject', () => {
+    it('should return an Array of objects', () => {
+      const categories = ['0', '2', '3'];
+      const categoriesAsObject = convertCategoryArrayToObject(categories);
+      expect(categoriesAsObject).toEqual({ 0: true, 2: true, 3: true });
     });
   });
 });
