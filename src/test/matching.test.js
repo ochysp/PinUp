@@ -22,6 +22,20 @@ const authUser573 = {
   email: 'nicolemaster@gmail.com',
   photoURL: null,
 };
+const pinInfoCategory1 = {
+  userId: '123',
+  title: 'Pin_2',
+  area: {
+    radius: 5,
+    location: {
+      latitude: parseFloat(47.23563352505211),
+      longitude: parseFloat(8.845367431395730),
+    },
+  },
+  categories: {
+    1: true,
+  },
+};
 const pinInfoCategory02 = {
   userId: '123',
   title: 'Pin_1',
@@ -35,20 +49,6 @@ const pinInfoCategory02 = {
   categories: {
     0: true,
     2: true,
-  },
-};
-const pinInfoCategory1 = {
-  userId: '123',
-  title: 'Pin_2',
-  area: {
-    radius: 5,
-    location: {
-      latitude: parseFloat(47.23563352505211),
-      longitude: parseFloat(8.845367431395730),
-    },
-  },
-  categories: {
-    1: true,
   },
 };
 const pinInfoCategory0123 = {
@@ -68,6 +68,15 @@ const pinInfoCategory0123 = {
     3: true,
   },
 };
+const postInfoCategory0 = {
+  userId: authUser573.uid,
+  title: 'Bike-Tour',
+  location: {
+    latitude: parseFloat(47.23563352505248),
+    longitude: parseFloat(8.845367431640627),
+  },
+  category: '0',
+};
 const postInfoCategory1 = {
   userId: authUser123.uid,
   title: 'Farmer Market',
@@ -86,15 +95,6 @@ const postInfoCategory2 = {
   },
   category: '2',
 };
-const postInfoCategory0 = {
-  userId: authUser573.uid,
-  title: 'Bike-Tour',
-  location: {
-    latitude: parseFloat(47.23563352505248),
-    longitude: parseFloat(8.845367431640627),
-  },
-  category: '0',
-};
 const postInfoShouldntMatch = {
   userId: authUser573.uid,
   title: 'Hiking',
@@ -104,38 +104,34 @@ const postInfoShouldntMatch = {
   },
   category: '0',
 };
-const pinStatus = { ready1: false, ready2: false, ready3: false };
-const postStatus = {
-  ready1: false, ready2: false, ready3: false, ready4: false,
-};
 
 const setUpForUse = () => {
   createPin(
-    pinInfoCategory02, () => { pinStatus.ready1 = true; },
+    pinInfoCategory02, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPin(
-    pinInfoCategory1, () => { pinStatus.ready2 = true; },
+    pinInfoCategory1, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPin(
-    pinInfoCategory0123, () => { pinStatus.ready3 = true; },
+    pinInfoCategory0123, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfoCategory1, () => { postStatus.ready1 = true; },
+    postInfoCategory1, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfoCategory2, () => { postStatus.ready2 = true; },
+    postInfoCategory2, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfoCategory0, () => { postStatus.ready3 = true; },
+    postInfoCategory0, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
   createPost(
-    postInfoShouldntMatch, () => { postStatus.ready4 = true; },
+    postInfoShouldntMatch, () => { },
     (error) => { console.log('error'); console.log(error); },
   );
 };
@@ -157,36 +153,60 @@ describe('Test matching', () => {
       PinsOfUser123.find('ListItem').first().simulate('click');
       expect(PinsOfUser123.containsAllMatchingElements([
         <h3>
-          Bike-Tour
+          {postInfoCategory0.title}
         </h3>,
         <h3>
-          Pub Tour
+          {postInfoCategory2.title}
         </h3>,
       ])).toEqual(true);
+      expect(PinsOfUser123.containsAnyMatchingElements([
+        <h3>
+          {postInfoCategory1.title}
+        </h3>,
+        <h3>
+          {postInfoShouldntMatch.title}
+        </h3>,
+      ])).toEqual(false);
     });
     it('should get matches of the specific category', () => {
       const PinsOfUser123 = mount(<MyPins authUser={authUser123} />);
       PinsOfUser123.find('ListItem').at(1).simulate('click');
       expect(PinsOfUser123.containsAllMatchingElements([
         <h3>
-          Farmer Market
+          {postInfoCategory1.title}
         </h3>,
       ])).toEqual(true);
+      expect(PinsOfUser123.containsAnyMatchingElements([
+        <h3>
+          {postInfoCategory0.title}
+        </h3>,
+        <h3>
+          {postInfoCategory2.title}
+        </h3>,
+        <h3>
+          {postInfoShouldntMatch.title}
+        </h3>,
+      ])).toEqual(false);
     });
     it('should get matches of all the post within the radius', () => {
       const PinsOfUser573 = mount(<MyPins authUser={authUser573} />);
       PinsOfUser573.find('ListItem').first().simulate('click');
       expect(PinsOfUser573.containsAllMatchingElements([
         <h3>
-          Bike-Tour
+          {postInfoCategory0.title}
         </h3>,
         <h3>
-          Farmer Market
+          {postInfoCategory1.title}
         </h3>,
         <h3>
-          Pub Tour
+          {postInfoCategory2.title}
         </h3>,
       ])).toEqual(true);
+      expect(PinsOfUser573.containsAnyMatchingElements([
+        <h3>
+          {postInfoShouldntMatch.title}
+        </h3>,
+      ])).toEqual(false);
     });
   });
 });
