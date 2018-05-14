@@ -52,6 +52,7 @@ export type PostType = {
   postId?: KeyType,
   userId: KeyType,
   title: string,
+  description: string,
   location: LocationType,
   category: string,
   event?: EventType
