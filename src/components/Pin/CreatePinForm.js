@@ -74,7 +74,7 @@ class CreatePinForm extends React.Component<Props, State> {
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -153,6 +153,7 @@ class CreatePinForm extends React.Component<Props, State> {
                       max={10}
                       step={0.1}
                       value={this.state.radius}
+                      defaultValue={5}
                       onUpdate={this.handleChange('radius')}
                       onChange={() => {}}
                       className={classes.slider}
@@ -177,6 +178,7 @@ class CreatePinForm extends React.Component<Props, State> {
               >Cancel
               </Button>
               <Button
+                id="Save"
                 color="primary"
                 variant="raised"
                 className={classes.buttonSave}

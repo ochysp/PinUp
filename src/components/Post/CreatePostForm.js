@@ -50,7 +50,7 @@ class CreatePostForm extends React.Component<Props, State> {
   handleSubmit = (event: any) => {
     if (this.state.title !== '' && this.state.category !== '') {
       this.setState({ invalidSubmit: false, dialogIsActive: false });
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
       createPost(
         {
           userId: this.props.authUser.uid,
@@ -65,7 +65,7 @@ class CreatePostForm extends React.Component<Props, State> {
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -162,6 +162,7 @@ class CreatePostForm extends React.Component<Props, State> {
               >Cancel
               </Button>
               <Button
+                id="Save"
                 color="primary"
                 variant="raised"
                 className={classes.buttonSave}
