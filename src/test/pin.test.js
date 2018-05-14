@@ -69,7 +69,7 @@ const doAfterPinCreation = (toDo) => {
 };
 
 describe('Test Pin', () => {
-  describe('#creatPin', () => {
+  describe('creatPin', () => {
     it('should create valid Pin', (done) => {
       const checkData = (pinForm, data) => {
         // eslint-disable-next-line no-param-reassign
@@ -88,7 +88,7 @@ describe('Test Pin', () => {
       expect(incompletePinForm.state().invalidSubmit).toEqual(true);
     });
   });
-  describe('#changePin', () => {
+  describe('changePin', () => {
     it('should update Pin with new Information', () => {
       // Content
     });
@@ -96,7 +96,7 @@ describe('Test Pin', () => {
       // Content
     });
   });
-  describe('#deletePin', () => {
+  describe('deletePin', () => {
     it('should be deleted after Request from Client', () => {
       createPin();
       const myPin = { pinId: '' };
@@ -113,7 +113,7 @@ describe('Test Pin', () => {
       listenForAllPinsOfUser(authUser.uid, callbackWithoutPin);
     });
   });
-  describe('#convertCategoryToObject', () => {
+  describe('convertCategoryToObject', () => {
     it('should return an Array of objects', () => {
       const categories = ['0', '2', '3'];
       const categoriesAsObject = convertCategoryArrayToObject(categories);
