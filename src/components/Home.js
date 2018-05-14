@@ -15,7 +15,7 @@ import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
-import SelectionDrawer from './MaterialComponents/SelectionDialog';
+import SelectionDrawer from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';

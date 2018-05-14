@@ -17,7 +17,7 @@ type State = {
   open: boolean,
 }
 
-class AlertDialog extends React.Component<Props, State> {
+class ConfirmationAlertDialog extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -55,4 +55,4 @@ class AlertDialog extends React.Component<Props, State> {
   }
 }
 
-export default AlertDialog;
+export default ConfirmationAlertDialog;
