@@ -32,7 +32,6 @@ export const listenForPostsIDsOfUser = (
   ref.on('child_removed', snapshot => keyLeft(snapshot.key));
 };
 
-
 const convertPostsSnapshotToArray = (snapshot: SnapshotType) => {
   if (snapshot.val() === null) {
     return [];
@@ -56,19 +55,24 @@ export const listenForPostData = (postId: KeyType, callback: ValueQueryCallback)
 
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
+const updatePost = (post: PostType) => {
+  delete post.location; // so that the location of the Post wont change
+  db.ref(dbRef.POSTS + post.postId).update(post);
+};
+
 export const createPost = (
-  postInfo: PostType,
+  post: PostType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
 ) => {
-  const newPostId = db.ref(dbRef.POSTS).push(postInfo).key;
-  createPostLocation(
-    newPostId, postInfo.category, postInfo.location, callbackOnSuccess, callbackOnError,
-  );
-};
-
-export const updatePost = (postInfo: postType) =>  {
-  db.ref(dbRef.POSTS + postInfo.uid).update(postInfo);
+  if (post.postId) {
+    updatePost(post);
+  } else {
+    const newPostId = db.ref(dbRef.POSTS).push(post).key;
+    createPostLocation(
+      newPostId, post.category, post.location, callbackOnSuccess, callbackOnError,
+    );
+  }
 };
 
 export const deletePost = (authUser: AuthUserType, postData: PostType) => {

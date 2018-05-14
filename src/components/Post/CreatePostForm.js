@@ -49,12 +49,7 @@ class CreatePostForm extends React.Component<Props, State> {
   componentDidMount() {
     if (this.props.editablePost) {
       this.setState({
-        userId: this.props.editablePost.userId,
         title: this.props.editablePost.title,
-        location: {
-          latitude: parseFloat(this.props.editablePost.location.latitude),
-          longitude: parseFloat(this.props.editablePost.location.longitude),
-        },
         category: this.props.editablePost.category,
       });
     }
@@ -66,6 +61,7 @@ class CreatePostForm extends React.Component<Props, State> {
       event.preventDefault();
       createPost(
         {
+          postId: this.props.editablePost ? this.props.editablePost.postId : null,
           userId: this.props.authUser.uid,
           title: this.state.title,
           location: {

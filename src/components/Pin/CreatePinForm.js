@@ -23,7 +23,7 @@ import { withStyles } from 'material-ui/styles';
 import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';
-import type { AuthUserType, LocationType } from '../../business/Types';
+import type { AuthUserType, LocationType, PinType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
@@ -40,6 +40,7 @@ export type Props = {
   classes: any,
   authUser: AuthUserType,
   position: LocationType,
+  editablePin?: PinType,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
@@ -55,11 +56,22 @@ class CreatePinForm extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.editablePin) {
+      this.setState({
+        title: this.props.editablePin.title,
+        categories: this.props.editablePin.categories,
+        radius: this.props.editablePin.area.radius,
+      });
+    }
+  }
+
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
       this.setState({ invalidSubmit: false, dialogIsActive: false });
       createPin(
         {
+          pinId: this.props.editablePin ? this.props.editablePin.pinId : null,
           userId: this.props.authUser.uid,
           title: this.state.title,
           area: {
@@ -110,6 +122,7 @@ class CreatePinForm extends React.Component<Props, State> {
                     onChange={this.handleChange('title')}
                     margin="normal"
                     className={classes.titleField}
+                    value={this.state.title}
                   />
 
                   <Grid item xs={12}>

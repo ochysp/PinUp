@@ -10,7 +10,7 @@ import {
   deletePin,
   listenForAllPinsWithMatchesOfUser,
 } from '../business/Pin';
-import { detachAllPostListeners, listenForAllPostsOfUser, deletePost, updatePost } from '../business/Post';
+import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
@@ -126,6 +126,11 @@ class Home extends React.Component<Props, State> {
     }
   };
 
+  handleEditPin = (pin: PinType) => () => {
+    this.handleSetPin();
+    this.setState({ editablePin: pin });
+  }
+
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
       deletePost(this.props.authUser, post);
@@ -195,7 +200,7 @@ class Home extends React.Component<Props, State> {
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
 
-          {this.state.pins.map((pin: PinType, index) => (
+          {this.state.pins.map((pin: PinType) => (
             <Marker
               key={pin.pinId}
               position={convertToLeafletLocation(pin.area.location)}
@@ -203,10 +208,13 @@ class Home extends React.Component<Props, State> {
             >
               <Popup>
                 <span>
-                  {pin.title} #{index}
+                  {pin.title}
                   <br />
                   {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')}
                   <br />
+                  <Button onClick={this.handleEditPin(pin)}>
+                    Edit Pin
+                  </Button>
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
                   </Button>
@@ -220,7 +228,7 @@ class Home extends React.Component<Props, State> {
             </Marker>
           ))}
 
-          {this.state.posts.map((post: PostType, index) => (
+          {this.state.posts.map((post: PostType) => (
             <Marker
               key={post.postId}
               position={convertToLeafletLocation(post.location)}
@@ -228,7 +236,7 @@ class Home extends React.Component<Props, State> {
             >
               <Popup>
                 <span>
-                  {post.title} #{index}
+                  {post.title}
                   <br />
                   {CATEGORIES[post.category]}
                   <br />

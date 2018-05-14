@@ -17,13 +17,23 @@ export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
 export const detachPinListener = (pinId: KeyType) =>
   db.ref(dbRef.PINS + pinId).off();
 
+const updatePin = (pin: PinType) => {
+  delete pin.area; // so that the location of the Post wont change
+  db.ref(dbRef.PINS + pin.pinId).update(pin);
+};
+
 export const createPin = (
-  pinInfo: PinType,
+  pin: PinType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
 ) => {
-  db.ref(dbRef.PINS)
-    .push(pinInfo).then(callbackOnSuccess, callbackOnError);
+  if (pin.pinId) {
+    updatePin(pin);
+  } else {
+    db.ref(dbRef.PINS)
+      .push(pin)
+      .then(callbackOnSuccess, callbackOnError);
+  }
 };
 
 const convertPinsSnapshotToArray = (snapshot: SnapshotType) => {
@@ -69,10 +79,7 @@ export const detachAllPinListeners = () => {
 };
 
 export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
-  db
-    .ref(dbRef.PINS)
-    .child(pinKey)
-    .remove();
+  db.ref(dbRef.PINS).child(pinKey).remove();
 };
 
 export const convertCategoryArrayToObject = (categoryArray: string[]): CategoriesType => {
