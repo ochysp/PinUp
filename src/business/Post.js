@@ -1,6 +1,5 @@
 // @flow
 
-// import * as GeoFire from 'geofire';
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import type {
@@ -88,4 +87,3 @@ export const deletePost = (authUser: AuthUserType, postData: PostType) => {
 export const detachAllPostListeners = () => {
   db.ref(dbRef.POSTS).off();
 };
-
