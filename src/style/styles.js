@@ -7,6 +7,9 @@ export const formStyles = theme => ({
     marginTop: 20,
     width: 200,
   },
+  descriptionField: {
+    width: 200,
+  },
   categoryField: {
     marginBottom: 20,
     width: 200,
@@ -98,4 +101,3 @@ export const styles = theme => ({
     marginLeft: -theme.spacing.unit,
   },
 });
-
