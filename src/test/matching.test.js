@@ -4,8 +4,9 @@ import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import MyPins from '../components/MyPins';
+import { getMatchesOnce } from '../business/Match';
 import { createPin } from '../business/Pin';
-import { createPost } from '../business/Post';
+import { createPost, listenForPostData } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -207,6 +208,40 @@ describe('Test matching', () => {
           {postInfoShouldntMatch.title}
         </h3>,
       ])).toEqual(false);
+    });
+  });
+  describe('checks Match.js Functions', () => {
+    it('should get matches of post ordered in expected order', () => {
+      const wasChecked = { 0: false, 1: false, 2: false };
+      function postDetailCallback(snapshot) {
+        if (snapshot.val() != null) {
+          const actualPostInfo = snapshot.val();
+          switch (actualPostInfo.category) {
+            case '0':
+              expect(actualPostInfo).toEqual(postInfoCategory0);
+              wasChecked[0] = true;
+              break;
+            case '1':
+              expect(actualPostInfo).toEqual(postInfoCategory1);
+              wasChecked[1] = true;
+              break;
+            case '2':
+              expect(actualPostInfo).toEqual(postInfoCategory2);
+              wasChecked[2] = true;
+              expect(wasChecked).toEqual({ 0: true, 1: true, 2: true });
+              break;
+            default:
+          }
+        }
+      }
+      function callback(data) {
+        data.forEach((postId) => {
+          listenForPostData(postId, postDetailCallback);
+        });
+      }
+      getMatchesOnce(
+        pinInfoCategory0123.area, pinInfoCategory0123.categories, callback,
+      );
     });
   });
 });
