@@ -20,10 +20,10 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
-import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
+import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';
-import type { AuthUserType, LocationType } from '../../business/Types';
+import type { AuthUserType, LocationType, PinType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
@@ -33,16 +33,28 @@ type State = {
   categories: string[],
   invalidSubmit: boolean,
   sentToDB: boolean,
-  dialogIsActive: boolean,
 };
 
 export type Props = {
   classes: any,
   authUser: AuthUserType,
   position: LocationType,
+  editablePin?: PinType,
+  onDone: () => void,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.editablePin) {
+      return ({
+        title: nextProps.editablePin.title,
+        categories: convertCategoryObjectToArray(nextProps.editablePin.categories),
+        radius: nextProps.editablePin.area.radius,
+      });
+    }
+    return {};
+  }
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -51,30 +63,46 @@ class CreatePinForm extends React.Component<Props, State> {
       categories: [],
       invalidSubmit: false,
       sentToDB: false,
-      dialogIsActive: true,
     };
   }
 
+  handleClose = () => {
+    if (this.props.onDone) {
+      this.props.onDone();
+    }
+  };
+
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
-      createPin(
-        {
-          userId: this.props.authUser.uid,
-          title: this.state.title,
-          area: {
-            location: {
-              latitude: parseFloat(this.props.position.latitude),
-              longitude: parseFloat(this.props.position.longitude),
-            },
-            radius: parseFloat(this.state.radius),
-          },
-          categories: convertCategoryArrayToObject(this.state.categories),
+      if (event) { event.preventDefault(); }
+
+      const pin: PinType = {
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        area: {
+          radius: parseFloat(this.state.radius),
         },
+        categories: convertCategoryArrayToObject(this.state.categories),
+      };
+
+      if (this.props.editablePin) {
+        pin.pinId = this.props.editablePin.pinId;
+        pin.area.location = this.props.editablePin.area.location;
+      } else {
+        pin.area.location = {
+          latitude: parseFloat(this.props.position.latitude),
+          longitude: parseFloat(this.props.position.longitude),
+        };
+      }
+
+      savePin(
+        pin,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-      if (event) { event.preventDefault(); }
+
+      this.setState({ invalidSubmit: false });
+      this.handleClose();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -95,8 +123,8 @@ class CreatePinForm extends React.Component<Props, State> {
       <div>
         {savedAlert}
         <Dialog
-          open={this.state.dialogIsActive}
-          onClose={() => this.setState({ dialogIsActive: false })}
+          open
+          onClose={this.handleClose}
         >
           <form className={classes.container} noValidate autoComplete="off">
             <Grid container spacing={36} className={classes.grid}>
@@ -110,6 +138,7 @@ class CreatePinForm extends React.Component<Props, State> {
                     onChange={this.handleChange('title')}
                     margin="normal"
                     className={classes.titleField}
+                    value={this.state.title}
                   />
 
                   <Grid item xs={12}>
@@ -167,12 +196,12 @@ class CreatePinForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={() => this.setState({ dialogIsActive: false })}
+            onKeyDown={this.handleClose}
           >
             <DialogActions>
               <Button
                 className={classes.buttonCancel}
-                onClick={() => this.setState({ dialogIsActive: false })}
+                onClick={this.handleClose}
               >Cancel
               </Button>
               <Button
@@ -184,7 +213,6 @@ class CreatePinForm extends React.Component<Props, State> {
               </Button>
             </DialogActions>
           </div>
-
         </Dialog>
       </div>
     );

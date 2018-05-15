@@ -57,9 +57,13 @@ type State = {
   isPost: boolean,
 
   pins: Array<PinType>,
-
-  dialogIsActive: boolean,
   posts: Array<PostType>,
+
+  editablePost: PostType,
+  editablePin: PinType,
+
+  dialogIsActive: boolean
+
 };
 
 type Props = {
@@ -85,6 +89,9 @@ class Home extends React.Component<Props, State> {
       pins: [],
       posts: [],
 
+      editablePost: null,
+      editablePin: null,
+
       dialogIsActive: false,
     };
   }
@@ -107,6 +114,8 @@ class Home extends React.Component<Props, State> {
       dialogIsActive: true,
       isPin: false,
       isPost: false,
+      editablePost: null,
+      editablePin: null,
     });
   };
 
@@ -130,6 +139,19 @@ class Home extends React.Component<Props, State> {
     }
   };
 
+  handleEditPin = (pin: PinType) => () => {
+    this.handleSetPin();
+    this.setState({ editablePin: pin });
+  };
+
+  handleCloseDialogs = () => this.setState({
+    isPin: false,
+    isPost: false,
+    dialogIsActive: false,
+    editablePost: null,
+    editablePin: null,
+  });
+
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
       deletePost(this.props.authUser, post);
@@ -140,17 +162,32 @@ class Home extends React.Component<Props, State> {
     }
   };
 
+  handleEditPost = (post: PostType) => () => {
+    this.handleSetPost();
+    this.setState({ editablePost: post });
+  };
+
   render() {
     const {
       marker, center, zoom, markerIsSet, isPin, isPost,
     } = this.state;
 
     const pinForm = isPin ? (
-      <CreatePinForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
+      <CreatePinForm
+        authUser={this.props.authUser}
+        position={convertToLocationType(marker)}
+        editablePin={this.state.editablePin}
+        onDone={this.handleCloseDialogs}
+      />
     ) : null;
 
     const postForm = isPost ? (
-      <CreatePostForm authUser={this.props.authUser} position={convertToLocationType(marker)} />
+      <CreatePostForm
+        authUser={this.props.authUser}
+        position={convertToLocationType(marker)}
+        editablePost={this.state.editablePost}
+        onDone={this.handleCloseDialogs}
+      />
     ) : null;
 
     const currentMarker = markerIsSet ? (
@@ -188,7 +225,7 @@ class Home extends React.Component<Props, State> {
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
 
-          {this.state.pins.map((pin: PinType, index) => (
+          {this.state.pins.map((pin: PinType) => (
             <Marker
               key={pin.pinId}
               position={convertToLeafletLocation(pin.area.location)}
@@ -196,10 +233,13 @@ class Home extends React.Component<Props, State> {
             >
               <Popup>
                 <span>
-                  {pin.title} #{index}
+                  {pin.title}
                   <br />
                   {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')}
                   <br />
+                  <Button onClick={this.handleEditPin(pin)}>
+                    Edit Pin
+                  </Button>
                   <Button onClick={this.handleDeletePin(pin)}>
                     Delete Pin
                   </Button>
@@ -213,7 +253,7 @@ class Home extends React.Component<Props, State> {
             </Marker>
           ))}
 
-          {this.state.posts.map((post: PostType, index) => (
+          {this.state.posts.map((post: PostType) => (
             <Marker
               key={post.postId}
               position={convertToLeafletLocation(post.location)}
@@ -221,10 +261,13 @@ class Home extends React.Component<Props, State> {
             >
               <Popup>
                 <span>
-                  {post.title} #{index}
+                  {post.title}
                   <br />
                   {CATEGORIES[post.category]}
                   <br />
+                  <Button onClick={this.handleEditPost(post)}>
+                    Edit Post
+                  </Button>
                   <Button onClick={this.handleDeletePost(post)}>
                     Delete Post
                   </Button>

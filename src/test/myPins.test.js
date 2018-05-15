@@ -4,7 +4,7 @@ import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import MyPins from '../components/MyPins';
-import { createPin } from '../business/Pin';
+import { savePin } from '../business/Pin';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -67,15 +67,15 @@ const pinInfo1User573 = {
 const status = { ready1: false, ready2: false, ready3: false };
 
 const setUpForUse = () => {
-  createPin(
+  savePin(
     pinInfo1User123, () => { status.ready1 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPin(
+  savePin(
     pinInfo2User123, () => { status.ready2 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPin(
+  savePin(
     pinInfo1User573, () => { status.ready3 = true; },
     (error) => { console.log('error:'); console.log(error); },
   );

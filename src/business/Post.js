@@ -4,7 +4,7 @@ import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import type {
   KeyType, LocationType, AuthUserType, KeyChangedCallback,
-  ValueQueryCallback, PostType, SuccessCallback, ErrorCallback, SnapshotType,
+  PostType, SuccessCallback, ErrorCallback, SnapshotType,
 } from './Types';
 
 const GeoFire = require('geofire');
@@ -32,7 +32,6 @@ export const listenForPostsIDsOfUser = (
   ref.on('child_added', snapshot => keyEntered(snapshot.key));
   ref.on('child_removed', snapshot => keyLeft(snapshot.key));
 };
-
 
 const convertPostsSnapshotToArray = (snapshot: SnapshotType) => {
   if (snapshot.val() === null) {
@@ -63,15 +62,25 @@ export const listenForPostData = (postId: KeyType, callback: (postData: PostType
 
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
-export const createPost = (
-  postInfo: PostType,
+const updatePost = (post: PostType) => {
+  const postClone = Object.assign({}, post);
+  delete postClone.postId;
+  db.ref(dbRef.POSTS + post.postId).update(postClone);
+};
+
+export const savePost = (
+  post: PostType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
 ) => {
-  const newPostId = db.ref(dbRef.POSTS).push(postInfo).key;
-  createPostLocation(
-    newPostId, postInfo.category, postInfo.location, callbackOnSuccess, callbackOnError,
-  );
+  if (post.postId) {
+    updatePost(post);
+  } else {
+    const newPostId = db.ref(dbRef.POSTS).push(post).key;
+    createPostLocation(
+      newPostId, post.category, post.location, callbackOnSuccess, callbackOnError,
+    );
+  }
 };
 
 export const deletePost = (authUser: AuthUserType, postData: PostType) => {

@@ -17,13 +17,24 @@ export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>
 export const detachPinListener = (pinId: KeyType) =>
   db.ref(dbRef.PINS + pinId).off();
 
-export const createPin = (
-  pinInfo: PinType,
+const updatePin = (pin: PinType) => {
+  const pinClone = Object.assign({}, pin);
+  delete pinClone.pinId; // so that the location of the Post wont change
+  db.ref(dbRef.PINS + pin.pinId).update(pinClone);
+};
+
+export const savePin = (
+  pin: PinType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
 ) => {
-  db.ref(dbRef.PINS)
-    .push(pinInfo).then(callbackOnSuccess, callbackOnError);
+  if (pin.pinId) {
+    updatePin(pin);
+  } else {
+    db.ref(dbRef.PINS)
+      .push(pin)
+      .then(callbackOnSuccess, callbackOnError);
+  }
 };
 
 const convertPinsSnapshotToArray = (snapshot: SnapshotType) => {
@@ -44,6 +55,7 @@ export const listenForAllPinsWithMatchesOfUser =
       .equalTo(userId)
       .on('value', (snapshot: SnapshotType) => {
         const pinArray = convertPinsSnapshotToArray(snapshot);
+        if (!pinArray.length) { callback([]); }
         pinArray.forEach((pin) => {
           getMatchesOnce(
             pin.area, pin.categories, (pinIds) => {
@@ -69,10 +81,7 @@ export const detachAllPinListeners = () => {
 };
 
 export const deletePin = (authUser: AuthUserType, pinKey: KeyType) => {
-  db
-    .ref(dbRef.PINS)
-    .child(pinKey)
-    .remove();
+  db.ref(dbRef.PINS).child(pinKey).remove();
 };
 
 export const convertCategoryArrayToObject = (categoryArray: string[]): CategoriesType => {
@@ -82,3 +91,6 @@ export const convertCategoryArrayToObject = (categoryArray: string[]): Categorie
   });
   return categoriesObject;
 };
+
+export const convertCategoryObjectToArray = (categoryObject: CategoriesType): string[] =>
+  Object.keys(categoryObject).map(key => key.toString());

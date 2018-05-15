@@ -13,9 +13,9 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import { createPost } from '../../business/Post';
+import { savePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-import type { AuthUserType, LocationType } from '../../business/Types';
+import type { AuthUserType, LocationType, PostType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
@@ -26,16 +26,28 @@ type State = {
   isEvent: boolean,
   invalidSubmit: boolean,
   sentToDB: boolean,
-  dialogIsActive: boolean,
 };
 
 type Props = {
   classes: any,
   authUser: AuthUserType,
   position: LocationType,
+  editablePost?: PostType,
+  onDone: () => void,
 };
 
 class CreatePostForm extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.editablePost) {
+      return ({
+        title: nextProps.editablePost.title,
+        description: nextProps.editablePost.description,
+        category: nextProps.editablePost.category,
+      });
+    }
+    return {};
+  }
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -45,36 +57,50 @@ class CreatePostForm extends React.Component<Props, State> {
       isEvent: false,
       invalidSubmit: false,
       sentToDB: false,
-      dialogIsActive: true,
     };
   }
 
+  handleClose = () => {
+    if (this.props.onDone) {
+      this.props.onDone();
+    }
+  };
+
   handleSubmit = (event: any) => {
-    if (this.state.title !== '' && this.state.category !== '') {
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
+    if (this.state.title !== '' && this.state.category !== '' && this.state.description !== '') {
       if (event) { event.preventDefault(); }
-      const postData = {
+
+      const post: postType = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         description: this.state.description,
-        location: {
-          latitude: parseFloat(this.props.position.latitude),
-          longitude: parseFloat(this.props.position.longitude),
-        },
         category: this.state.category,
       };
+
       if (this.state.isEvent) {
-        postData.event = {
+        post.event = {
           participants: {},
           date: Date.now(),
         };
       }
-      createPost(
-        postData,
+
+      if (this.props.editablePost) {
+        post.postId = this.props.editablePost.postId;
+      } else {
+        post.location = {
+          latitude: parseFloat(this.props.position.latitude),
+          longitude: parseFloat(this.props.position.longitude),
+        };
+      }
+
+      savePost(
+        post,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-      if (event) { event.preventDefault(); }
+
+      this.setState({ invalidSubmit: false });
+      this.handleClose();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -98,8 +124,8 @@ class CreatePostForm extends React.Component<Props, State> {
       <div>
         {savedAlert}
         <Dialog
-          open={this.state.dialogIsActive}
-          onClose={() => this.setState({ dialogIsActive: false })}
+          open
+          onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
           <form className={classes.container} noValidate autoComplete="off">
@@ -180,12 +206,12 @@ class CreatePostForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={() => this.setState({ dialogIsActive: false })}
+            onKeyDown={this.handleClose}
           >
             <DialogActions>
               <Button
                 className={classes.buttonCancel}
-                onClick={() => this.setState({ dialogIsActive: false })}
+                onClick={this.handleClose}
               >Cancel
               </Button>
               <Button
