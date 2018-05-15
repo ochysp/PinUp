@@ -164,15 +164,13 @@ class CreatePinForm extends React.Component<Props, State> {
             </Grid>
           </form>
 
-          <DialogActions>
-            <div
-              tabIndex={0}
-              role="button"
-              onKeyDown={() => this.setState({ dialogIsActive: false })}
-            >
+          <div
+            tabIndex={0}
+            role="button"
+            onKeyDown={() => this.setState({ dialogIsActive: false })}
+          >
+            <DialogActions>
               <Button
-                color="secondary"
-                variant="raised"
                 className={classes.buttonCancel}
                 onClick={() => this.setState({ dialogIsActive: false })}
               >Cancel
@@ -180,13 +178,13 @@ class CreatePinForm extends React.Component<Props, State> {
               <Button
                 id="Save"
                 color="primary"
-                variant="raised"
                 className={classes.buttonSave}
                 onClick={this.handleSubmit}
               >Save
               </Button>
-            </div>
-          </DialogActions>
+            </DialogActions>
+          </div>
+
         </Dialog>
       </div>
     );

@@ -41,6 +41,7 @@ class CreatePostForm extends React.Component<Props, State> {
       title: '',
       description: '',
       category: '',
+      isEvent: false,
       invalidSubmit: false,
       sentToDB: false,
       dialogIsActive: true,
@@ -51,17 +52,24 @@ class CreatePostForm extends React.Component<Props, State> {
     if (this.state.title !== '' && this.state.category !== '') {
       this.setState({ invalidSubmit: false, dialogIsActive: false });
       if (event) { event.preventDefault(); }
-      createPost(
-        {
-          userId: this.props.authUser.uid,
-          title: this.state.title,
-          description: this.state.description,
-          location: {
-            latitude: parseFloat(this.props.position.latitude),
-            longitude: parseFloat(this.props.position.longitude),
-          },
-          category: this.state.category,
+      const postData = {
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        description: this.state.description,
+        location: {
+          latitude: parseFloat(this.props.position.latitude),
+          longitude: parseFloat(this.props.position.longitude),
         },
+        category: this.state.category,
+      };
+      if (this.state.isEvent) {
+        postData.event = {
+          participants: {},
+          date: Date.now(),
+        };
+      }
+      createPost(
+        postData,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
@@ -72,9 +80,13 @@ class CreatePostForm extends React.Component<Props, State> {
   };
 
   handleChange = name => (event) => {
-    this.setState({
-      [name]: event.target.value,
-    });
+    const newState = {};
+    if (event.target.type === 'checkbox') {
+      newState[name] = event.target.checked;
+    } else {
+      newState[name] = event.target.value;
+    }
+    this.setState(newState);
   };
 
   render() {
@@ -148,6 +160,7 @@ class CreatePostForm extends React.Component<Props, State> {
               </DialogContent>
             </Grid>
           </form>
+
           <div
             tabIndex={0}
             role="button"
@@ -155,22 +168,20 @@ class CreatePostForm extends React.Component<Props, State> {
           >
             <DialogActions>
               <Button
-                color="secondary"
-                variant="raised"
                 className={classes.buttonCancel}
                 onClick={() => this.setState({ dialogIsActive: false })}
               >Cancel
               </Button>
               <Button
                 id="Save"
-                color="primary"
-                variant="raised"
+                color="secondary"
                 className={classes.buttonSave}
                 onClick={this.handleSubmit}
               >Save
               </Button>
             </DialogActions>
           </div>
+
         </Dialog>
       </div>
     );
