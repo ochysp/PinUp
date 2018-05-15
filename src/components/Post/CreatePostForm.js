@@ -40,6 +40,7 @@ class CreatePostForm extends React.Component<Props, State> {
     if (nextProps.editablePost) {
       return ({
         title: nextProps.editablePost.title,
+        description: nextProps.editablePost.description,
         category: nextProps.editablePost.category,
       });
     }
@@ -59,15 +60,16 @@ class CreatePostForm extends React.Component<Props, State> {
   }
 
   handleSubmit = (event: any) => {
-    if (this.state.title !== '' && this.state.category !== '') {
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
+    if (this.state.title !== '' && this.state.category !== '' && this.state.description !== '') {
       if (event) { event.preventDefault(); }
-      const post = {
+
+      const post: postType = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         description: this.state.description,
         category: this.state.category,
       };
+
       if (this.props.editablePost) {
         post.postId = this.props.editablePost.postId;
       } else {
@@ -76,12 +78,14 @@ class CreatePostForm extends React.Component<Props, State> {
           longitude: parseFloat(this.props.position.longitude),
         };
       }
+
       savePost(
         post,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
 
+      this.setState({ invalidSubmit: false, dialogIsActive: false });
     } else {
       this.setState({ invalidSubmit: true });
     }
