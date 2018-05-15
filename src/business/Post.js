@@ -56,11 +56,12 @@ export const listenForPostData = (postId: KeyType, callback: ValueQueryCallback)
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
 const updatePost = (post: PostType) => {
-  delete post.location; // so that the location of the Post wont change
-  db.ref(dbRef.POSTS + post.postId).update(post);
+  const postClone = Object.assign({}, post);
+  delete postClone.postId;
+  db.ref(dbRef.POSTS + post.postId).update(postClone);
 };
 
-export const createPost = (
+export const savePost = (
   post: PostType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,

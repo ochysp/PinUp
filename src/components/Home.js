@@ -144,7 +144,7 @@ class Home extends React.Component<Props, State> {
   handleEditPost = (post: PostType) => () => {
     this.handleSetPost();
     this.setState({ editablePost: post });
-  }
+  };
 
   render() {
     const {

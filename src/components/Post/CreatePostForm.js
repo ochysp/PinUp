@@ -13,7 +13,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import { createPost } from '../../business/Post';
+import { savePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType, PostType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
@@ -35,6 +35,16 @@ type Props = {
 };
 
 class CreatePostForm extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.editablePost) {
+      return ({
+        title: nextProps.editablePost.title,
+        category: nextProps.editablePost.category,
+      });
+    }
+    return {};
+  }
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -46,33 +56,30 @@ class CreatePostForm extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    if (this.props.editablePost) {
-      this.setState({
-        title: this.props.editablePost.title,
-        category: this.props.editablePost.category,
-      });
-    }
-  }
-
   handleSubmit = (event: any) => {
     if (this.state.title !== '' && this.state.category !== '') {
       this.setState({ invalidSubmit: false, dialogIsActive: false });
       event.preventDefault();
-      createPost(
-        {
-          postId: this.props.editablePost ? this.props.editablePost.postId : null,
-          userId: this.props.authUser.uid,
-          title: this.state.title,
-          location: {
-            latitude: parseFloat(this.props.position.latitude),
-            longitude: parseFloat(this.props.position.longitude),
-          },
-          category: this.state.category,
-        },
+
+      const post = {
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        category: this.state.category,
+      };
+      if (this.props.editablePost) {
+        post.postId = this.props.editablePost.postId;
+      } else {
+        post.location = {
+          latitude: parseFloat(this.props.position.latitude),
+          longitude: parseFloat(this.props.position.longitude),
+        };
+      }
+      savePost(
+        post,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
+
       event.preventDefault();
     } else {
       this.setState({ invalidSubmit: true });
