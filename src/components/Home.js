@@ -142,7 +142,7 @@ class Home extends React.Component<Props, State> {
   handleEditPin = (pin: PinType) => () => {
     this.handleSetPin();
     this.setState({ editablePin: pin });
-  }
+  };
 
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {

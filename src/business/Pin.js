@@ -54,6 +54,7 @@ export const listenForAllPinsWithMatchesOfUser =
       .equalTo(userId)
       .on('value', (snapshot: SnapshotType) => {
         const pinArray = convertPinsSnapshotToArray(snapshot);
+        if (!pinArray.length) { callback([]); }
         pinArray.forEach((pin) => {
           getMatchesOnce(
             pin.area, pin.categories, (pinIds) => {
