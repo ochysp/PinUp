@@ -33,7 +33,6 @@ type State = {
   categories: string[],
   invalidSubmit: boolean,
   sentToDB: boolean,
-  dialogIsActive: boolean,
 };
 
 export type Props = {
@@ -41,6 +40,7 @@ export type Props = {
   authUser: AuthUserType,
   position: LocationType,
   editablePin?: PinType,
+  onDone: () => void,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
@@ -63,7 +63,6 @@ class CreatePinForm extends React.Component<Props, State> {
       categories: [],
       invalidSubmit: false,
       sentToDB: false,
-      dialogIsActive: true,
     };
   }
 
@@ -96,7 +95,8 @@ class CreatePinForm extends React.Component<Props, State> {
         (error) => { console.log('error:'); console.log(error); },
       );
 
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
+      this.setState({ invalidSubmit: false });
+      this.props.onDone();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -117,8 +117,8 @@ class CreatePinForm extends React.Component<Props, State> {
       <div>
         {savedAlert}
         <Dialog
-          open={this.state.dialogIsActive}
-          onClose={() => this.setState({ dialogIsActive: false })}
+          open
+          onClose={this.props.onDone}
         >
           <form className={classes.container} noValidate autoComplete="off">
             <Grid container spacing={36} className={classes.grid}>
@@ -190,12 +190,12 @@ class CreatePinForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={() => this.setState({ dialogIsActive: false })}
+            onKeyDown={this.props.onDone}
           >
             <DialogActions>
               <Button
                 className={classes.buttonCancel}
-                onClick={() => this.setState({ dialogIsActive: false })}
+                onClick={this.props.onDone}
               >Cancel
               </Button>
               <Button

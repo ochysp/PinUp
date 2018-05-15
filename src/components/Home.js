@@ -144,6 +144,14 @@ class Home extends React.Component<Props, State> {
     this.setState({ editablePin: pin });
   };
 
+  handleCloseDialogs = () => this.setState({
+    isPin: false,
+    isPost: false,
+    dialogIsActive: false,
+    editablePost: null,
+    editablePin: null,
+  });
+
   handleDeletePost = (post: PostType) => () => {
     if (post.postId) {
       deletePost(this.props.authUser, post);
@@ -169,6 +177,7 @@ class Home extends React.Component<Props, State> {
         authUser={this.props.authUser}
         position={convertToLocationType(marker)}
         editablePin={this.state.editablePin}
+        onDone={this.handleCloseDialogs}
       />
     ) : null;
 
