@@ -31,20 +31,14 @@ export const formStyle = theme => ({
     alignContent: 'center',
   },
   buttonPin: {
-    color: 'white',
-    backgroundColor: 'coral',
+
   },
   buttonPost: {
-    color: 'grey()',
-    backgroundColor: 'lightblue',
+
   },
   buttonSave: {
-    color: 'white',
-    backgroundColor: 'green',
   },
   buttonCancel: {
-    color: 'white',
-    backgroundColor: 'red',
   },
 });
 
@@ -108,5 +102,8 @@ export const styles = theme => ({
   },
   logout: {
     background: globalTheme.palette.secondary.main,
+  },
+  postDetailDialog: {
+    minWidth: '300px',
   },
 });
