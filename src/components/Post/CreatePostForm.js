@@ -60,6 +60,12 @@ class CreatePostForm extends React.Component<Props, State> {
     };
   }
 
+  handleClose = () => {
+    if (this.props.onDone) {
+      this.props.onDone();
+    }
+  };
+
   handleSubmit = (event: any) => {
     if (this.state.title !== '' && this.state.category !== '' && this.state.description !== '') {
       if (event) { event.preventDefault(); }
@@ -94,7 +100,7 @@ class CreatePostForm extends React.Component<Props, State> {
       );
 
       this.setState({ invalidSubmit: false });
-      this.props.onDone();
+      this.handleClose();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -119,7 +125,7 @@ class CreatePostForm extends React.Component<Props, State> {
         {savedAlert}
         <Dialog
           open
-          onClose={this.props.onDone}
+          onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
           <form className={classes.container} noValidate autoComplete="off">
@@ -200,12 +206,12 @@ class CreatePostForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={this.props.onDone}
+            onKeyDown={this.handleClose}
           >
             <DialogActions>
               <Button
                 className={classes.buttonCancel}
-                onClick={this.props.onDone}
+                onClick={this.handleClose}
               >Cancel
               </Button>
               <Button

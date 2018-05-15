@@ -66,6 +66,12 @@ class CreatePinForm extends React.Component<Props, State> {
     };
   }
 
+  handleClose = () => {
+    if (this.props.onDone) {
+      this.props.onDone();
+    }
+  };
+
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
       if (event) { event.preventDefault(); }
@@ -96,7 +102,7 @@ class CreatePinForm extends React.Component<Props, State> {
       );
 
       this.setState({ invalidSubmit: false });
-      this.props.onDone();
+      this.handleClose();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -118,7 +124,7 @@ class CreatePinForm extends React.Component<Props, State> {
         {savedAlert}
         <Dialog
           open
-          onClose={this.props.onDone}
+          onClose={this.handleClose}
         >
           <form className={classes.container} noValidate autoComplete="off">
             <Grid container spacing={36} className={classes.grid}>
@@ -190,12 +196,12 @@ class CreatePinForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={this.props.onDone}
+            onKeyDown={this.handleClose}
           >
             <DialogActions>
               <Button
                 className={classes.buttonCancel}
-                onClick={this.props.onDone}
+                onClick={this.handleClose}
               >Cancel
               </Button>
               <Button
