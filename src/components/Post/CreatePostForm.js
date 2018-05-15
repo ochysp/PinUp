@@ -2,7 +2,7 @@
 // @flow
 
 import React from 'react';
-import { FormControl, FormHelperText, Input, InputLabel, Select } from 'material-ui';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select } from 'material-ui';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
@@ -23,6 +23,7 @@ type State = {
   title: string,
   description: string,
   category: string,
+  isEvent: boolean,
   invalidSubmit: boolean,
   sentToDB: boolean,
   dialogIsActive: boolean,
@@ -157,6 +158,21 @@ class CreatePostForm extends React.Component<Props, State> {
                 && (<FormHelperText>Requires a category</FormHelperText>)}
                   </FormControl>
                 </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        id="isEvent"
+                        checked={this.state.isEvent}
+                        onChange={this.handleChange('isEvent')}
+                        value="This is an event"
+                      />
+                  }
+                    label="Users can sign up"
+                  />
+                </Grid>
+
               </DialogContent>
             </Grid>
           </form>
