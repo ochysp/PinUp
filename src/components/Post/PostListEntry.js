@@ -12,7 +12,7 @@ import {
   withStyles,
 } from 'material-ui';
 import { listenForPostData, detachPostListener } from '../../business/Post';
-import type { PostType, SnapshotType, KeyType, AuthUserType } from '../../business/Types';
+import type { PostType, KeyType, AuthUserType } from '../../business/Types';
 import PostDetails from './PostDetails';
 import { styles } from '../../style/styles';
 import { CATEGORIES } from '../../constants/categories';
@@ -42,8 +42,8 @@ class PostListEntry extends React.Component<Props, State> {
 
   componentDidMount() {
     listenForPostData(this.props.postId,
-      (snapshot: SnapshotType) => {
-        this.updateData(snapshot.val());
+      (post: PostType) => {
+        this.updateData(post);
       });
   }
 
@@ -87,7 +87,12 @@ class PostListEntry extends React.Component<Props, State> {
             onClose={this.handleClose}
             aria-labelledby="simple-dialog-title"
           >
-            <DialogTitle id="simple-dialog-title">{this.state.postData.title}</DialogTitle>
+            <DialogTitle
+              id="simple-dialog-title"
+              className={this.props.classes.postDetailDialog}
+            >
+              {this.state.postData.title}
+            </DialogTitle>
             <PostDetails
               postData={this.state.postData}
               authUser={this.props.authUser}

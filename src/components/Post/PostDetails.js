@@ -2,8 +2,8 @@
 
 import React from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import { Button } from 'material-ui';
-import { doSignUpForEvent } from '../../business/Event';
+import { Button, DialogActions, DialogContent } from 'material-ui';
+import { doSignOutOfEvent, doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
 import { CATEGORIES } from '../../constants/categories';
 
@@ -26,23 +26,43 @@ class PostDetails extends React.Component<Props, State> {
       );
     }
   };
+  handleDeleteParticipant = () => {
+    if (this.props.postData.postId) {
+      doSignOutOfEvent(
+        this.props.postData.postId, this.props.authUser,
+        () => { /* TODO: onSuccess */ }, () => { /* TODO: onSuccess */ },
+      );
+    }
+  };
 
   render() {
-    const eventButton = this.props.postData.event ? (
-      <Button onClick={this.handleNewParticipant}>Take Part in event</Button>
-    ) : null;
+    let eventButton = null;
+    if (this.props.postData.event) {
+      eventButton = this.props.postData.event.participants
+      && this.props.postData.event.participants[this.props.authUser.uid]
+        ? <Button onClick={this.handleDeleteParticipant}>Revoke Sign up</Button>
+        : <Button color="secondary" onClick={this.handleNewParticipant}>Sign me up!</Button>;
+    }
+
     return (
       <div>
-        <List>
-          <ListItem>
-            <ListItemText primary="Category" secondary={CATEGORIES[this.props.postData.category]} />
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="Description" secondary={this.props.postData.description} />
-          </ListItem>
+
+        <DialogContent>
+          <List>
+            <ListItem>
+              <ListItemText primary="Description" secondary={this.props.postData.description} />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Category" secondary={CATEGORIES[this.props.postData.category]} />
+            </ListItem>
+          </List>
+        </DialogContent>
+
+        <DialogActions>
           {eventButton}
           <Button onClick={this.props.onCloseClicked}>Close</Button>
-        </List>
+        </DialogActions>
+
       </div>
     );
   }
