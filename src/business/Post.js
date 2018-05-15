@@ -51,8 +51,14 @@ export const listenForAllPostsOfUser = (userId: KeyType, callback: (PostType[]) 
     .on('value', (snapshot: SnapshotType) => callback(convertPostsSnapshotToArray(snapshot)));
 };
 
-export const listenForPostData = (postId: KeyType, callback: ValueQueryCallback) =>
-  db.ref(dbRef.POSTS + postId).on('value', callback);
+export const listenForPostData = (postId: KeyType, callback: (postData: PostType) => void) =>
+  db.ref(dbRef.POSTS + postId).on('value', (snapshot: SnapshotType) => {
+    const post = snapshot.val();
+    if (post) {
+      post.postId = postId;
+    }
+    callback(post);
+  });
 
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
