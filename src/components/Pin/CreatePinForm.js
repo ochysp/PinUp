@@ -20,7 +20,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
-import { createPin, convertCategoryArrayToObject } from '../../business/Pin';
+import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';
 import type { AuthUserType, LocationType, PinType } from '../../business/Types';
@@ -44,6 +44,17 @@ export type Props = {
 };
 
 class CreatePinForm extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.editablePin) {
+      return ({
+        title: nextProps.editablePin.title,
+        categories: convertCategoryObjectToArray(nextProps.editablePin.categories),
+        radius: nextProps.editablePin.area.radius,
+      });
+    }
+    return {};
+  }
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -56,37 +67,36 @@ class CreatePinForm extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    if (this.props.editablePin) {
-      this.setState({
-        title: this.props.editablePin.title,
-        categories: this.props.editablePin.categories,
-        radius: this.props.editablePin.area.radius,
-      });
-    }
-  }
-
   handleSubmit = (event: any) => {
     if (this.state.categories.length > 0) {
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
-      createPin(
-        {
-          pinId: this.props.editablePin ? this.props.editablePin.pinId : null,
-          userId: this.props.authUser.uid,
-          title: this.state.title,
-          area: {
-            location: {
-              latitude: parseFloat(this.props.position.latitude),
-              longitude: parseFloat(this.props.position.longitude),
-            },
-            radius: parseFloat(this.state.radius),
-          },
-          categories: convertCategoryArrayToObject(this.state.categories),
+      if (event) { event.preventDefault(); }
+
+      const pin: PinType = {
+        userId: this.props.authUser.uid,
+        title: this.state.title,
+        area: {
+          radius: parseFloat(this.state.radius),
         },
+        categories: convertCategoryArrayToObject(this.state.categories),
+      };
+
+      if (this.props.editablePin) {
+        pin.pinId = this.props.editablePin.pinId;
+        pin.area.location = this.props.editablePin.area.location;
+      } else {
+        pin.area.location = {
+          latitude: parseFloat(this.props.position.latitude),
+          longitude: parseFloat(this.props.position.longitude),
+        };
+      }
+
+      savePin(
+        pin,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-      if (event) { event.preventDefault(); }
+
+      this.setState({ invalidSubmit: false, dialogIsActive: false });
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -177,15 +187,13 @@ class CreatePinForm extends React.Component<Props, State> {
             </Grid>
           </form>
 
-          <DialogActions>
-            <div
-              tabIndex={0}
-              role="button"
-              onKeyDown={() => this.setState({ dialogIsActive: false })}
-            >
+          <div
+            tabIndex={0}
+            role="button"
+            onKeyDown={() => this.setState({ dialogIsActive: false })}
+          >
+            <DialogActions>
               <Button
-                color="secondary"
-                variant="raised"
                 className={classes.buttonCancel}
                 onClick={() => this.setState({ dialogIsActive: false })}
               >Cancel
@@ -193,13 +201,12 @@ class CreatePinForm extends React.Component<Props, State> {
               <Button
                 id="Save"
                 color="primary"
-                variant="raised"
                 className={classes.buttonSave}
                 onClick={this.handleSubmit}
               >Save
               </Button>
-            </div>
-          </DialogActions>
+            </DialogActions>
+          </div>
         </Dialog>
       </div>
     );

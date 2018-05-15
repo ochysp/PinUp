@@ -18,11 +18,12 @@ export const detachPinListener = (pinId: KeyType) =>
   db.ref(dbRef.PINS + pinId).off();
 
 const updatePin = (pin: PinType) => {
-  delete pin.area; // so that the location of the Post wont change
-  db.ref(dbRef.PINS + pin.pinId).update(pin);
+  const pinClone = Object.assign({}, pin);
+  delete pinClone.pinId; // so that the location of the Post wont change
+  db.ref(dbRef.PINS + pin.pinId).update(pinClone);
 };
 
-export const createPin = (
+export const savePin = (
   pin: PinType,
   callbackOnSuccess: SuccessCallback,
   callbackOnError: ErrorCallback,
@@ -90,3 +91,6 @@ export const convertCategoryArrayToObject = (categoryArray: string[]): Categorie
   });
   return categoriesObject;
 };
+
+export const convertCategoryObjectToArray = (categoryObject: CategoriesType): string[] =>
+  Object.keys(categoryObject).map(key => key.toString());
