@@ -55,7 +55,9 @@ export const listenForAllPostsOfUser = (userId: KeyType, callback: (PostType[]) 
 export const listenForPostData = (postId: KeyType, callback: (postData: PostType) => void) =>
   db.ref(dbRef.POSTS + postId).on('value', (snapshot: SnapshotType) => {
     const post = snapshot.val();
-    post.postId = postId;
+    if (post) {
+      post.postId = postId;
+    }
     callback(post);
   });
 
