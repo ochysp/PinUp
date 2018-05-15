@@ -177,6 +177,7 @@ class Home extends React.Component<Props, State> {
         authUser={this.props.authUser}
         position={convertToLocationType(marker)}
         editablePost={this.state.editablePost}
+        onDone={this.handleCloseDialogs}
       />
     ) : null;
 

@@ -25,7 +25,6 @@ type State = {
   category: string,
   invalidSubmit: boolean,
   sentToDB: boolean,
-  dialogIsActive: boolean,
 };
 
 type Props = {
@@ -33,6 +32,7 @@ type Props = {
   authUser: AuthUserType,
   position: LocationType,
   editablePost?: PostType,
+  onDone: () => void,
 };
 
 class CreatePostForm extends React.Component<Props, State> {
@@ -55,7 +55,6 @@ class CreatePostForm extends React.Component<Props, State> {
       category: '',
       invalidSubmit: false,
       sentToDB: false,
-      dialogIsActive: true,
     };
   }
 
@@ -85,7 +84,8 @@ class CreatePostForm extends React.Component<Props, State> {
         (error) => { console.log('error:'); console.log(error); },
       );
 
-      this.setState({ invalidSubmit: false, dialogIsActive: false });
+      this.setState({ invalidSubmit: false });
+      this.props.onDone();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -105,8 +105,8 @@ class CreatePostForm extends React.Component<Props, State> {
       <div>
         {savedAlert}
         <Dialog
-          open={this.state.dialogIsActive}
-          onClose={() => this.setState({ dialogIsActive: false })}
+          open
+          onClose={this.props.onDone}
           aria-labelledby="form-dialog-title"
         >
           <form className={classes.container} noValidate autoComplete="off">
@@ -171,14 +171,14 @@ class CreatePostForm extends React.Component<Props, State> {
           <div
             tabIndex={0}
             role="button"
-            onKeyDown={() => this.setState({ dialogIsActive: false })}
+            onKeyDown={this.props.onDone}
           >
             <DialogActions>
               <Button
                 color="secondary"
                 variant="raised"
                 className={classes.buttonCancel}
-                onClick={() => this.setState({ dialogIsActive: false })}
+                onClick={this.props.onDone}
               >Cancel
               </Button>
               <Button
