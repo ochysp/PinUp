@@ -5,8 +5,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import '../data/firebase/setTestRun';
 import MyPins from '../components/MyPins';
 import { getMatchesOnce } from '../business/Match';
-import { createPin } from '../business/Pin';
-import { createPost, listenForPostData } from '../business/Post';
+import { savePin } from '../business/Pin';
+import { savePost, listenForPostData } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -107,31 +107,31 @@ const postInfoShouldntMatch = {
 };
 
 const setUpForUse = () => {
-  createPin(
+  savePin(
     pinInfoCategory02, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPin(
+  savePin(
     pinInfoCategory1, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPin(
+  savePin(
     pinInfoCategory0123, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPost(
+  savePost(
     postInfoCategory1, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPost(
+  savePost(
     postInfoCategory2, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPost(
+  savePost(
     postInfoCategory0, () => { },
     (error) => { console.log('error:'); console.log(error); },
   );
-  createPost(
+  savePost(
     postInfoShouldntMatch, () => { },
     (error) => { console.log('error'); console.log(error); },
   );
@@ -214,6 +214,7 @@ describe('Test matching', () => {
     it('should get matches of post ordered in expected order', (done) => {
       const wasChecked = [false, false, false];
       function postDetailCallback(actualPostInfo) {
+        // eslint-disable-next-line no-param-reassign
         delete actualPostInfo.postId;
         switch (actualPostInfo.category) {
           case '0':
