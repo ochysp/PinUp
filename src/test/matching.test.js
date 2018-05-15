@@ -211,33 +211,39 @@ describe('Test matching', () => {
     });
   });
   describe('checks Match.js Functions', () => {
-    it('should get matches of post ordered in expected order', () => {
-      const wasChecked = { 0: false, 1: false, 2: false };
-      function postDetailCallback(snapshot) {
-        if (snapshot.val() != null) {
-          const actualPostInfo = snapshot.val();
-          switch (actualPostInfo.category) {
-            case '0':
-              expect(actualPostInfo).toEqual(postInfoCategory0);
-              wasChecked[0] = true;
-              break;
-            case '1':
-              expect(actualPostInfo).toEqual(postInfoCategory1);
-              wasChecked[1] = true;
-              break;
-            case '2':
-              expect(actualPostInfo).toEqual(postInfoCategory2);
-              wasChecked[2] = true;
-              expect(wasChecked).toEqual({ 0: true, 1: true, 2: true });
-              break;
-            default:
-          }
+    it('should get matches of post ordered in expected order', (done) => {
+      const wasChecked = [false, false, false];
+      function postDetailCallback(actualPostInfo) {
+        delete actualPostInfo.postId;
+        switch (actualPostInfo.category) {
+          case '0':
+            expect(actualPostInfo).toEqual(postInfoCategory0);
+            wasChecked[0] = true;
+            break;
+          case '1':
+            expect(actualPostInfo).toEqual(postInfoCategory1);
+            wasChecked[1] = true;
+            break;
+          case '2':
+            expect(actualPostInfo).toEqual(postInfoCategory2);
+            wasChecked[2] = true;
+            break;
+          default:
+            expect(actualPostInfo).contains(postInfoShouldntMatch).toEqual(false);
+        }
+        if (wasChecked[0] && wasChecked[1] && wasChecked[2]) {
+          done();
         }
       }
       function callback(data) {
-        data.forEach((postId) => {
-          listenForPostData(postId, postDetailCallback);
-        });
+        if (data) {
+          expect(data.length).toEqual(3);
+          data.forEach((postId) => {
+            if (postId) {
+              listenForPostData(postId, postDetailCallback);
+            }
+          });
+        }
       }
       getMatchesOnce(
         pinInfoCategory0123.area, pinInfoCategory0123.categories, callback,
