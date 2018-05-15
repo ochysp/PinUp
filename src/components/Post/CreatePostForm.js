@@ -21,6 +21,7 @@ import { formStyle } from '../../style/styles';
 
 type State = {
   title: string,
+  description: string,
   category: string,
   invalidSubmit: boolean,
   sentToDB: boolean,
@@ -49,6 +50,7 @@ class CreatePostForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
+      description: '',
       category: '',
       invalidSubmit: false,
       sentToDB: false,
@@ -59,11 +61,11 @@ class CreatePostForm extends React.Component<Props, State> {
   handleSubmit = (event: any) => {
     if (this.state.title !== '' && this.state.category !== '') {
       this.setState({ invalidSubmit: false, dialogIsActive: false });
-      event.preventDefault();
-
+      if (event) { event.preventDefault(); }
       const post = {
         userId: this.props.authUser.uid,
         title: this.state.title,
+        description: this.state.description,
         category: this.state.category,
       };
       if (this.props.editablePost) {
@@ -80,7 +82,6 @@ class CreatePostForm extends React.Component<Props, State> {
         (error) => { console.log('error:'); console.log(error); },
       );
 
-      event.preventDefault();
     } else {
       this.setState({ invalidSubmit: true });
     }
@@ -118,6 +119,18 @@ class CreatePostForm extends React.Component<Props, State> {
                     error={this.state.invalidSubmit && this.state.title === ''}
                     value={this.state.title}
                     className={classes.titleField}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="Description"
+                    id="description"
+                    onChange={this.handleChange('description')}
+                    helperText={this.state.invalidSubmit && this.state.description === '' ? 'Requires a description' : ''}
+                    error={this.state.invalidSubmit && this.state.description === ''}
+                    value={this.state.description}
+                    className={classes.descriptionField}
                   />
                 </Grid>
 
@@ -165,6 +178,7 @@ class CreatePostForm extends React.Component<Props, State> {
               >Cancel
               </Button>
               <Button
+                id="Save"
                 color="primary"
                 variant="raised"
                 className={classes.buttonSave}

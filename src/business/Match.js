@@ -1,6 +1,5 @@
 // @flow
 
-import * as GeoFire from 'geofire';
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
 import type {
@@ -11,8 +10,10 @@ import type {
   CategoriesType,
   NotificationCallback,
 } from './Types';
-
 //  Listens for Posts in a specific area
+
+const GeoFire = require('geofire');
+
 const Match = (
   area: AreaType,
   categories: CategoriesType,

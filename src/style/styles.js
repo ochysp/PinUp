@@ -9,6 +9,9 @@ export const formStyle = theme => ({
     marginTop: 20,
     width: 200,
   },
+  descriptionField: {
+    width: 200,
+  },
   categoryField: {
     marginBottom: 20,
     width: 200,
@@ -107,4 +110,3 @@ export const styles = theme => ({
     background: globalTheme.palette.secondary.main,
   },
 });
-

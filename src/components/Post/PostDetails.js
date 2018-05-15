@@ -38,7 +38,7 @@ class PostDetails extends React.Component<Props, State> {
             <ListItemText primary="Category" secondary={CATEGORIES[this.props.postData.category]} />
           </ListItem>
           <ListItem>
-            <ListItemText primary="Description" secondary="Some more Info about event" />
+            <ListItemText primary="Description" secondary={this.props.postData.description} />
           </ListItem>
           {eventButton}
           <Button onClick={this.props.onCloseClicked}>Close</Button>
