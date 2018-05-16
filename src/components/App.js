@@ -10,7 +10,7 @@ import Main from './Main';
 import type { AuthUserType } from '../business/Types';
 import { styles } from '../style/styles';
 import style from '../style/styles.css';
-import theme from '../style/theme';
+import theme from '../style/globalTheme';
 
 type Props = {
   classes: any,

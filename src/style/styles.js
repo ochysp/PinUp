@@ -1,4 +1,4 @@
-import globalTheme from './theme';
+import globalTheme from './globalTheme';
 
 export const formStyle = theme => ({
   container: {
