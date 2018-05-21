@@ -5,13 +5,7 @@ import type Match from 'react-router';
 import { Typography } from 'material-ui';
 import { listenForPinData, detachPinListener } from '../../business/Pin';
 import Matches from '../Match/Matches';
-import type {
-  AreaType,
-  SnapshotType,
-  PinType,
-  CategoriesType,
-  AuthUserType,
-} from '../../business/Types';
+import type { AreaType, SnapshotType, PinType, CategoriesType, AuthUserType } from '../../business/Types';
 
 type State = {
   area: ?AreaType,

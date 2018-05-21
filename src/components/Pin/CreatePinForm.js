@@ -2,23 +2,12 @@
 // @flow
 
 import React from 'react';
-import {
-  Checkbox,
-  FormControl, FormHelperText,
-  Input,
-  InputLabel,
-  ListItemText,
-  Select,
-} from 'material-ui';
+import { Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select } from 'material-ui';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from 'material-ui/Dialog';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
