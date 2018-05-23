@@ -2,13 +2,7 @@
 
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
-import type {
-  AuthUserType,
-  ValueQueryCallback,
-  PinType,
-  KeyType,
-  SuccessCallback, ErrorCallback, CategoriesType, SnapshotType,
-} from './Types';
+import type { AuthUserType, ValueQueryCallback, PinType, KeyType, SuccessCallback, ErrorCallback, CategoriesType, SnapshotType } from './Types';
 import { getMatchesOnce } from './Match';
 
 export const listenForPinData = (pinId: string, callback: ValueQueryCallback) =>

@@ -4,11 +4,7 @@
 import React from 'react';
 import {
   Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select,
-  Grid,
-  TextField,
-  MenuItem,
-  Button,
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Grid, TextField, MenuItem, Button, Dialog, DialogActions, DialogContent, DialogTitle,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { savePost } from '../../business/Post';

@@ -31,14 +31,13 @@ export const formStyle = theme => ({
     alignContent: 'center',
   },
   buttonPin: {
-
+    width: '60%',
+    background: globalTheme.palette.primary.main,
+    color: 'white',
   },
   buttonPost: {
-
-  },
-  buttonSave: {
-  },
-  buttonCancel: {
+    width: '60%',
+    background: globalTheme.palette.secondary.main,
   },
 });
 
@@ -133,5 +132,25 @@ export const styles = theme => ({
   participantsSubheader: {
     lineHeight: 1,
     marginBottom: theme.spacing.unit,
+  },
+  popup: {
+    textAlign: 'center',
+  },
+  matchesButton: {
+    background: globalTheme.palette.primary.main,
+    color: globalTheme.palette.common.white,
+    width: '60%',
+    marginBottom: 5,
+  },
+  editButton: {
+    background: globalTheme.palette.secondary.main,
+    color: globalTheme.palette.common.white,
+    width: '60%',
+    marginBottom: 5,
+  },
+  deleteButton: {
+    background: 'gray',
+    width: '60%',
+    marginBottom: 5,
   },
 });

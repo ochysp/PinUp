@@ -3,16 +3,8 @@
 
 import React from 'react';
 import {
-  Checkbox,
-  FormControl, FormHelperText,
-  Input, InputLabel,
-  ListItemText,
-  Select,
-  TextField,
-  MenuItem,
-  Button,
-  Grid,
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select, TextField,
+  MenuItem, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
@@ -71,7 +63,7 @@ class CreatePinForm extends React.Component<Props, State> {
     if (this.state.categories.length > 0) {
       if (event) { event.preventDefault(); }
 
-      const pin: any = {
+      const pin: PinType = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         area: {
