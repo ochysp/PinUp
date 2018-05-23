@@ -1,16 +1,7 @@
 // @flow
 
 import React from 'react';
-import {
-  Avatar,
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  ListItem,
-  ListItemText,
-  Typography,
-  withStyles,
-} from 'material-ui';
+import { Avatar, CircularProgress, Dialog, DialogTitle, ListItem, ListItemText, Typography, withStyles } from 'material-ui';
 import { listenForPostData, detachPostListener } from '../../business/Post';
 import type { PostType, KeyType, AuthUserType } from '../../business/Types';
 import PostDetails from './PostDetails';

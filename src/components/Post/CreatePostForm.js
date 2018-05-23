@@ -6,11 +6,7 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLa
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from 'material-ui/Dialog';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import { savePost } from '../../business/Post';

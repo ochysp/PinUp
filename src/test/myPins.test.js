@@ -4,82 +4,10 @@ import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import MyPins from '../components/MyPins';
-import { savePin } from '../business/Pin';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
+import { authUser123, authUser573, setUpPins } from './testingSetup';
 
 Enzyme.configure({ adapter: new Adapter() });
-
-const authUser123 = {
-  uid: '123',
-  displayName: 'Max Muster',
-  email: 'maxmuster@gmail.com',
-  photoURL: null,
-};
-const authUser573 = {
-  uid: '573',
-  displayName: 'Nicole Master',
-  email: 'nicolemaster@gmail.com',
-  photoURL: null,
-};
-const pinInfo1User123 = {
-  userId: authUser123.uid,
-  title: 'Pin_1',
-  area: {
-    radius: 2,
-    location: {
-      latitude: parseFloat(47.23563352505248),
-      longitude: parseFloat(8.845367431640627),
-    },
-  },
-  categories: {
-    0: true,
-    2: true,
-  },
-};
-const pinInfo2User123 = {
-  userId: authUser123.uid,
-  title: 'Pin_2',
-  area: {
-    radius: 5,
-    location: {
-      latitude: parseFloat(47.23563352505211),
-      longitude: parseFloat(8.845367431395730),
-    },
-  },
-  categories: {
-    1: true,
-  },
-};
-const pinInfo1User573 = {
-  userId: authUser573.uid,
-  title: 'Pin_1',
-  area: {
-    radius: 3,
-    location: {
-      latitude: parseFloat(47.23563352505248),
-      longitude: parseFloat(8.845367431640627),
-    },
-  },
-  categories: {
-    0: true,
-  },
-};
-const status = { ready1: false, ready2: false, ready3: false };
-
-const setUpForUse = () => {
-  savePin(
-    pinInfo1User123, () => { status.ready1 = true; },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePin(
-    pinInfo2User123, () => { status.ready2 = true; },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePin(
-    pinInfo1User573, () => { status.ready3 = true; },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-};
 
 afterEach(() => {
   deleteTestDbOnRootLevel();
@@ -88,7 +16,7 @@ afterEach(() => {
 beforeEach(() => {
   haltIfLiveDB();
   deleteTestDbOnRootLevel();
-  setUpForUse();
+  setUpPins();
 });
 
 describe('Test myPins', () => {

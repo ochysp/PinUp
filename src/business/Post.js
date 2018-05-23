@@ -2,10 +2,7 @@
 
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
-import type {
-  KeyType, LocationType, AuthUserType, KeyChangedCallback,
-  PostType, SuccessCallback, ErrorCallback, SnapshotType,
-} from './Types';
+import type { KeyType, LocationType, AuthUserType, KeyChangedCallback, PostType, SuccessCallback, ErrorCallback, SnapshotType } from './Types';
 
 const GeoFire = require('geofire');
 
