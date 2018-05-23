@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Paper, Typography, withStyles } from 'material-ui';
+import { Typography, withStyles } from '@material-ui/core';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
 import ListOfPosts from './Post/ListOfPosts';

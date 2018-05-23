@@ -1,8 +1,14 @@
 // @flow
 
 import React from 'react';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import { Button, DialogActions, DialogContent } from 'material-ui';
+import {
+  List, Button,
+  ExpansionPanelActions, ExpansionPanelDetails,
+  Grid,
+  ListSubheader,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { doSignOutOfEvent, doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
 import { CATEGORIES } from '../../constants/categories';

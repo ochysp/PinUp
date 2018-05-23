@@ -5,21 +5,16 @@ import React from 'react';
 import {
   Checkbox,
   FormControl, FormHelperText,
-  Input,
-  InputLabel,
+  Input, InputLabel,
   ListItemText,
   Select,
-} from 'material-ui';
-import TextField from 'material-ui/TextField';
-import { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from 'material-ui/Dialog';
-import { withStyles } from 'material-ui/styles';
+  TextField,
+  MenuItem,
+  Button,
+  Grid,
+  Dialog, DialogActions, DialogContent, DialogTitle,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';

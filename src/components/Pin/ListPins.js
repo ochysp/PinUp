@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { List, Typography, withStyles } from 'material-ui';
+import { List, Typography, withStyles } from '@material-ui/core';
 import PinListEntry from './PinListEntry';
 import type { AuthUserType, PinType } from '../../business/Types';
 import { styles } from '../../style/styles';

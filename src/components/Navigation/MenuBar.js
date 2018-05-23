@@ -3,9 +3,9 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import { Tab, Tabs } from '@material-ui/core';
 import * as routes from '../../constants/routes';
 import { authentication } from '../../data/firebase';
 import { styles } from '../../style/styles';

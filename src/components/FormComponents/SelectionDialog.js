@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import Button from 'material-ui/Button';
-import Dialog, { DialogActions } from 'material-ui/Dialog';
-import { withStyles } from 'material-ui/styles';
+import Button from '@material-ui/core/Button';
+import { Dialog, DialogActions } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { formStyle } from '../../style/styles';
 
 

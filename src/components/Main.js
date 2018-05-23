@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { withStyles } from 'material-ui';
+import { withStyles } from '@material-ui/core';
 import Home from './Home';
 import MyPins from './MyPins';
 import MyPosts from './MyPosts';

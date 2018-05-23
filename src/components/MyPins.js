@@ -2,7 +2,7 @@
 // @flow
 
 import React from 'react';
-import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from 'material-ui';
+import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from '@material-ui/core';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import ListPins from './Pin/ListPins';
 import type { AuthUserType, ConnectionType, KeyType, PinType } from '../business/Types';

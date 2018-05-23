@@ -4,7 +4,7 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
-import { withStyles, Button } from 'material-ui';
+import { withStyles, Button } from '@material-ui/core';
 import {
   detachAllPinListeners,
   deletePin,
