@@ -60,9 +60,15 @@ export const listenForPostData = (postId: KeyType, callback: (postData: PostType
 export const detachPostListener = (postId: KeyType) => db.ref(dbRef.POSTS + postId).off();
 
 const updatePost = (post: PostType) => {
-  const postClone = Object.assign({}, post);
-  delete postClone.postId;
-  db.ref(dbRef.POSTS + post.postId).update(postClone);
+  if (post.postId) {
+    const { postId } = post;
+    const postClone = Object.assign({}, post);
+    delete postClone.postId;
+    db.ref(dbRef.POSTS + postId).update(postClone);
+  } else {
+    // eslint-disable-next-line no-throw-literal
+    throw "Can't delete Post without postId";
+  }
 };
 
 export const savePost = (
