@@ -25,7 +25,7 @@ type State = {
 };
 
 class MyPins extends React.Component<Props, State> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     this.dbHandles = [];
     this.state = {
@@ -137,7 +137,7 @@ class MyPins extends React.Component<Props, State> {
 
 
     return (
-      <div className={this.props.classes.flexContainer}>
+      <div className="sidePadding">
         <Grid container spacing={24}>
 
           {this.state.pinSelected ?
@@ -149,22 +149,27 @@ class MyPins extends React.Component<Props, State> {
 
           {this.state.pinSelected &&
           <Grid item xs={12} md={6}>
-            <Paper className={this.props.classes.paper} elevation={4}>
-
-              <Typography variant="headline" className={this.props.classes.typographyTitle}>
-                <IconButton
-                  onClick={this.handleUnselect}
-                  className={this.props.classes.backButton}
-                  aria-label="Delete"
-                >
-                  <BackIcon />
-                </IconButton>
-                Matches for {this.state.pinSelected.title}
-              </Typography>
-              {this.state.PostsDbReady ?
-                <ListOfPosts posts={this.state.matchIds} authUser={this.props.authUser} />
-              : <LinearProgress className={this.props.classes.progress} />}
-            </Paper>
+            <div className={this.props.classes.invisiblePaper}>
+              <div className={`${this.props.classes.flexContainer} ${this.props.classes.flexCenter}`}>
+                <Hidden mdUp>
+                  <IconButton
+                    onClick={this.handleUnselect}
+                    className={this.props.classes.backButton}
+                    aria-label="Delete"
+                  >
+                    <BackIcon />
+                  </IconButton>
+                </Hidden>
+                <Typography variant="headline" className={this.props.classes.spaceAbove}>
+              Matches for {this.state.pinSelected.title}
+                </Typography>
+              </div>
+              <div className={this.props.classes.spaceAbove}>
+                {this.state.PostsDbReady ?
+                  <ListOfPosts posts={this.state.matchIds} authUser={this.props.authUser} />
+            : <LinearProgress className={this.props.classes.progress} />}
+              </div>
+            </div>
           </Grid>
           }
 

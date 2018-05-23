@@ -51,6 +51,12 @@ export const styles = theme => ({
     paddingTop: 16,
     marginTop: theme.spacing.unit * 3,
   },
+  invisiblePaper: {
+    margin: 'auto',
+    maxWidth: '500px',
+    minWidth: '400px',
+    paddingTop: '16px',
+  },
   typographyTitle: {
     marginLeft: theme.spacing.unit * 3,
   },
@@ -94,7 +100,9 @@ export const styles = theme => ({
     color: 'white',
   },
   backButton: {
-    marginLeft: -theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    marginTop: '-20px',
+    marginBottom: '-20px',
   },
   menuBar: {
     backgroundColor: globalTheme.palette.primary.main,
@@ -105,5 +113,25 @@ export const styles = theme => ({
   },
   postDetailDialog: {
     minWidth: '300px',
+  },
+  dialogContent: {
+    paddingTop: '0px',
+  },
+  sideSection: {
+    borderLeft: `1px solid ${theme.palette.divider}`,
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+  },
+  flexCenter: {
+    alignItems: 'center',
+  },
+  spaceAbove: {
+    marginTop: theme.spacing.unit,
+  },
+  flexJustifyContentCenter: {
+    justifyContent: 'center',
+  },
+  participantsSubheader: {
+    lineHeight: 1,
+    marginBottom: theme.spacing.unit,
   },
 });

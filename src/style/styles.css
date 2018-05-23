@@ -9,3 +9,9 @@ html, body
     height: 100%;
     background: lightgray;
 }
+@media (min-width: 960px) {
+    .sidePadding{
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}

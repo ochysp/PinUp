@@ -60,10 +60,14 @@ class MyPosts extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.flexContainer}>
 
-        <Paper className={this.props.classes.paper} elevation={4}>
-          <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
-          <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
-        </Paper>
+        <div className={this.props.classes.invisiblePaper} >
+          <div className={`${this.props.classes.flexContainer} ${this.props.classes.flexJustifyContentCenter}`}>
+            <Typography variant="headline" className={this.props.classes.spaceAbove} >My Posts</Typography>
+          </div>
+          <div className={this.props.classes.spaceAbove}>
+            <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
+          </div>
+        </div>
 
       </div>
     );

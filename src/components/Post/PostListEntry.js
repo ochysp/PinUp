@@ -9,28 +9,30 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styles } from '../../style/styles';
+import type { AuthUserType, PostType } from '../../business/Types';
+import { listenForPostData, detachPostListener } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-
+import PostDetails from './PostDetails';
 
 type Props = {
   postId: KeyType,
   authUser: AuthUserType,
   classes: any,
+  expanded: boolean,
+  handleChange: (panel: string) => void,
 };
 
 type State = {
   postData: ?PostType,
-  isDetailViewOpen: boolean,
-  dbReady: boolean,
+  loading: boolean,
 };
 
-// eslint-disable-next-line import/prefer-default-export
 class PostListEntry extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       postData: null,
-      isDetailViewOpen: false,
+      loading: true,
     };
   }
 
@@ -46,56 +48,48 @@ class PostListEntry extends React.Component<Props, State> {
   }
 
   updateData = (values: PostType) => {
-    const newState = { postData: values };
+    const newState = { postData: values, loading: false };
     this.setState(newState);
   };
 
-  handleClickOpen = () => {
-    this.setState({
-      isDetailViewOpen: true,
-    });
-  };
-
-  handleClose = () => {
-    this.setState({ isDetailViewOpen: false });
-  };
-
   render() {
+    const { expanded } = this.props;
+
     return (
-      <div>
-        <ListItem button onClick={this.handleClickOpen}>
-          <Avatar>
-            {this.state.postData ?
-              <Typography variant="headline" className={this.props.classes.iconStyle}>
-                {CATEGORIES[this.state.postData.category].charAt(0)}
+      <ExpansionPanel
+        expanded={expanded === this.props.postId}
+        onChange={this.props.handleChange(this.props.postId)}
+      >
+        <ExpansionPanelSummary
+          expandIcon={this.state.loading
+            ? <CircularProgress className={this.props.classes.circularProgress} />
+            : <ExpandMoreIcon />
+          }
+        >
+          <Grid container spacing={24}>
+            <Grid item xs={12} sm={8}>
+              <Typography variant="subheading">
+                {this.state.postData ? this.state.postData.title : ''}
               </Typography>
-              : <CircularProgress />}
-
-          </Avatar>
-          <ListItemText primary={this.state.postData ? this.state.postData.title : ''} />
-
-        </ListItem>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="subheading" color="textSecondary">
+                {this.state.postData ? CATEGORIES[this.state.postData.category] : ''}
+              </Typography>
+            </Grid>
+          </Grid>
+        </ExpansionPanelSummary>
         {this.state.postData &&
-          <Dialog
-            open={this.state.isDetailViewOpen}
-            onClose={this.handleClose}
-            aria-labelledby="simple-dialog-title"
-          >
-            <DialogTitle
-              id="simple-dialog-title"
-              className={this.props.classes.postDetailDialog}
-            >
-              {this.state.postData.title}
-            </DialogTitle>
-            <PostDetails
-              postData={this.state.postData}
-              authUser={this.props.authUser}
-              onCloseClicked={this.handleClose}
-            />
-          </Dialog>}
-      </div>
+          <PostDetails
+            postData={this.state.postData}
+            authUser={this.props.authUser}
+            onCloseClicked={this.handleClose}
+          />
+          }
+      </ExpansionPanel>
     );
   }
 }
 
 export default withStyles(styles)(PostListEntry);
+
