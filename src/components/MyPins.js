@@ -2,6 +2,8 @@
 // @flow
 
 import React from 'react';
+import { withRouter } from 'react-router';
+import QueryString from 'query-string';
 import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from '@material-ui/core';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import ListPins from './Pin/ListPins';
@@ -14,6 +16,7 @@ import ListOfPosts from './Post/ListOfPosts';
 type Props = {
   authUser: AuthUserType,
   classes: any,
+  location: any,
 };
 
 type State = {
@@ -42,6 +45,16 @@ class MyPins extends React.Component<Props, State> {
       this.setState({
         pins: newData,
         PinsDbReady: true,
+      }, () => {
+        const queryString = QueryString.parse(this.props.location.search);
+        if (queryString.pinId) {
+          const queryPin = this.state.pins.find(pin => pin.pinId === queryString.pinId);
+          if (queryPin) {
+            this.handleSelect(queryPin);
+          } else {
+            // Todo Pin not found
+          }
+        }
       });
     });
   }
@@ -179,4 +192,4 @@ class MyPins extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(MyPins);
+export default withRouter(withStyles(styles)(MyPins));

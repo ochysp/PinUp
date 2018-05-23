@@ -173,9 +173,8 @@ class Home extends React.Component<Props, State> {
     this.setState({ editablePost: post });
   };
 
-  // TODO showMatches on Button click
   showMatches = (pin: PinType) => () => {
-    this.props.history.push(routes.PINS);
+    this.props.history.push(`${routes.PINS}?pinId=${pin.pinId}`);
   };
 
   render() {
