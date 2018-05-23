@@ -5,137 +5,11 @@ import Adapter from 'enzyme-adapter-react-16';
 import '../data/firebase/setTestRun';
 import MyPins from '../components/MyPins';
 import { getMatchesOnce } from '../business/Match';
-import { savePin } from '../business/Pin';
-import { savePost, listenForPostData } from '../business/Post';
+import { listenForPostData } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
+import { authUser123, authUser573, pinInfos, postInfos, setUpEverythingForUse } from './testingSetup';
 
 Enzyme.configure({ adapter: new Adapter() });
-
-const authUser123 = {
-  uid: '123',
-  displayName: 'Max Muster',
-  email: 'maxmuster@gmail.com',
-  photoURL: null,
-};
-const authUser573 = {
-  uid: '573',
-  displayName: 'Nicole Master',
-  email: 'nicolemaster@gmail.com',
-  photoURL: null,
-};
-const pinInfoCategory1 = {
-  userId: '123',
-  title: 'Pin_2',
-  area: {
-    radius: 5,
-    location: {
-      latitude: parseFloat(47.23563352505211),
-      longitude: parseFloat(8.845367431395730),
-    },
-  },
-  categories: {
-    1: true,
-  },
-};
-const pinInfoCategory02 = {
-  userId: '123',
-  title: 'Pin_1',
-  area: {
-    radius: 5,
-    location: {
-      latitude: parseFloat(47.23563352505248),
-      longitude: parseFloat(8.845367431640627),
-    },
-  },
-  categories: {
-    0: true,
-    2: true,
-  },
-};
-const pinInfoCategory0123 = {
-  userId: '573',
-  title: 'Pin_1',
-  area: {
-    radius: 5,
-    location: {
-      latitude: parseFloat(47.23563352505248),
-      longitude: parseFloat(8.845367431640627),
-    },
-  },
-  categories: {
-    0: true,
-    1: true,
-    2: true,
-    3: true,
-  },
-};
-const postInfoCategory0 = {
-  userId: authUser573.uid,
-  title: 'Bike-Tour',
-  location: {
-    latitude: parseFloat(47.23563352505248),
-    longitude: parseFloat(8.845367431640627),
-  },
-  category: '0',
-};
-const postInfoCategory1 = {
-  userId: authUser123.uid,
-  title: 'Farmer Market',
-  location: {
-    latitude: parseFloat(47.23563352505248),
-    longitude: parseFloat(8.845367431640627),
-  },
-  category: '1',
-};
-const postInfoCategory2 = {
-  userId: authUser123.uid,
-  title: 'Pub Tour',
-  location: {
-    latitude: parseFloat(47.23563352505211),
-    longitude: parseFloat(8.845367431395730),
-  },
-  category: '2',
-};
-const postInfoShouldntMatch = {
-  userId: authUser573.uid,
-  title: 'Hiking',
-  location: {
-    latitude: parseFloat(67.23563352505248),
-    longitude: parseFloat(9.845367431640627),
-  },
-  category: '0',
-};
-
-const setUpForUse = () => {
-  savePin(
-    pinInfoCategory02, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePin(
-    pinInfoCategory1, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePin(
-    pinInfoCategory0123, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePost(
-    postInfoCategory1, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePost(
-    postInfoCategory2, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePost(
-    postInfoCategory0, () => { },
-    (error) => { console.log('error:'); console.log(error); },
-  );
-  savePost(
-    postInfoShouldntMatch, () => { },
-    (error) => { console.log('error'); console.log(error); },
-  );
-};
 
 afterEach(() => {
   deleteTestDbOnRootLevel();
@@ -144,28 +18,37 @@ afterEach(() => {
 beforeEach(() => {
   haltIfLiveDB();
   deleteTestDbOnRootLevel();
-  setUpForUse();
+  setUpEverythingForUse();
 });
 
 describe('Test matching', () => {
   describe('checks Listing', () => {
-    it('should get matches of two different categories', () => {
+    it('should get matches of one category', () => {
       const PinsOfUser123 = mount(<MyPins authUser={authUser123} />);
       PinsOfUser123.find('ListItem').first().simulate('click');
       expect(PinsOfUser123.containsAllMatchingElements([
         <h3>
-          {postInfoCategory0.title}
-        </h3>,
-        <h3>
-          {postInfoCategory2.title}
+          {postInfos.postInfoCategory2.title}
         </h3>,
       ])).toEqual(true);
       expect(PinsOfUser123.containsAnyMatchingElements([
+        // first post should be out of reach (really close out of reach)
         <h3>
-          {postInfoCategory1.title}
+          {postInfos.postInfoCategory0.title}
+        </h3>,
+        // should be within reach but has not the matching category
+        <h3>
+          {postInfos.postInfoCategory1.title}
+        </h3>,
+        // should be way out of reach
+        <h3>
+          {postInfos.postInfoShouldntMatch.title}
         </h3>,
         <h3>
-          {postInfoShouldntMatch.title}
+          {postInfos.postInfoCloseToPinRadiusButShouldntMatch.title}
+        </h3>,
+        <h3>
+          {postInfos.postInfoWithinRadiusButNotSameCategoryShouldntMatch.title}
         </h3>,
       ])).toEqual(false);
     });
@@ -174,18 +57,24 @@ describe('Test matching', () => {
       PinsOfUser123.find('ListItem').at(1).simulate('click');
       expect(PinsOfUser123.containsAllMatchingElements([
         <h3>
-          {postInfoCategory1.title}
+          {postInfos.postInfoCategory1.title}
         </h3>,
       ])).toEqual(true);
       expect(PinsOfUser123.containsAnyMatchingElements([
         <h3>
-          {postInfoCategory0.title}
+          {postInfos.postInfoCategory0.title}
         </h3>,
         <h3>
-          {postInfoCategory2.title}
+          {postInfos.postInfoCategory2.title}
         </h3>,
         <h3>
-          {postInfoShouldntMatch.title}
+          {postInfos.postInfoShouldntMatch.title}
+        </h3>,
+        <h3>
+          {postInfos.postInfoCloseToPinRadiusButShouldntMatch.title}
+        </h3>,
+        <h3>
+          {postInfos.postInfoWithinRadiusButNotSameCategoryShouldntMatch.title}
         </h3>,
       ])).toEqual(false);
     });
@@ -194,18 +83,24 @@ describe('Test matching', () => {
       PinsOfUser573.find('ListItem').first().simulate('click');
       expect(PinsOfUser573.containsAllMatchingElements([
         <h3>
-          {postInfoCategory0.title}
+          {postInfos.postInfoCategory0.title}
         </h3>,
         <h3>
-          {postInfoCategory1.title}
+          {postInfos.postInfoCategory1.title}
         </h3>,
         <h3>
-          {postInfoCategory2.title}
+          {postInfos.postInfoCategory2.title}
         </h3>,
       ])).toEqual(true);
       expect(PinsOfUser573.containsAnyMatchingElements([
         <h3>
-          {postInfoShouldntMatch.title}
+          {postInfos.postInfoShouldntMatch.title}
+        </h3>,
+        <h3>
+          {postInfos.postInfoCloseToPinRadiusButShouldntMatch.title}
+        </h3>,
+        <h3>
+          {postInfos.postInfoWithinRadiusButNotSameCategoryShouldntMatch.title}
         </h3>,
       ])).toEqual(false);
     });
@@ -218,19 +113,19 @@ describe('Test matching', () => {
         delete actualPostInfo.postId;
         switch (actualPostInfo.category) {
           case '0':
-            expect(actualPostInfo).toEqual(postInfoCategory0);
+            expect(actualPostInfo).toEqual(postInfos.postInfoCategory0);
             wasChecked[0] = true;
             break;
           case '1':
-            expect(actualPostInfo).toEqual(postInfoCategory1);
+            expect(actualPostInfo).toEqual(postInfos.postInfoCategory1);
             wasChecked[1] = true;
             break;
           case '2':
-            expect(actualPostInfo).toEqual(postInfoCategory2);
+            expect(actualPostInfo).toEqual(postInfos.postInfoCategory2);
             wasChecked[2] = true;
             break;
           default:
-            expect(actualPostInfo).contains(postInfoShouldntMatch).toEqual(false);
+            expect(actualPostInfo).contains(postInfos.postInfoShouldntMatch).toEqual(false);
         }
         if (wasChecked[0] && wasChecked[1] && wasChecked[2]) {
           done();
@@ -247,7 +142,7 @@ describe('Test matching', () => {
         }
       }
       getMatchesOnce(
-        pinInfoCategory0123.area, pinInfoCategory0123.categories, callback,
+        pinInfos.pinInfoCategory0123.area, pinInfos.pinInfoCategory0123.categories, callback,
       );
     });
   });
