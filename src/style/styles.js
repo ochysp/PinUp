@@ -153,4 +153,7 @@ export const styles = theme => ({
     width: '60%',
     marginBottom: 5,
   },
+  spaceLeft: {
+    paddingLeft: 3 * theme.spacing.unit,
+  },
 });
