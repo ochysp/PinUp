@@ -74,6 +74,7 @@ type State = {
 type Props = {
   authUser: AuthUserType,
   classes: any,
+  history: any,
 };
 
 class Home extends React.Component<Props, State> {
@@ -175,7 +176,7 @@ class Home extends React.Component<Props, State> {
   // TODO showMatches on Button click
   showMatches = (pin: PinType) => () => {
     this.props.history.push(routes.PINS);
-  }
+  };
 
   render() {
     const {
