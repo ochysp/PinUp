@@ -2,14 +2,7 @@
 
 import * as dbRef from '../constants/dbRef';
 import { db } from '../data/firebase/firebase';
-import type {
-  AreaType,
-  KeyType,
-  GeoQuerryCallback,
-  ConnectionType,
-  CategoriesType,
-  NotificationCallback,
-} from './Types';
+import type { AreaType, KeyType, GeoQuerryCallback, ConnectionType, CategoriesType, NotificationCallback } from './Types';
 //  Listens for Posts in a specific area
 
 const GeoFire = require('geofire');

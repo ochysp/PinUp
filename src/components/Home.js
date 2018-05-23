@@ -5,12 +5,8 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import { withStyles, Button } from 'material-ui';
+import { detachAllPinListeners, deletePin, listenForAllPinsWithMatchesOfUser } from '../business/Pin';
 import { withRouter } from 'react-router-dom';
-import {
-  detachAllPinListeners,
-  deletePin,
-  listenForAllPinsWithMatchesOfUser,
-} from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -22,20 +18,27 @@ import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
 import * as routes from '../constants/routes';
 
+const upperMapBoundLng = 180;
+const lowerMapBoundLng = -180;
+const upperMapBoundLat = 90;
+const lowerMapBoundLat = -90;
+const moveToGetNextMap = 360;
+const viewMinimumZoomRestriction = 2;
+
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
 );
 
 const convertToValidLocation = (location: LatLng): LocationType => {
-  const newLocation = { lat: location.lat, lng: location.lng };
-  if (newLocation.lng > 180) {
-    newLocation.lng -= 360;
-    return convertToValidLocation(newLocation);
-  } else if (newLocation.lng < -180) {
-    newLocation.lng += 360;
-    return convertToValidLocation(newLocation);
+  const correctedLocation = { lat: location.lat, lng: location.lng };
+  while (correctedLocation.lng > upperMapBoundLng || correctedLocation.lng < lowerMapBoundLng) {
+    if (correctedLocation.lng > upperMapBoundLng) {
+      correctedLocation.lng -= moveToGetNextMap;
+    } else if (correctedLocation.lng < lowerMapBoundLng) {
+      correctedLocation.lng += moveToGetNextMap;
+    }
   }
-  return location;
+  return correctedLocation;
 };
 
 const convertToLocationType = (location: LatLng): LocationType => {
@@ -226,8 +229,8 @@ class Home extends React.Component<Props, State> {
         <Map
           center={center}
           zoom={zoom}
-          minZoom={2}
-          maxBounds={[[-90, -180], [90, 180]]}
+          minZoom={viewMinimumZoomRestriction}
+          maxBounds={[[lowerMapBoundLat, lowerMapBoundLng], [upperMapBoundLat, upperMapBoundLng]]}
           onClick={this.setMarker}
           className={this.props.classes.map}
         >
