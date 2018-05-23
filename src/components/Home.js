@@ -5,6 +5,7 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
 import { withStyles, Button } from 'material-ui';
+import { withRouter } from 'react-router-dom';
 import {
   detachAllPinListeners,
   deletePin,
@@ -19,6 +20,7 @@ import SelectionDrawer from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
+import * as routes from '../constants/routes';
 
 const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
@@ -167,10 +169,19 @@ class Home extends React.Component<Props, State> {
     this.setState({ editablePost: post });
   };
 
+  // TODO showMatches on Button click
+  showMatches = (pin: PinType) => () => {
+    this.props.history.push(routes.PINS);
+  }
+
   render() {
     const {
       marker, center, zoom, markerIsSet, isPin, isPost,
     } = this.state;
+
+    const {
+      matchesButton, editButton, deleteButton, popup,
+    } = this.props.classes;
 
     const pinForm = isPin ? (
       <CreatePinForm
@@ -231,20 +242,22 @@ class Home extends React.Component<Props, State> {
               position={convertToLeafletLocation(pin.area.location)}
               icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
             >
-              <Popup>
-                <span>
-                  {pin.title}
-                  <br />
-                  {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')}
-                  <br />
-                  <Button onClick={this.handleEditPin(pin)}>
+              <Popup className={popup}>
+                <div className={popup}>
+                  <p id="title">{pin.title}</p>
+                  <p> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </p>
+                  <Button className={matchesButton} onClick={this.showMatches(pin)}>
+                    Show Matches
+                  </Button>
+                  <Button className={editButton} onClick={this.handleEditPin(pin)}>
                     Edit Pin
                   </Button>
-                  <Button onClick={this.handleDeletePin(pin)}>
+                  <Button className={deleteButton} onClick={this.handleDeletePin(pin)}>
                     Delete Pin
                   </Button>
-                </span>
+                </div>
               </Popup>
+
               <Circle
                 center={convertToLeafletLocation(pin.area.location)}
                 radius={convertToLeafletRadius(pin.area.radius)}
@@ -260,18 +273,16 @@ class Home extends React.Component<Props, State> {
               icon={postIcon}
             >
               <Popup>
-                <span>
-                  {post.title}
-                  <br />
-                  {CATEGORIES[post.category]}
-                  <br />
-                  <Button onClick={this.handleEditPost(post)}>
+                <div className={popup}>
+                  <p id="title">{post.title}</p>
+                  <p>{CATEGORIES[post.category]}</p>
+                  <Button className={editButton} onClick={this.handleEditPost(post)}>
                     Edit Post
                   </Button>
-                  <Button onClick={this.handleDeletePost(post)}>
+                  <Button className={deleteButton} onClick={this.handleDeletePost(post)}>
                     Delete Post
                   </Button>
-                </span>
+                </div>
               </Popup>
             </Marker>
           ))}
@@ -290,4 +301,4 @@ class Home extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Home);
+export default withRouter(withStyles(styles)(Home));

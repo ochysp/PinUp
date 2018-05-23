@@ -48,10 +48,14 @@ class SelectionDialog extends React.Component<Props, State> {
             onClick={() => this.setState({ dialogIsActive: false })}
             onKeyDown={() => this.setState({ dialogIsActive: false })}
           >
-            <DialogActions>
-              <Button onClick={this.props.handleSetPin} className={classes.buttonPin} variant="raised" color="primary">Create a Pin</Button>
-              <Button onClick={this.props.handleSetPost} className={classes.buttonPost} variant="raised" color="secondary">Create a Post</Button>
-            </DialogActions>
+            <div id="selectionText">
+              <p>I wannt to...</p>
+              <DialogActions>
+                <Button onClick={this.props.handleSetPin} className={classes.buttonPin} variant="raised">Find</Button>
+                <Button onClick={this.props.handleSetPost} className={classes.buttonPost} variant="raised">Host</Button>
+              </DialogActions>
+              <p>...an event in this area!</p>
+            </div>
           </div>
         </Dialog>
 
