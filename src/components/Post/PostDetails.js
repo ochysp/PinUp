@@ -70,7 +70,7 @@ class PostDetails extends React.Component<Props, State> {
         ? Object.keys(this.props.postData.event.participants)
           .map(userId => (<UserListEntry userId={userId} key={userId} />))
         : (
-          <Typography variant="caption">
+          <Typography variant="caption" className={this.props.classes.spaceLeft}>
             No Participants jet.
           </Typography>
         );
