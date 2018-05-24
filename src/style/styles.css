@@ -9,15 +9,6 @@ html, body
     height: 100%;
     background: lightgray;
 }
-#selectionText{
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
-}
-#title{
-    font-size: large;
-    font-weight: bold;
-}
 @media (min-width: 960px) {
     .sidePadding{
         padding-left: 24px;

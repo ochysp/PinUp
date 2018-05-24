@@ -30,14 +30,20 @@ export const formStyle = theme => ({
     justifyContent: 'center',
     alignContent: 'center',
   },
-  buttonPin: {
-    width: '60%',
-    background: globalTheme.palette.primary.main,
-    color: 'white',
+  dialogButton: {
+    flexGrow: 1,
+    margin: `0 ${theme.spacing.unit}px`,
   },
-  buttonPost: {
-    width: '60%',
-    background: globalTheme.palette.secondary.main,
+  dialogContentContainer: {
+    padding: theme.spacing.unit * 3,
+    paddingTop: 0,
+  },
+  dialogActions: {
+    margin: `0 -${theme.spacing.unit}px`,
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: 2 * theme.spacing.unit,
   },
 });
 
