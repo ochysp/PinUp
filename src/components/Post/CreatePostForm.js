@@ -64,7 +64,7 @@ class CreatePostForm extends React.Component<Props, State> {
     if (this.state.title !== '' && this.state.category !== '' && this.state.description !== '') {
       if (event) { event.preventDefault(); }
 
-      const post: postType = {
+      const post: any = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         description: this.state.description,
