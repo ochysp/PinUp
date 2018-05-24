@@ -29,3 +29,13 @@ export const postIcon = new Leaflet.Icon({
   shadowAnchor: [18, 27], // the same for the shadow
   popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
 });
+
+export const newIcon = new Leaflet.Icon({
+  iconUrl: '/img/newMarker_icon.svg',
+  shadowUrl: '/img/newMarker_icon_shadow.svg',
+  iconSize: [52, 52], // size of the icon
+  shadowSize: [52, 52], // size of the shadow
+  iconAnchor: [18, 48], // point of the icon which will correspond to marker's location
+  shadowAnchor: [18, 48], // the same for the shadow
+  popupAnchor: [0, 0], // point from which the popup should open relative to the iconAnchor
+});
