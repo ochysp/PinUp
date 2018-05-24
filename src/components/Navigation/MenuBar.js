@@ -9,13 +9,12 @@ import Paper from '@material-ui/core/Paper';
 import { Tab, Tabs } from '@material-ui/core';
 import * as routes from '../../constants/routes';
 import { authentication } from '../../data/firebase';
-import { styles } from '../../style/styles';
+import { menuBarStyles } from '../../style/styles';
 
 
 type Props = {
   history: any,
   classes: any,
-  location: any,
 };
 
 type State = {
@@ -63,27 +62,31 @@ class MenuBar extends React.Component<Props, State> {
 
     return (
       <Paper className={classes.root}>
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-          className={classes.menuBar}
-          fullWidth
-        >
-          <Tab label="Home" />
-          <Tab label="My Pins" />
-          <Tab label="My Posts" />
+        <div className={classes.flexContainer}>
 
-          <div className={classes.logoutContainer}>
-            <Button variant="outlined" size="medium" color="secondary" className={classes.logoutButton} onClick={authentication.doSignOut}>
-              LogOut
+          <div className={classes.flexItemLeft} />
+
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+            className={classes.menuBar}
+            centered
+          >
+            <Tab label="Home" />
+            <Tab label="My Pins" />
+            <Tab label="My Posts" />
+          </Tabs>
+
+          <div className={classes.flexLogout} >
+            <Button variant="outlined" size="small" color="secondary" className={classes.logoutButton} onClick={authentication.doSignOut}>
+            LogOut
             </Button>
           </div>
 
-        </Tabs>
-
+        </div>
       </Paper>
     );
   }
 }
 
-export default withRouter(withStyles(styles)(MenuBar));
+export default withRouter(withStyles(menuBarStyles)(MenuBar));

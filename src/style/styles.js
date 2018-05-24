@@ -103,20 +103,6 @@ export const styles = theme => ({
     marginTop: '-20px',
     marginBottom: '-20px',
   },
-  menuBar: {
-    backgroundColor: globalTheme.palette.primary.main,
-    color: globalTheme.palette.common.white,
-  },
-  logoutContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flexGrow: 1,
-    flexShrink: 5,
-  },
-  logoutButton: {
-    color: 'white',
-  },
   postDetailDialog: {
     minWidth: '300px',
   },
@@ -170,3 +156,30 @@ export const styles = theme => ({
     marginBottom: 3 * theme.spacing.unit,
   },
 });
+export const menuBarStyles = theme => ({
+  root: {
+    backgroundColor: globalTheme.palette.primary.main,
+  },
+  flexContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  flexItemLeft: {
+    flexGrow: 0.6,
+  },
+  menuBar: {
+    color: globalTheme.palette.common.white,
+    flexGrow: 2,
+  },
+  flexLogout: {
+    flexGrow: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginRight: theme.spacing.unit,
+  },
+  logoutButton: {
+    color: 'white',
+  },
+});
+
