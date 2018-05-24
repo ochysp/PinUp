@@ -180,6 +180,7 @@ export const menuBarStyles = theme => ({
   },
   logoutButton: {
     color: 'white',
+    borderColor: globalTheme.palette.common.white,
   },
 });
 
