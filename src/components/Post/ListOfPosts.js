@@ -14,6 +14,7 @@ type Props = {
   posts: KeyType[],
   authUser: AuthUserType,
   classes: any,
+// eslint-disable-next-line react/no-unused-prop-types
   defaultOpen?: KeyType[],
 };
 
@@ -31,7 +32,7 @@ class ListOfPosts extends React.Component<Props, State> {
 
   handleChange = panel => (event, expanded) => {
     this.setState({
-      expanded: expanded ? panel : false,
+      expanded: expanded ? panel : null,
     });
   };
 

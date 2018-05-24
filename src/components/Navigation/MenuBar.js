@@ -15,6 +15,8 @@ import { menuBarStyles } from '../../style/styles';
 type Props = {
   history: any,
   classes: any,
+// eslint-disable-next-line react/no-unused-prop-types
+  location: any,
 };
 
 type State = {
