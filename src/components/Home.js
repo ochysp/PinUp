@@ -256,7 +256,7 @@ class Home extends React.Component<Props, State> {
                 <div className={popup}>
                   <div className={popupDiv}>
 
-                    <Typography variant="subheading" className={spaceAbove}>{pin.title}</Typography>
+                    <Typography variant="title" className={spaceAbove}>{pin.title}</Typography>
                     <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </Typography>
 
                     <Divider />
@@ -296,7 +296,7 @@ class Home extends React.Component<Props, State> {
                 <div className={popup}>
                   <div className={popupDiv}>
 
-                    <Typography variant="subheading" className={spaceAbove}>{post.title}</Typography>
+                    <Typography variant="title" className={spaceAbove}>{post.title}</Typography>
                     <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}>{CATEGORIES[post.category]}</Typography>
 
                     <Divider />
