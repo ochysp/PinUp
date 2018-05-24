@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { withRouter } from 'react-router';
 import QueryString from 'query-string';
 import { Typography, withStyles } from '@material-ui/core';
 import { listenForPostsIDsOfUser } from '../business/Post';
@@ -71,7 +70,8 @@ class MyPosts extends React.Component<Props, State> {
             <ListOfPosts
               posts={this.state.posts}
               authUser={this.props.authUser}
-              defaultOpen={QueryString.parse(this.props.location.search).postId}
+              defaultOpen={this.props.location
+              && QueryString.parse(this.props.location.search).postId}
             />
           </div>
         </div>
@@ -81,4 +81,4 @@ class MyPosts extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withStyles(styles)(MyPosts));
+export default withStyles(styles)(MyPosts);
