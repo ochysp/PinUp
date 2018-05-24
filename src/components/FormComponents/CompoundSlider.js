@@ -1,7 +1,7 @@
 // @flow
 import Slider from 'react-compound-slider';
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { Rail, Handle, Track } from './SliderComponents';
 
 const style = () => ({

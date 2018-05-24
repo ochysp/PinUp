@@ -1,11 +1,18 @@
 // @flow
 
 import React from 'react';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import { Button, DialogActions, DialogContent } from 'material-ui';
+import {
+  List, Button,
+  ExpansionPanelActions, ExpansionPanelDetails,
+  Grid,
+  ListSubheader,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { doSignOutOfEvent, doSignUpForEvent } from '../../business/Event';
 import type { AuthUserType, PostType } from '../../business/Types';
-import { CATEGORIES } from '../../constants/categories';
+import UserListEntry from './UserListEntry';
+import { styles } from '../../style/styles';
 
 type State = {
   takesPart: boolean
@@ -14,7 +21,7 @@ type State = {
 type Props = {
   postData: PostType,
   authUser: AuthUserType,
-  onCloseClicked: () => void;
+  classes: any,
 };
 
 class PostDetails extends React.Component<Props, State> {
@@ -37,35 +44,78 @@ class PostDetails extends React.Component<Props, State> {
 
   render() {
     let eventButton = null;
+    let eventParticipantsListEntries = null;
+    let eventParticipantsList = null;
+
     if (this.props.postData.event) {
       eventButton = this.props.postData.event.participants
       && this.props.postData.event.participants[this.props.authUser.uid]
-        ? <Button onClick={this.handleDeleteParticipant}>Revoke Sign up</Button>
-        : <Button color="secondary" onClick={this.handleNewParticipant}>Sign me up!</Button>;
+        ? (
+          <Button
+            size="small"
+            onClick={this.handleDeleteParticipant}
+          >
+            Revoke Sign up
+          </Button>)
+        : (
+          <Button
+            size="small"
+            onClick={this.handleNewParticipant}
+            color="secondary"
+          >
+            Sign me up!
+          </Button>);
+
+      eventParticipantsListEntries = this.props.postData.event.participants
+        ? Object.keys(this.props.postData.event.participants)
+          .map(userId => (<UserListEntry userId={userId} key={userId} />))
+        : (
+          <Typography variant="caption" className={this.props.classes.spaceLeft}>
+            No Participants jet.
+          </Typography>
+        );
+
+      eventParticipantsList = (
+        <div>
+          <List
+            dense
+            subheader={<ListSubheader component="div" className={this.props.classes.participantsSubheader}>Participants</ListSubheader>}
+          >
+            {eventParticipantsListEntries}
+          </List>
+        </div>
+      );
     }
 
     return (
       <div>
+        <ExpansionPanelDetails>
 
-        <DialogContent>
-          <List>
-            <ListItem>
-              <ListItemText primary="Description" secondary={this.props.postData.description} />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Category" secondary={CATEGORIES[this.props.postData.category]} />
-            </ListItem>
-          </List>
-        </DialogContent>
+          <Grid container>
 
-        <DialogActions>
-          {eventButton}
-          <Button onClick={this.props.onCloseClicked}>Close</Button>
-        </DialogActions>
+            <Grid item xs={7}>
+              <Typography style={{ paddingRight: '16px' }}>
+                {this.props.postData.description}
+              </Typography>
+            </Grid>
+
+            {eventParticipantsList &&
+              <Grid style={{ padding: '0px' }} item xs={5} className={this.props.classes.sideSection}>
+                {eventParticipantsList}
+              </Grid>
+            }
+          </Grid>
+        </ExpansionPanelDetails>
+
+        {eventButton &&
+          <ExpansionPanelActions style={{ justifyContent: 'left', paddingTop: 0 }}>
+            {eventButton}
+          </ExpansionPanelActions>
+        }
 
       </div>
     );
   }
 }
 
-export default PostDetails;
+export default withStyles(styles)(PostDetails);

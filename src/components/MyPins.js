@@ -2,7 +2,9 @@
 // @flow
 
 import React from 'react';
-import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from 'material-ui';
+import { withRouter } from 'react-router';
+import QueryString from 'query-string';
+import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from '@material-ui/core';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import ListPins from './Pin/ListPins';
 import type { AuthUserType, ConnectionType, KeyType, PinType } from '../business/Types';
@@ -14,6 +16,7 @@ import ListOfPosts from './Post/ListOfPosts';
 type Props = {
   authUser: AuthUserType,
   classes: any,
+  location: any,
 };
 
 type State = {
@@ -25,7 +28,7 @@ type State = {
 };
 
 class MyPins extends React.Component<Props, State> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     this.dbHandles = [];
     this.state = {
@@ -42,6 +45,16 @@ class MyPins extends React.Component<Props, State> {
       this.setState({
         pins: newData,
         PinsDbReady: true,
+      }, () => {
+        const queryString = QueryString.parse(this.props.location.search);
+        if (queryString.pinId) {
+          const queryPin = this.state.pins.find(pin => pin.pinId === queryString.pinId);
+          if (queryPin) {
+            this.handleSelect(queryPin);
+          } else {
+            // Todo Pin not found
+          }
+        }
       });
     });
   }
@@ -137,7 +150,7 @@ class MyPins extends React.Component<Props, State> {
 
 
     return (
-      <div className={this.props.classes.flexContainer}>
+      <div className="sidePadding">
         <Grid container spacing={24}>
 
           {this.state.pinSelected ?
@@ -149,22 +162,27 @@ class MyPins extends React.Component<Props, State> {
 
           {this.state.pinSelected &&
           <Grid item xs={12} md={6}>
-            <Paper className={this.props.classes.paper} elevation={4}>
-
-              <Typography variant="headline" className={this.props.classes.typographyTitle}>
-                <IconButton
-                  onClick={this.handleUnselect}
-                  className={this.props.classes.backButton}
-                  aria-label="Delete"
-                >
-                  <BackIcon />
-                </IconButton>
-                Matches for {this.state.pinSelected.title}
-              </Typography>
-              {this.state.PostsDbReady ?
-                <ListOfPosts posts={this.state.matchIds} authUser={this.props.authUser} />
-              : <LinearProgress className={this.props.classes.progress} />}
-            </Paper>
+            <div className={this.props.classes.invisiblePaper}>
+              <div className={`${this.props.classes.flexContainer} ${this.props.classes.flexCenter}`}>
+                <Hidden mdUp>
+                  <IconButton
+                    onClick={this.handleUnselect}
+                    className={this.props.classes.backButton}
+                    aria-label="Delete"
+                  >
+                    <BackIcon />
+                  </IconButton>
+                </Hidden>
+                <Typography variant="headline" className={this.props.classes.spaceAbove}>
+              Matches for {this.state.pinSelected.title}
+                </Typography>
+              </div>
+              <div className={this.props.classes.spaceAbove}>
+                {this.state.PostsDbReady ?
+                  <ListOfPosts posts={this.state.matchIds} authUser={this.props.authUser} />
+            : <LinearProgress className={this.props.classes.progress} />}
+              </div>
+            </div>
           </Grid>
           }
 
@@ -174,4 +192,4 @@ class MyPins extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(MyPins);
+export default withRouter(withStyles(styles)(MyPins));

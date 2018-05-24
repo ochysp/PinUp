@@ -50,6 +50,12 @@ export const styles = theme => ({
     paddingTop: 16,
     marginTop: theme.spacing.unit * 3,
   },
+  invisiblePaper: {
+    margin: 'auto',
+    maxWidth: '500px',
+    minWidth: '400px',
+    paddingTop: '16px',
+  },
   typographyTitle: {
     marginLeft: theme.spacing.unit * 3,
   },
@@ -93,36 +99,74 @@ export const styles = theme => ({
     color: 'white',
   },
   backButton: {
-    marginLeft: -theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    marginTop: '-20px',
+    marginBottom: '-20px',
   },
   menuBar: {
     backgroundColor: globalTheme.palette.primary.main,
     color: globalTheme.palette.common.white,
   },
-  logout: {
-    background: globalTheme.palette.secondary.main,
+  logoutContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flexGrow: 1,
+    flexShrink: 5,
+  },
+  logoutButton: {
+    color: 'white',
   },
   postDetailDialog: {
     minWidth: '300px',
   },
+  dialogContent: {
+    paddingTop: '0px',
+  },
+  sideSection: {
+    borderLeft: `1px solid ${theme.palette.divider}`,
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+  },
+  flexCenter: {
+    alignItems: 'center',
+  },
+  flexJustifyContentCenter: {
+    justifyContent: 'center',
+  },
+  participantsSubheader: {
+    lineHeight: 1,
+    marginBottom: theme.spacing.unit,
+  },
   popup: {
     textAlign: 'center',
+  },
+  popupDiv: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   matchesButton: {
     background: globalTheme.palette.primary.main,
     color: globalTheme.palette.common.white,
-    width: '60%',
     marginBottom: 5,
   },
   editButton: {
-    background: globalTheme.palette.secondary.main,
-    color: globalTheme.palette.common.white,
-    width: '60%',
-    marginBottom: 5,
+
   },
   deleteButton: {
-    background: 'gray',
-    width: '60%',
+
+  },
+  PostButton: {
+    background: globalTheme.palette.secondary.main,
+    color: globalTheme.palette.common.white,
     marginBottom: 5,
+  },
+  spaceAbove: {
+    marginTop: theme.spacing.unit,
+  },
+  spaceLeft: {
+    paddingLeft: 3 * theme.spacing.unit,
+  },
+  spaceUnder: {
+    marginBottom: 3 * theme.spacing.unit,
   },
 });

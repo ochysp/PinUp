@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import CssBaseline from 'material-ui/CssBaseline';
-import { MuiThemeProvider, Paper, withStyles } from 'material-ui';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider, Paper, withStyles } from '@material-ui/core';
 import { firebase } from '../data/firebase';
 import { doCreateUser } from '../business/User';
 import Header from './Navigation/Header';

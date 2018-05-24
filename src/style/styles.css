@@ -18,3 +18,15 @@ html, body
     font-size: large;
     font-weight: bold;
 }
+@media (min-width: 960px) {
+    .sidePadding{
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+#show-matches-button:hover{
+    background-color: #d8383b;
+}
+#show-post-button:hover{
+    background-color: #dd7025;
+}
