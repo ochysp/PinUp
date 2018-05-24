@@ -63,7 +63,7 @@ class CreatePinForm extends React.Component<Props, State> {
     if (this.state.categories.length > 0) {
       if (event) { event.preventDefault(); }
 
-      const pin: PinType = {
+      const pin: any = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         area: {
