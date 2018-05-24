@@ -57,6 +57,7 @@ class PostListEntry extends React.Component<Props, State> {
 
     return (
       <ExpansionPanel
+        elevation={4}
         expanded={expanded === this.props.postId}
         onChange={this.props.handleChange(this.props.postId)}
       >
