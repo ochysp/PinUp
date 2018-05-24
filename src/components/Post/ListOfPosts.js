@@ -40,6 +40,7 @@ class ListOfPosts extends React.Component<Props, State> {
     const listItems = this.props.posts.map(postId => (
       <PostListEntry
         postId={postId}
+        key={postId}
         authUser={this.props.authUser}
         expanded={this.state.expanded}
         handleChange={this.handleChange}
