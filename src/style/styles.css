@@ -24,3 +24,9 @@ html, body
         padding-right: 24px;
     }
 }
+#show-matches-button:hover{
+    background-color: #d8383b;
+}
+#show-post-button:hover{
+    background-color: #dd7025;
+}

@@ -7,16 +7,24 @@ import type { AuthUserType, KeyType } from '../../business/Types';
 import { styles } from '../../style/styles';
 
 type State = {
-  expanded: ?any,
+  expanded: ?KeyType,
 }
 
 type Props = {
   posts: KeyType[],
   authUser: AuthUserType,
   classes: any,
+  defaultOpen?: KeyType[],
 };
 
 class ListOfPosts extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props) {
+    if (nextProps.defaultOpen) {
+      return { expanded: nextProps.defaultOpen };
+    }
+    return null;
+  }
+
   state = {
     expanded: null,
   };

@@ -107,8 +107,15 @@ export const styles = theme => ({
     backgroundColor: globalTheme.palette.primary.main,
     color: globalTheme.palette.common.white,
   },
-  logout: {
-    background: globalTheme.palette.secondary.main,
+  logoutContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flexGrow: 1,
+    flexShrink: 5,
+  },
+  logoutButton: {
+    color: 'white',
   },
   postDetailDialog: {
     minWidth: '300px',
@@ -123,9 +130,6 @@ export const styles = theme => ({
   flexCenter: {
     alignItems: 'center',
   },
-  spaceAbove: {
-    marginTop: theme.spacing.unit,
-  },
   flexJustifyContentCenter: {
     justifyContent: 'center',
   },
@@ -136,24 +140,33 @@ export const styles = theme => ({
   popup: {
     textAlign: 'center',
   },
+  popupDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   matchesButton: {
     background: globalTheme.palette.primary.main,
     color: globalTheme.palette.common.white,
-    width: '60%',
     marginBottom: 5,
   },
   editButton: {
-    background: globalTheme.palette.secondary.main,
-    color: globalTheme.palette.common.white,
-    width: '60%',
-    marginBottom: 5,
+
   },
   deleteButton: {
-    background: 'gray',
-    width: '60%',
+
+  },
+  PostButton: {
+    background: globalTheme.palette.secondary.main,
+    color: globalTheme.palette.common.white,
     marginBottom: 5,
+  },
+  spaceAbove: {
+    marginTop: theme.spacing.unit,
   },
   spaceLeft: {
     paddingLeft: 3 * theme.spacing.unit,
+  },
+  spaceUnder: {
+    marginBottom: 3 * theme.spacing.unit,
   },
 });

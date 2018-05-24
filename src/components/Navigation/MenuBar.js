@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Tab, Tabs } from '@material-ui/core';
@@ -14,6 +15,7 @@ import { styles } from '../../style/styles';
 type Props = {
   history: any,
   classes: any,
+  location: any,
 };
 
 type State = {
@@ -21,6 +23,20 @@ type State = {
 };
 
 class MenuBar extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props) {
+    const path = nextProps.location.pathname;
+    if (path.startsWith(routes.POSTS)) {
+      return { value: 2 };
+    }
+    if (path.startsWith(routes.PINS)) {
+      return { value: 1 };
+    }
+    if (path.startsWith(routes.HOME)) {
+      return { value: 0 };
+    }
+    return null;
+  }
+
   state = {
     value: 0,
   };
@@ -35,9 +51,6 @@ class MenuBar extends React.Component<Props, State> {
         break;
       case 2:
         this.props.history.push(routes.POSTS);
-        break;
-      case 3:
-        authentication.doSignOut();
         break;
       default:
         throw 'Not Implemented';
@@ -54,12 +67,18 @@ class MenuBar extends React.Component<Props, State> {
           value={this.state.value}
           onChange={this.handleChange}
           className={classes.menuBar}
-          centered
+          fullWidth
         >
           <Tab label="Home" />
           <Tab label="My Pins" />
           <Tab label="My Posts" />
-          <Tab className={classes.logout} label="Log Out" />
+
+          <div className={classes.logoutContainer}>
+            <Button variant="outlined" size="medium" color="secondary" className={classes.logoutButton} onClick={authentication.doSignOut}>
+              LogOut
+            </Button>
+          </div>
+
         </Tabs>
 
       </Paper>
