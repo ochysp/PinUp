@@ -128,8 +128,6 @@ class CreatePinForm extends React.Component<Props, State> {
       <div className={this.props.className}>
         {savedAlert}
         <Paper
-          open
-          onClose={this.handleClose}
           className={classes.formRoot}
         >
           <form noValidate autoComplete="off">

@@ -24,13 +24,16 @@ export const formStyle = theme => ({
     marginBottom: theme.spacing.unit * 2,
   },
   buttonContainer: {
-    marginTop: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit,
     marginLeft: -theme.spacing.unit * 3,
     marginBottom: -theme.spacing.unit * 2,
   },
   button: {
     marginTop: theme.spacing.unit,
     marginLeft: theme.spacing.unit,
+  },
+  checkbox: {
+    marginLeft: -11,
   },
 });
 

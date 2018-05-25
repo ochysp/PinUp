@@ -225,6 +225,7 @@ class Home extends React.Component<Props, State> {
 
     const postForm = userMarkerIsPost ? (
       <CreatePostForm
+        className={this.props.classes.editRoot}
         authUser={authUser}
         position={convertToLocationType(userMarkerPosition)}
         editablePost={editablePost}
@@ -365,10 +366,10 @@ class Home extends React.Component<Props, State> {
             {userMarker}
           </Map>
           {selectionDialog}
-          {postForm}
           <div />
         </div>
         {pinForm}
+        {postForm}
       </div>
     );
   }
