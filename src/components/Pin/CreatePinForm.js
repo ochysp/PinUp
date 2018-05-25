@@ -4,9 +4,8 @@
 import React from 'react';
 import {
   Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select, TextField,
-  MenuItem, Button,
+  MenuItem, Button, Divider, Paper, Typography,
 } from '@material-ui/core';
-import { Divider, Paper, Typography } from '@material-ui/core/es/index';
 import { withStyles } from '@material-ui/core/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';

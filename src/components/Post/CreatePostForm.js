@@ -4,9 +4,8 @@
 import React from 'react';
 import {
   Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select,
-  TextField, MenuItem, Button,
+  TextField, MenuItem, Button, Divider, Paper, Typography,
 } from '@material-ui/core';
-import { Divider, Paper, Typography } from '@material-ui/core/es/index';
 import { withStyles } from '@material-ui/core/styles';
 import { savePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
