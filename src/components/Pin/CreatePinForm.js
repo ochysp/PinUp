@@ -4,8 +4,9 @@
 import React from 'react';
 import {
   Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select, TextField,
-  MenuItem, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle,
+  MenuItem, Button,
 } from '@material-ui/core';
+import { Divider, Paper, Typography } from '@material-ui/core/es/index';
 import { withStyles } from '@material-ui/core/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
@@ -31,6 +32,7 @@ export type Props = {
   onRadiusChange?: (radius: number) => void,
 // eslint-disable-next-line react/no-unused-prop-types
   defaultRadius?: number,
+  className?: any,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
@@ -123,103 +125,91 @@ class CreatePinForm extends React.Component<Props, State> {
     const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Pin" />) : null;
 
     return (
-      <div>
+      <div className={this.props.className}>
         {savedAlert}
-        <Dialog
+        <Paper
           open
           onClose={this.handleClose}
+          className={classes.formRoot}
         >
-          <form className={classes.container} noValidate autoComplete="off">
-            <Grid container spacing={36} className={classes.grid}>
-              <DialogTitle id="form-dialog-title">Edit Pin</DialogTitle>
+          <form noValidate autoComplete="off">
+            <Typography variant="title" id="form-dialog-title">Edit Pin</Typography>
 
-              <DialogContent>
-                <Grid item xs={12}>
-                  <TextField
-                    id="title"
-                    label="Title"
-                    onChange={this.handleChange('title')}
-                    margin="normal"
-                    className={classes.titleField}
-                    value={this.state.title}
-                  />
+            <div className={classes.fieldContainer}>
+              <TextField
+                className={classes.field}
+                id="title"
+                label="Title"
+                onChange={this.handleChange('title')}
+                value={this.state.title}
+              />
 
-                  <Grid item xs={12}>
-                    <FormControl
-                      className={classes.formControl}
-                      error={this.state.invalidSubmit && this.state.categories.length === 0}
-                    >
-                      <InputLabel htmlFor="select-multiple-checkbox">Category</InputLabel>
-                      <Select
-                        multiple
-                        value={this.state.categories}
-                        onChange={this.handleChange('categories')}
-                        input={<Input id="select-categories" />}
-                        renderValue={selected => selected.map(category => (CATEGORIES[category])).join(', ')}
-                        className={classes.categoryField}
-                      >
-                        {Object.entries(CATEGORIES).map(category => (
+              <FormControl
+                className={classes.field}
+                error={this.state.invalidSubmit && this.state.categories.length === 0}
+              >
+                <InputLabel htmlFor="select-multiple-checkbox">Categories</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.categories}
+                  onChange={this.handleChange('categories')}
+                  input={<Input id="select-categories" />}
+                  renderValue={selected => selected.map(category => (CATEGORIES[category])).join(', ')}
+                >
+                  {Object.entries(CATEGORIES).map(category => (
 
-                          <MenuItem key={category[0]} value={category[0]}>
-                            <Checkbox
-                              checked={this.state.categories.indexOf(category[0]) > -1}
-                            />
-                            <ListItemText primary={category[1]} />
-                          </MenuItem>
+                    <MenuItem key={category[0]} value={category[0]}>
+                      <Checkbox
+                        checked={this.state.categories.indexOf(category[0]) > -1}
+                      />
+                      <ListItemText primary={category[1]} />
+                    </MenuItem>
                 ))}
-                      </Select>
-                      { this.state.invalidSubmit
+                </Select>
+                { this.state.invalidSubmit
                 && this.state.categories.length === 0
                 && (<FormHelperText>Requires one or more</FormHelperText>)}
-                    </FormControl>
-                  </Grid>
+              </FormControl>
 
-                  <Grid item xs={12}>
-                    <p>Set Search-Radius</p>
-                    <p>
-                      <span>Current set Radius </span>
-                      <span>{`${this.state.radius}km`}</span>
-                    </p>
-                    <CompoundSlider
-                      min={0.1}
-                      max={10}
-                      step={0.1}
-                      value={this.state.radius}
-                      defaultValue={this.state.radius}
-                      onUpdate={this.handleChange('radius')}
-                      onChange={() => {}}
-                      className={classes.slider}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-            </Grid>
+              <div className={classes.field}>
+                <Typography variant="caption" className={classes.sliderHeader}>Search-Radius</Typography>
+                <CompoundSlider
+                  min={0.1}
+                  max={10}
+                  step={0.1}
+                  value={this.state.radius}
+                  defaultValue={this.state.radius}
+                  onUpdate={this.handleChange('radius')}
+                  onChange={() => {}}
+                />
+              </div>
+            </div>
+
           </form>
 
-          <div
-            tabIndex={0}
-            role="button"
-            onKeyDown={this.handleClose}
-          >
-            <DialogActions>
-              <Button
-                className={classes.buttonCancel}
-                onClick={this.handleClose}
-              >Cancel
-              </Button>
-              <Button
-                id="Save"
-                color="primary"
-                className={classes.buttonSave}
-                onClick={this.handleSubmit}
-              >Save
-              </Button>
-            </DialogActions>
+          <div className={classes.buttonContainer}>
+            <Divider />
+
+            <Button
+              className={classes.button}
+              id="Save"
+              color="primary"
+              onClick={this.handleSubmit}
+            >Save
+            </Button>
+
+            <Button
+              className={classes.button}
+              onClick={this.handleClose}
+            >Cancel
+            </Button>
+
           </div>
-        </Dialog>
+        </Paper>
       </div>
     );
   }
 }
 
 export default withStyles(formStyle)(CreatePinForm);
+

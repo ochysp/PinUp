@@ -17,7 +17,7 @@ import type { AuthUserType, LocationType, PinType, PostType } from '../business/
 import SelectionDialog from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { newIcon, numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
-import { styles } from '../style/styles';
+import { homeStyles } from '../style/styles';
 import * as routes from '../constants/routes';
 
 const upperMapBoundLng = 180;
@@ -115,6 +115,12 @@ class Home extends React.Component<Props, State> {
     });
   }
 
+  componentDidUpdate() {
+    setTimeout(() => {
+      this.refs.map.leafletElement.invalidateSize(false);
+    }, 300);
+  }
+
   setMarker = (e: any) => {
     const position = e.latlng;
     this.setState({
@@ -132,11 +138,23 @@ class Home extends React.Component<Props, State> {
   };
 
   handleEditPinRequest = () => {
-    this.setState({ userMarkerIsPin: true, userMarkerIsPost: false, chooserDialogIsActive: false });
+    this.setState({
+      center: this.state.userMarkerPosition,
+      userMarkerIsPin: true,
+      userMarkerIsPost: false,
+      chooserDialogIsActive: false,
+    });
   };
+
   handleEditPostRequest = () => {
-    this.setState({ userMarkerIsPost: true, userMarkerIsPin: false, chooserDialogIsActive: false });
+    this.setState({
+      center: this.state.userMarkerPosition,
+      userMarkerIsPost: true,
+      userMarkerIsPin: false,
+      chooserDialogIsActive: false,
+    });
   };
+
   unsetMarker = () => {
     this.setState({ userMarkerIsSet: false });
   };
@@ -189,12 +207,13 @@ class Home extends React.Component<Props, State> {
     } = this.props;
 
     const {
-      matchesButton, editButton, deleteButton, popup, popupDiv,
+      matchesButton, popup, popupDiv,
       flexContainer, spaceAbove, PostButton, spaceUnder,
     } = this.props.classes;
 
     const pinForm = userMarkerIsPin ? (
       <CreatePinForm
+        className={this.props.classes.editRoot}
         authUser={authUser}
         position={convertToLocationType(userMarkerPosition)}
         editablePin={editablePin}
@@ -254,98 +273,102 @@ class Home extends React.Component<Props, State> {
     );
 
     return (
-      <div className={this.props.classes.mapRoot}>
-        <Map
-          center={center}
-          zoom={zoom}
-          minZoom={viewMinimumZoomRestriction}
-          maxBounds={[[lowerMapBoundLat, lowerMapBoundLng], [upperMapBoundLat, upperMapBoundLng]]}
-          onClick={this.setMarker}
-          className={this.props.classes.map}
-        >
-          <TileLayer
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          />
+      <div className={this.props.classes.homeRoot}>
+        <div className={this.props.classes.mapRoot}>
+          <Map
+            ref="map"
+            center={center}
+            zoom={zoom}
+            minZoom={viewMinimumZoomRestriction}
+            maxBounds={[[lowerMapBoundLat, lowerMapBoundLng], [upperMapBoundLat, upperMapBoundLng]]}
+            onClick={userMarkerIsSet ? () => {} : this.setMarker}
+            className={this.props.classes.map}
+          >
+            <TileLayer
+              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+              url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+            />
 
-          {pins.map((pin: PinType) => (
-            <Marker
-              key={pin.pinId}
-              position={convertToLeafletLocation(pin.area.location)}
-              icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
-            >
-              <Popup>
-                <div className={popup}>
-                  <div className={popupDiv}>
+            {pins.map((pin: PinType) => (
+              <Marker
+                key={pin.pinId}
+                position={convertToLeafletLocation(pin.area.location)}
+                icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
+              >
+                <Popup>
+                  <div className={popup}>
+                    <div className={popupDiv}>
 
-                    <Typography variant="title" className={spaceAbove}>{pin.title}</Typography>
-                    <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </Typography>
+                      <Typography variant="title" className={spaceAbove}>{pin.title}</Typography>
+                      <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </Typography>
 
-                    <Divider />
+                      <Divider />
 
-                    <div className={`${flexContainer} ${spaceAbove}`}>
-                      <Button className={editButton} onClick={this.handleEditPin(pin)}>
+                      <div className={`${flexContainer} ${spaceAbove}`}>
+                        <Button onClick={this.handleEditPin(pin)}>
                       Edit
-                      </Button>
-                      <Button className={deleteButton} onClick={this.handleDeletePin(pin)}>
+                        </Button>
+                        <Button onClick={this.handleDeletePin(pin)}>
                       Delete
-                      </Button>
-                    </div>
+                        </Button>
+                      </div>
 
-                    <Button variant="raised" id="show-matches-button" className={`${matchesButton} ${spaceAbove}`} onClick={this.showMatches(pin)}>
+                      <Button variant="raised" id="show-matches-button" className={`${matchesButton} ${spaceAbove}`} onClick={this.showMatches(pin)}>
                     Show Matches
-                    </Button>
-
-                  </div>
-                </div>
-              </Popup>
-
-              <Circle
-                center={convertToLeafletLocation(pin.area.location)}
-                radius={convertToLeafletRadius(pin.area.radius)}
-                color="white"
-              />
-            </Marker>
-          ))}
-
-          {posts.map((post: PostType) => (
-            <Marker
-              key={post.postId}
-              position={convertToLeafletLocation(post.location)}
-              icon={postIcon}
-            >
-              <Popup>
-                <div className={popup}>
-                  <div className={popupDiv}>
-
-                    <Typography variant="title" className={spaceAbove}>{post.title}</Typography>
-                    <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}>{CATEGORIES[post.category]}</Typography>
-
-                    <Divider />
-
-                    <div className={`${flexContainer} ${spaceAbove}`}>
-                      <Button className={editButton} onClick={this.handleEditPost(post)}>
-                    Edit
                       </Button>
-                      <Button className={deleteButton} onClick={this.handleDeletePost(post)}>
-                    Delete
-                      </Button>
+
                     </div>
-
-                    <Button variant="raised" id="show-post-button" className={`${PostButton} ${spaceAbove}`} onClick={this.showPost(post)}>
-                    Show Post
-                    </Button>
-
                   </div>
-                </div>
-              </Popup>
-            </Marker>
+                </Popup>
+
+                <Circle
+                  center={convertToLeafletLocation(pin.area.location)}
+                  radius={convertToLeafletRadius(pin.area.radius)}
+                  color="white"
+                />
+              </Marker>
           ))}
-          {userMarker}
-        </Map>
-        {selectionDialog}
+
+            {posts.map((post: PostType) => (
+              <Marker
+                key={post.postId}
+                position={convertToLeafletLocation(post.location)}
+                icon={postIcon}
+              >
+                <Popup>
+                  <div className={popup}>
+                    <div className={popupDiv}>
+
+                      <Typography variant="title" className={spaceAbove}>{post.title}</Typography>
+                      <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}>{CATEGORIES[post.category]}</Typography>
+
+                      <Divider />
+
+                      <div className={`${flexContainer} ${spaceAbove}`}>
+                        <Button onClick={this.handleEditPost(post)}>
+                    Edit
+                        </Button>
+                        <Button onClick={this.handleDeletePost(post)}>
+                    Delete
+                        </Button>
+                      </div>
+
+                      <Button variant="raised" id="show-post-button" className={`${PostButton} ${spaceAbove}`} onClick={this.showPost(post)}>
+                    Show Post
+                      </Button>
+
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+          ))}
+            {userMarker}
+          </Map>
+          {selectionDialog}
+          {postForm}
+          <div />
+        </div>
         {pinForm}
-        {postForm}
       </div>
     );
   }
@@ -356,4 +379,4 @@ class Home extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withStyles(styles)(Home));
+export default withRouter(withStyles(homeStyles)(Home));
