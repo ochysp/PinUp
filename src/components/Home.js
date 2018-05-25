@@ -180,9 +180,13 @@ class Home extends React.Component<Props, State> {
 
   render() {
     const {
-      center, zoom,
+      center, zoom, pins, posts, editablePin, editablePost, chooserDialogIsActive,
       userMarkerPosition, userMarkerIsSet, userMarkerIsPin, userMarkerIsPost, userMarkerRadius,
     } = this.state;
+
+    const {
+      authUser,
+    } = this.props;
 
     const {
       matchesButton, editButton, deleteButton, popup, popupDiv,
@@ -191,20 +195,20 @@ class Home extends React.Component<Props, State> {
 
     const pinForm = userMarkerIsPin ? (
       <CreatePinForm
-        authUser={this.props.authUser}
+        authUser={authUser}
         position={convertToLocationType(userMarkerPosition)}
-        editablePin={this.state.editablePin}
+        editablePin={editablePin}
         onDone={this.handleCloseDialogs}
-        defaultRadius={this.state.userMarkerRadius}
+        defaultRadius={userMarkerRadius}
         onRadiusChange={radius => this.setState({ userMarkerRadius: radius })}
       />
     ) : null;
 
     const postForm = userMarkerIsPost ? (
       <CreatePostForm
-        authUser={this.props.authUser}
+        authUser={authUser}
         position={convertToLocationType(userMarkerPosition)}
-        editablePost={this.state.editablePost}
+        editablePost={editablePost}
         onDone={this.handleCloseDialogs}
       />
     ) : null;
@@ -241,7 +245,7 @@ class Home extends React.Component<Props, State> {
       <SelectionDialog
         handleSelectPin={this.handleEditPinRequest}
         handleSelectPost={this.handleEditPostRequest}
-        dialogIsActive={this.state.chooserDialogIsActive}
+        dialogIsActive={chooserDialogIsActive}
         onClose={() => (this.setState({
           userMarkerIsSet: false,
           chooserDialogIsActive: false,
@@ -264,7 +268,7 @@ class Home extends React.Component<Props, State> {
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
 
-          {this.state.pins.map((pin: PinType) => (
+          {pins.map((pin: PinType) => (
             <Marker
               key={pin.pinId}
               position={convertToLeafletLocation(pin.area.location)}
@@ -304,7 +308,7 @@ class Home extends React.Component<Props, State> {
             </Marker>
           ))}
 
-          {this.state.posts.map((post: PostType) => (
+          {posts.map((post: PostType) => (
             <Marker
               key={post.postId}
               position={convertToLeafletLocation(post.location)}
