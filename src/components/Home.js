@@ -137,6 +137,13 @@ class Home extends React.Component<Props, State> {
     });
   };
 
+  updateMarker = (e: any) => {
+    const position = e.latlng;
+    this.setState({
+      userMarkerPosition: position,
+    });
+  };
+
   handleEditPinRequest = () => {
     this.setState({
       center: this.state.userMarkerPosition,
@@ -194,6 +201,16 @@ class Home extends React.Component<Props, State> {
 
   showPost = (post: PostType) => () => {
     this.props.history.push(`${routes.POSTS}?postId=${post.postId}`);
+  };
+
+  handleOnMapClick = (e: any) => {
+    if (this.state.userMarkerIsPin || this.state.userMarkerIsPost) {
+      this.updateMarker(e);
+      return;
+    }
+    if (!this.state.userMarkerIsSet) {
+      this.setMarker(e);
+    }
   };
 
   render() {
@@ -282,7 +299,7 @@ class Home extends React.Component<Props, State> {
             zoom={zoom}
             minZoom={viewMinimumZoomRestriction}
             maxBounds={[[lowerMapBoundLat, lowerMapBoundLng], [upperMapBoundLat, upperMapBoundLng]]}
-            onClick={userMarkerIsSet ? () => {} : this.setMarker}
+            onClick={this.handleOnMapClick}
             className={this.props.classes.map}
           >
             <TileLayer
