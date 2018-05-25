@@ -84,7 +84,6 @@ class PostListEntry extends React.Component<Props, State> {
           <PostDetails
             postData={this.state.postData}
             authUser={this.props.authUser}
-            onCloseClicked={this.handleClose}
           />
           }
       </ExpansionPanel>
