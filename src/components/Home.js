@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
-import type { LatLng } from 'react-leaflet/es/types';
+import type { LatLng } from 'leaflet';
 import { withStyles, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -31,7 +31,7 @@ const convertToLeafletLocation = (location: LocationType): LatLng => (
   { lat: location.latitude, lng: location.longitude }
 );
 
-const convertToValidLocation = (location: LatLng): LocationType => {
+const convertToValidLocation = (location: LatLng): LatLng => {
   const correctedLocation = { lat: location.lat, lng: location.lng };
   while (correctedLocation.lng > upperMapBoundLng || correctedLocation.lng < lowerMapBoundLng) {
     if (correctedLocation.lng > upperMapBoundLng) {
