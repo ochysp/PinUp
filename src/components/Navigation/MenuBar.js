@@ -3,17 +3,20 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import { Tab, Tabs } from '@material-ui/core';
 import * as routes from '../../constants/routes';
 import { authentication } from '../../data/firebase';
-import { styles } from '../../style/styles';
+import { menuBarStyles } from '../../style/styles';
 
 
 type Props = {
   history: any,
   classes: any,
+// eslint-disable-next-line react/no-unused-prop-types
+  location: any,
 };
 
 type State = {
@@ -21,6 +24,20 @@ type State = {
 };
 
 class MenuBar extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props) {
+    const path = nextProps.location.pathname;
+    if (path.startsWith(routes.POSTS)) {
+      return { value: 2 };
+    }
+    if (path.startsWith(routes.PINS)) {
+      return { value: 1 };
+    }
+    if (path.startsWith(routes.HOME)) {
+      return { value: 0 };
+    }
+    return null;
+  }
+
   state = {
     value: 0,
   };
@@ -36,9 +53,6 @@ class MenuBar extends React.Component<Props, State> {
       case 2:
         this.props.history.push(routes.POSTS);
         break;
-      case 3:
-        authentication.doSignOut();
-        break;
       default:
         throw 'Not Implemented';
     }
@@ -50,21 +64,31 @@ class MenuBar extends React.Component<Props, State> {
 
     return (
       <Paper className={classes.root}>
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-          className={classes.menuBar}
-          centered
-        >
-          <Tab label="Home" />
-          <Tab label="My Pins" />
-          <Tab label="My Posts" />
-          <Tab className={classes.logout} label="Log Out" />
-        </Tabs>
+        <div className={classes.flexContainer}>
 
+          <div className={classes.flexItemLeft} />
+
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+            className={classes.menuBar}
+            centered
+          >
+            <Tab label="Home" />
+            <Tab label="My Pins" />
+            <Tab label="My Posts" />
+          </Tabs>
+
+          <div className={classes.flexLogout} >
+            <Button variant="outlined" size="small" color="secondary" className={classes.logoutButton} onClick={authentication.doSignOut}>
+            LogOut
+            </Button>
+          </div>
+
+        </div>
       </Paper>
     );
   }
 }
 
-export default withRouter(withStyles(styles)(MenuBar));
+export default withRouter(withStyles(menuBarStyles)(MenuBar));

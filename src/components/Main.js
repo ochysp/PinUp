@@ -3,7 +3,8 @@
 
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { withStyles } from 'material-ui';
+import { withRouter } from 'react-router';
+import { withStyles } from '@material-ui/core';
 import Home from './Home';
 import MyPins from './MyPins';
 import MyPosts from './MyPosts';
@@ -28,12 +29,12 @@ const Main = (props: Props) => (
     <PrivateRoute
       authUser={props.authUser}
       path={routes.PINS}
-      component={MyPins}
+      component={withRouter(MyPins)}
     />
     <PrivateRoute
       authUser={props.authUser}
       path={routes.POSTS}
-      component={MyPosts}
+      component={withRouter(MyPosts)}
     />
     <Route
       exact

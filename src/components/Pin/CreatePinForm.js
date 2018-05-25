@@ -2,13 +2,11 @@
 // @flow
 
 import React from 'react';
-import { Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select } from 'material-ui';
-import TextField from 'material-ui/TextField';
-import { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
-import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
-import { withStyles } from 'material-ui/styles';
+import {
+  Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select, TextField,
+  MenuItem, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';
@@ -65,7 +63,7 @@ class CreatePinForm extends React.Component<Props, State> {
     if (this.state.categories.length > 0) {
       if (event) { event.preventDefault(); }
 
-      const pin: any = {
+      const pin: PinType = {
         userId: this.props.authUser.uid,
         title: this.state.title,
         area: {

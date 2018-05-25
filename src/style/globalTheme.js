@@ -1,4 +1,4 @@
-import { createMuiTheme } from 'material-ui/styles/index';
+import { createMuiTheme } from '@material-ui/core/styles/index';
 
 const globalTheme = createMuiTheme({
   palette: {

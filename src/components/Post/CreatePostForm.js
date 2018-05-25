@@ -2,13 +2,11 @@
 // @flow
 
 import React from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select } from 'material-ui';
-import TextField from 'material-ui/TextField';
-import { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
-import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
+import {
+  Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select,
+  Grid, TextField, MenuItem, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { savePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import type { AuthUserType, LocationType, PostType } from '../../business/Types';

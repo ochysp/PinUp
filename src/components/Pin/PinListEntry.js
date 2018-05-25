@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ListItem, ListItemText } from 'material-ui';
+import { ListItem, ListItemText } from '@material-ui/core';
 import type { PinType } from '../../business/Types';
 
 type Props = {

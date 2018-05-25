@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import { Paper, Typography, withStyles } from 'material-ui';
+import QueryString from 'query-string';
+import { Typography, withStyles } from '@material-ui/core';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
 import ListOfPosts from './Post/ListOfPosts';
@@ -16,6 +17,7 @@ type State = {
 type Props = {
   authUser: AuthUserType,
   classes: any,
+  location: any,
 };
 
 class MyPosts extends React.Component<Props, State> {
@@ -60,10 +62,19 @@ class MyPosts extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.flexContainer}>
 
-        <Paper className={this.props.classes.paper} elevation={4}>
-          <Typography variant="headline" className={this.props.classes.typographyTitle} >My Posts</Typography>
-          <ListOfPosts posts={this.state.posts} authUser={this.props.authUser} />
-        </Paper>
+        <div className={this.props.classes.invisiblePaper} >
+          <div className={`${this.props.classes.flexContainer} ${this.props.classes.flexJustifyContentCenter}`}>
+            <Typography variant="headline" className={this.props.classes.spaceAbove} >My Posts</Typography>
+          </div>
+          <div className={this.props.classes.spaceAbove}>
+            <ListOfPosts
+              posts={this.state.posts}
+              authUser={this.props.authUser}
+              defaultOpen={this.props.location
+              && QueryString.parse(this.props.location.search).postId}
+            />
+          </div>
+        </div>
 
       </div>
     );

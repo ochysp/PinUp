@@ -4,9 +4,11 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import type { LatLng } from 'react-leaflet/es/types';
-import { withStyles, Button } from 'material-ui';
-import { detachAllPinListeners, deletePin, listenForAllPinsWithMatchesOfUser } from '../business/Pin';
+import { withStyles, Button } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import { withRouter } from 'react-router-dom';
+import { detachAllPinListeners, deletePin, listenForAllPinsWithMatchesOfUser } from '../business/Pin';
 import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
@@ -74,6 +76,7 @@ type State = {
 type Props = {
   authUser: AuthUserType,
   classes: any,
+  history: any,
 };
 
 class Home extends React.Component<Props, State> {
@@ -172,10 +175,13 @@ class Home extends React.Component<Props, State> {
     this.setState({ editablePost: post });
   };
 
-  // TODO showMatches on Button click
   showMatches = (pin: PinType) => () => {
-    this.props.history.push(routes.PINS);
-  }
+    this.props.history.push(`${routes.PINS}?pinId=${pin.pinId}`);
+  };
+
+  showPost = (post: PostType) => () => {
+    this.props.history.push(`${routes.POSTS}?postId=${post.postId}`);
+  };
 
   render() {
     const {
@@ -183,7 +189,8 @@ class Home extends React.Component<Props, State> {
     } = this.state;
 
     const {
-      matchesButton, editButton, deleteButton, popup,
+      matchesButton, editButton, deleteButton, popup, popupDiv,
+      flexContainer, spaceAbove, PostButton, spaceUnder,
     } = this.props.classes;
 
     const pinForm = isPin ? (
@@ -245,19 +252,29 @@ class Home extends React.Component<Props, State> {
               position={convertToLeafletLocation(pin.area.location)}
               icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
             >
-              <Popup className={popup}>
+              <Popup>
                 <div className={popup}>
-                  <p id="title">{pin.title}</p>
-                  <p> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </p>
-                  <Button className={matchesButton} onClick={this.showMatches(pin)}>
+                  <div className={popupDiv}>
+
+                    <Typography variant="title" className={spaceAbove}>{pin.title}</Typography>
+                    <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </Typography>
+
+                    <Divider />
+
+                    <div className={`${flexContainer} ${spaceAbove}`}>
+                      <Button className={editButton} onClick={this.handleEditPin(pin)}>
+                      Edit
+                      </Button>
+                      <Button className={deleteButton} onClick={this.handleDeletePin(pin)}>
+                      Delete
+                      </Button>
+                    </div>
+
+                    <Button variant="raised" id="show-matches-button" className={`${matchesButton} ${spaceAbove}`} onClick={this.showMatches(pin)}>
                     Show Matches
-                  </Button>
-                  <Button className={editButton} onClick={this.handleEditPin(pin)}>
-                    Edit Pin
-                  </Button>
-                  <Button className={deleteButton} onClick={this.handleDeletePin(pin)}>
-                    Delete Pin
-                  </Button>
+                    </Button>
+
+                  </div>
                 </div>
               </Popup>
 
@@ -277,14 +294,27 @@ class Home extends React.Component<Props, State> {
             >
               <Popup>
                 <div className={popup}>
-                  <p id="title">{post.title}</p>
-                  <p>{CATEGORIES[post.category]}</p>
-                  <Button className={editButton} onClick={this.handleEditPost(post)}>
-                    Edit Post
-                  </Button>
-                  <Button className={deleteButton} onClick={this.handleDeletePost(post)}>
-                    Delete Post
-                  </Button>
+                  <div className={popupDiv}>
+
+                    <Typography variant="title" className={spaceAbove}>{post.title}</Typography>
+                    <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}>{CATEGORIES[post.category]}</Typography>
+
+                    <Divider />
+
+                    <div className={`${flexContainer} ${spaceAbove}`}>
+                      <Button className={editButton} onClick={this.handleEditPost(post)}>
+                    Edit
+                      </Button>
+                      <Button className={deleteButton} onClick={this.handleDeletePost(post)}>
+                    Delete
+                      </Button>
+                    </div>
+
+                    <Button variant="raised" id="show-post-button" className={`${PostButton} ${spaceAbove}`} onClick={this.showPost(post)}>
+                    Show Post
+                    </Button>
+
+                  </div>
                 </div>
               </Popup>
             </Marker>
