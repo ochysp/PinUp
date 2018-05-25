@@ -16,7 +16,7 @@ import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
 import SelectionDrawer from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
-import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
+import { newIcon, numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
 import * as routes from '../constants/routes';
 
@@ -216,6 +216,7 @@ class Home extends React.Component<Props, State> {
         position={marker}
         ref="marker"
         color="white"
+        icon={newIcon}
       />
     ) : null;
 
