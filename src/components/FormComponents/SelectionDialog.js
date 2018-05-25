@@ -10,8 +10,8 @@ import { formStyle } from '../../style/styles';
 type Props = {
   classes: any,
   dialogIsActive: boolean,
-  handleSetPin: any,
-  handleSetPost: any,
+  handleSelectPin: any,
+  handleSelectPost: any,
   onClose: () => void,
 };
 
@@ -48,8 +48,8 @@ class SelectionDialog extends React.Component<Props, State> {
           <div className={classes.dialogContentContainer}>
 
             <DialogActions className={classes.dialogActions}>
-              <Button onClick={this.props.handleSetPin} className={classes.dialogButton} color="primary" variant="outlined">Find</Button>
-              <Button onClick={this.props.handleSetPost} className={classes.dialogButton} color="secondary" variant="outlined">Host</Button>
+              <Button onClick={this.props.handleSelectPin} className={classes.dialogButton} color="primary" variant="outlined">Find</Button>
+              <Button onClick={this.props.handleSelectPost} className={classes.dialogButton} color="secondary" variant="outlined">Host</Button>
             </DialogActions>
 
             <Typography>...an event at this location!</Typography>

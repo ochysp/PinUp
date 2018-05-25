@@ -14,7 +14,7 @@ import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
 import * as leafletValues from '../constants/leafletValues';
 import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
-import SelectionDrawer from './FormComponents/SelectionDialog';
+import SelectionDialog from './FormComponents/SelectionDialog';
 import { CATEGORIES } from '../constants/categories';
 import { newIcon, numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { styles } from '../style/styles';
@@ -58,19 +58,18 @@ type State = {
   center: LatLng,
   zoom: number,
 
-  marker: LatLng,
-  markerIsSet: boolean,
-  isPin: boolean,
-  isPost: boolean,
+  userMarkerPosition: LatLng,
+  userMarkerIsSet: boolean,
+  userMarkerIsPin: boolean,
+  userMarkerIsPost: boolean,
 
   pins: Array<PinType>,
   posts: Array<PostType>,
 
-  editablePost: PostType,
-  editablePin: PinType,
+  editablePost: ?PostType,
+  editablePin: ?PinType,
 
-  dialogIsActive: boolean
-
+  chooserDialogIsActive: boolean
 };
 
 type Props = {
@@ -89,10 +88,10 @@ class Home extends React.Component<Props, State> {
       center: position,
       zoom: leafletValues.ZOOM,
 
-      marker: position,
-      markerIsSet: false,
-      isPin: false,
-      isPost: false,
+      userMarkerPosition: position,
+      userMarkerIsSet: false,
+      userMarkerIsPin: false,
+      userMarkerIsPost: false,
 
       pins: [],
       posts: [],
@@ -100,7 +99,7 @@ class Home extends React.Component<Props, State> {
       editablePost: null,
       editablePin: null,
 
-      dialogIsActive: false,
+      chooserDialogIsActive: false,
     };
   }
 
@@ -117,61 +116,54 @@ class Home extends React.Component<Props, State> {
   setMarker = (e: any) => {
     const position = e.latlng;
     this.setState({
-      markerIsSet: true,
-      marker: position,
-      dialogIsActive: true,
-      isPin: false,
-      isPost: false,
+      userMarkerPosition: position,
+      userMarkerIsSet: true,
+      userMarkerIsPin: false,
+      userMarkerIsPost: false,
+
+      chooserDialogIsActive: true,
+
       editablePost: null,
       editablePin: null,
     });
   };
 
-  handleSetPin = () => {
-    this.setState({ isPin: true, isPost: false, dialogIsActive: false });
+  handleEditPinRequest = () => {
+    this.setState({ userMarkerIsPin: true, userMarkerIsPost: false, chooserDialogIsActive: false });
   };
-  handleSetPost = () => {
-    this.setState({ isPost: true, isPin: false, dialogIsActive: false });
+  handleEditPostRequest = () => {
+    this.setState({ userMarkerIsPost: true, userMarkerIsPin: false, chooserDialogIsActive: false });
   };
   unsetMarker = () => {
-    this.setState({ markerIsSet: false });
+    this.setState({ userMarkerIsSet: false });
   };
 
   handleDeletePin = (pin: PinType) => () => {
-    if (pin.pinId) {
-      deletePin(this.props.authUser, pin.pinId);
-      this.unsetMarker();
-    } else {
-      // eslint-disable-next-line no-throw-literal
-      throw 'pin can not be deleted because no pinId was provided';
-    }
+    deletePin(this.props.authUser, pin.pinId);
+    this.unsetMarker();
   };
 
   handleEditPin = (pin: PinType) => () => {
-    this.handleSetPin();
+    this.handleEditPinRequest();
     this.setState({ editablePin: pin });
   };
 
   handleCloseDialogs = () => this.setState({
-    isPin: false,
-    isPost: false,
-    dialogIsActive: false,
+    userMarkerIsSet: false,
+    userMarkerIsPin: false,
+    userMarkerIsPost: false,
+    chooserDialogIsActive: false,
     editablePost: null,
     editablePin: null,
   });
 
   handleDeletePost = (post: PostType) => () => {
-    if (post.postId) {
-      deletePost(this.props.authUser, post);
-      this.unsetMarker();
-    } else {
-      // eslint-disable-next-line no-throw-literal
-      throw 'post can not be deleted because no postId was provided';
-    }
+    deletePost(this.props.authUser, post);
+    this.unsetMarker();
   };
 
   handleEditPost = (post: PostType) => () => {
-    this.handleSetPost();
+    this.handleEditPostRequest();
     this.setState({ editablePost: post });
   };
 
@@ -185,7 +177,7 @@ class Home extends React.Component<Props, State> {
 
   render() {
     const {
-      marker, center, zoom, markerIsSet, isPin, isPost,
+      userMarkerPosition, center, zoom, userMarkerIsSet, userMarkerIsPin, userMarkerIsPost,
     } = this.state;
 
     const {
@@ -193,41 +185,51 @@ class Home extends React.Component<Props, State> {
       flexContainer, spaceAbove, PostButton, spaceUnder,
     } = this.props.classes;
 
-    const pinForm = isPin ? (
+    const pinForm = userMarkerIsPin ? (
       <CreatePinForm
         authUser={this.props.authUser}
-        position={convertToLocationType(marker)}
+        position={convertToLocationType(userMarkerPosition)}
         editablePin={this.state.editablePin}
         onDone={this.handleCloseDialogs}
       />
     ) : null;
 
-    const postForm = isPost ? (
+    const postForm = userMarkerIsPost ? (
       <CreatePostForm
         authUser={this.props.authUser}
-        position={convertToLocationType(marker)}
+        position={convertToLocationType(userMarkerPosition)}
         editablePost={this.state.editablePost}
         onDone={this.handleCloseDialogs}
       />
     ) : null;
 
-    const currentMarker = markerIsSet ? (
-      <Marker
-        position={marker}
+    let userMarker = null;
+    if (userMarkerIsSet) {
+      let userMarkerIcon;
+      if (userMarkerIsPin) {
+        userMarkerIcon = pinIcon;
+      } else if (userMarkerIsPost) {
+        userMarkerIcon = postIcon;
+      } else {
+        userMarkerIcon = newIcon;
+      }
+
+      userMarker = (<Marker
+        position={userMarkerPosition}
         ref="marker"
         color="white"
-        icon={newIcon}
-      />
-    ) : null;
+        icon={userMarkerIcon}
+      />);
+    }
 
-    const selectionDrawer = (
-      <SelectionDrawer
-        handleSetPin={this.handleSetPin}
-        handleSetPost={this.handleSetPost}
-        dialogIsActive={this.state.dialogIsActive}
+    const selectionDialog = (
+      <SelectionDialog
+        handleSelectPin={this.handleEditPinRequest}
+        handleSelectPost={this.handleEditPostRequest}
+        dialogIsActive={this.state.chooserDialogIsActive}
         onClose={() => (this.setState({
-          markerIsSet: false,
-          dialogIsActive: false,
+          userMarkerIsSet: false,
+          chooserDialogIsActive: false,
         }))}
       />
     );
@@ -320,9 +322,9 @@ class Home extends React.Component<Props, State> {
               </Popup>
             </Marker>
           ))}
-          {currentMarker}
+          {userMarker}
         </Map>
-        {selectionDrawer}
+        {selectionDialog}
         {pinForm}
         {postForm}
       </div>
