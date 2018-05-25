@@ -3,53 +3,44 @@
 
 import React from 'react';
 import {
-  Checkbox, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, Select,
-  TextField, MenuItem, Button, Divider, Paper, Typography,
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Input,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { savePost } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
-import type { AuthUserType, LocationType, PostType } from '../../business/Types';
+import type { FormPostType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
 type State = {
-  title: string,
-  description: string,
-  category: string,
-  isEvent: boolean,
   invalidSubmit: boolean,
   sentToDB: boolean,
 };
 
 type Props = {
-  classes: any,
-  authUser: AuthUserType,
-  position: LocationType,
-  editablePost?: PostType,
+  postData: FormPostType,
+  onPostDataChange: (FormPostType) => void,
   onDone: () => void,
+  classes: any,
   className?: any,
 };
 
 class CreatePostForm extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps) {
-    if (nextProps.editablePost) {
-      return ({
-        title: nextProps.editablePost.title,
-        description: nextProps.editablePost.description,
-        category: nextProps.editablePost.category,
-      });
-    }
-    return {};
-  }
-
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: '',
-      description: '',
-      category: '',
-      isEvent: false,
       invalidSubmit: false,
       sentToDB: false,
     };
@@ -62,38 +53,13 @@ class CreatePostForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    if (this.state.title !== '' && this.state.category !== '' && this.state.description !== '') {
+    if (this.props.postData.title !== '' && this.props.postData.category !== '' && this.props.postData.description !== '') {
       if (event) { event.preventDefault(); }
-
-      const post: any = {
-        userId: this.props.authUser.uid,
-        title: this.state.title,
-        description: this.state.description,
-        category: this.state.category,
-      };
-
-      if (this.state.isEvent) {
-        post.event = {
-          participants: {},
-          date: Date.now(),
-        };
-      }
-
-      if (this.props.editablePost) {
-        post.postId = this.props.editablePost.postId;
-      } else {
-        post.location = {
-          latitude: parseFloat(this.props.position.latitude),
-          longitude: parseFloat(this.props.position.longitude),
-        };
-      }
-
       savePost(
-        post,
+        this.props.postData,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-
       this.setState({ invalidSubmit: false });
       this.handleClose();
     } else {
@@ -102,17 +68,23 @@ class CreatePostForm extends React.Component<Props, State> {
   };
 
   handleChange = name => (event) => {
-    const newState = {};
-    if (event.target.type === 'checkbox') {
-      newState[name] = event.target.checked;
-    } else {
-      newState[name] = event.target.value;
+    const newData = Object.assign({}, this.props.postData);
+    switch (name) {
+      case 'isEvent':
+        if (event.target.checked) {
+          newData.event = { participants: {}, date: Date.now() };
+          break;
+        }
+        delete newData.event;
+        break;
+      default:
+        newData[name] = event.target.value;
     }
-    this.setState(newState);
+    this.props.onPostDataChange(newData);
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, postData } = this.props;
     const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Post" />) : null;
 
     return (
@@ -131,28 +103,28 @@ class CreatePostForm extends React.Component<Props, State> {
                 label="Title"
                 id="title"
                 onChange={this.handleChange('title')}
-                helperText={this.state.invalidSubmit && this.state.title === '' ? 'Requires a Title' : ''}
-                error={this.state.invalidSubmit && this.state.title === ''}
-                value={this.state.title}
+                helperText={this.state.invalidSubmit && postData.title === '' ? 'Requires a Title' : ''}
+                error={this.state.invalidSubmit && postData.title === ''}
+                value={postData.title}
               />
 
               <TextField
                 label="Description"
                 id="description"
                 onChange={this.handleChange('description')}
-                helperText={this.state.invalidSubmit && this.state.description === '' ? 'Requires a description' : ''}
-                error={this.state.invalidSubmit && this.state.description === ''}
-                value={this.state.description}
+                helperText={this.state.invalidSubmit && postData.description === '' ? 'Requires a description' : ''}
+                error={this.state.invalidSubmit && postData.description === ''}
+                value={postData.description}
                 className={classes.field}
               />
 
               <FormControl
                 className={classes.field}
-                error={this.state.invalidSubmit && this.state.category === ''}
+                error={this.state.invalidSubmit && postData.category === ''}
               >
                 <InputLabel htmlFor="select-category">Category</InputLabel>
                 <Select
-                  value={this.state.category}
+                  value={postData.category}
                   onChange={this.handleChange('category')}
                   input={<Input name="category" id="select-category" />}
                 >
@@ -164,10 +136,9 @@ class CreatePostForm extends React.Component<Props, State> {
                       {category[1]}
                     </MenuItem>
                   ))}
-
                 </Select>
                 { this.state.invalidSubmit
-                && this.state.category !== ''
+                && postData.category !== ''
                 && (<FormHelperText>Requires a category</FormHelperText>)}
               </FormControl>
 
@@ -175,9 +146,10 @@ class CreatePostForm extends React.Component<Props, State> {
                 className={classes.field}
                 control={
                   <Checkbox
+                    disabled={!!postData.postId}
                     className={classes.checkbox}
                     id="isEvent"
-                    checked={this.state.isEvent}
+                    checked={!!postData.event}
                     onChange={this.handleChange('isEvent')}
                     value="This is an event"
                   />

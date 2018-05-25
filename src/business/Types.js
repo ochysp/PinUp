@@ -42,6 +42,14 @@ export type PinType = {
   categories: CategoriesType
 };
 
+export type FormPinType = {
+  pinId?: KeyType,
+  userId: KeyType,
+  title: string,
+  area: AreaType,
+  categories: CategoriesType
+};
+
 export type EventType = {
   date: Date,
   participants: { [KeyType]: Date }
@@ -49,6 +57,16 @@ export type EventType = {
 
 export type PostType = {
   postId: KeyType,
+  userId: KeyType,
+  title: string,
+  description: string,
+  location: LocationType,
+  category: string,
+  event?: EventType
+};
+
+export type FormPostType = {
+  postId?: KeyType,
   userId: KeyType,
   title: string,
   description: string,

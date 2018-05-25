@@ -2,106 +2,130 @@
 /* eslint-disable react/jsx-no-bind,react/sort-comp,react/no-string-refs */
 
 import React from 'react';
-import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
-import type { LatLng } from 'leaflet';
-import { withStyles, Button } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
-import { detachAllPinListeners, deletePin, listenForAllPinsWithMatchesOfUser } from '../business/Pin';
-import { detachAllPostListeners, listenForAllPostsOfUser, deletePost } from '../business/Post';
+import {
+  deletePin,
+  detachAllPinListeners,
+  listenForAllPinsWithMatchesOfUser,
+} from '../business/Pin';
+import { deletePost, detachAllPostListeners, listenForAllPostsOfUser } from '../business/Post';
 import CreatePinForm from './Pin/CreatePinForm';
 import CreatePostForm from './Post/CreatePostForm';
-import * as leafletValues from '../constants/leafletValues';
-import type { AuthUserType, LocationType, PinType, PostType } from '../business/Types';
+import type {
+  AuthUserType,
+  FormPinType,
+  FormPostType,
+  LocationType,
+  PinType,
+  PostType,
+} from '../business/Types';
 import SelectionDialog from './FormComponents/SelectionDialog';
-import { CATEGORIES } from '../constants/categories';
-import { newIcon, numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
 import { homeStyles } from '../style/styles';
-import * as routes from '../constants/routes';
+import PinUpMap from './PinUpMap';
+import type { MarkerType } from '../business/Marker';
+import { PIN, POST, UNDEFINED } from '../business/Marker';
+import * as leafletValues from '../constants/leafletValues';
 
-const upperMapBoundLng = 180;
-const lowerMapBoundLng = -180;
-const upperMapBoundLat = 90;
-const lowerMapBoundLat = -90;
-const moveToGetNextMap = 360;
-const viewMinimumZoomRestriction = 2;
+const CHOOSER_DIALOG = 'chooserDialog';
+const EDIT_PIN_FORM = 'editPinForm';
+const EDIT_POST_FORM = 'editPostForm';
 
-const convertToLeafletLocation = (location: LocationType): LatLng => (
-  { lat: location.latitude, lng: location.longitude }
-);
-
-const convertToValidLocation = (location: LatLng): LatLng => {
-  const correctedLocation = { lat: location.lat, lng: location.lng };
-  while (correctedLocation.lng > upperMapBoundLng || correctedLocation.lng < lowerMapBoundLng) {
-    if (correctedLocation.lng > upperMapBoundLng) {
-      correctedLocation.lng -= moveToGetNextMap;
-    } else if (correctedLocation.lng < lowerMapBoundLng) {
-      correctedLocation.lng += moveToGetNextMap;
-    }
-  }
-  return correctedLocation;
-};
-
-const convertToLocationType = (location: LatLng): LocationType => {
-  if (location.lat && location.lng && typeof location.lat === 'number' && typeof location.lng === 'number') {
-    const validLocation = convertToValidLocation(location);
-    return { latitude: validLocation.lat, longitude: validLocation.lng };
-  }
-  // eslint-disable-next-line no-throw-literal
-  throw 'unknown leaflet location type';
-};
-
-const convertToLeafletRadius = (radius: number): number => (radius * 1000);
+type ActiveComponent = CHOOSER_DIALOG | EDIT_PIN_FORM | EDIT_POST_FORM;
 
 type State = {
-  center: LatLng,
-  zoom: number,
-
-  userMarkerPosition: LatLng,
-  userMarkerIsSet: boolean,
-  userMarkerIsPin: boolean,
-  userMarkerIsPost: boolean,
-  userMarkerRadius: number,
-
   pins: Array<PinType>,
   posts: Array<PostType>,
 
-  editablePost: ?PostType,
-  editablePin: ?PinType,
+  currentMarkerIsSet: boolean,
+  currentMarkerLocation: ?LocationType,
+  currentMarkerType: MarkerType,
 
-  chooserDialogIsActive: boolean
+  postToEdit: PostType,
+  pinToEdit: PinType,
+
+  activeComponent: ?ActiveComponent,
 };
 
 type Props = {
   authUser: AuthUserType,
   classes: any,
-  history: any,
 };
 
 class Home extends React.Component<Props, State> {
-  constructor() {
-    super();
+  handleNewMarkerSet = (location) => {
+    this.setState({
+      currentMarkerIsSet: true,
+      currentMarkerLocation: location,
+      currentMarkerType: UNDEFINED,
+      activeComponent: CHOOSER_DIALOG,
+    });
+  };
+  handleMarkerLocationChange = (location) => {
+    const newPostToEdit = Object.assign({}, this.state.postToEdit);
+    newPostToEdit.location = location;
+    const newPinToEdit = Object.assign({}, this.state.pinToEdit);
+    newPinToEdit.area.location = location;
+    this.setState({
+      currentMarkerLocation: location,
+      pinToEdit: newPinToEdit,
+      postToEdit: newPostToEdit,
+    });
+  };
+  handleEditExistingPin = (pin: PinType) => {
+    this.setState({
+      pinToEdit: pin,
+      currentMarkerType: PIN,
+      activeComponent: EDIT_PIN_FORM,
+      currentMarkerIsSet: true,
+      currentMarkerLocation: pin.area.location,
+    });
+  };
+  handleEditExistingPost = (post: PostType) => {
+    this.setState({
+      postToEdit: post,
+      currentMarkerType: POST,
+      activeComponent: EDIT_POST_FORM,
+      currentMarkerIsSet: true,
+      currentMarkerLocation: post.location,
+    });
+  };
+  handleCreateNewPin = () => {
+    this.setState({
+      pinToEdit: this.initializePinData(this.state.currentMarkerLocation),
+      activeComponent: EDIT_PIN_FORM,
+      currentMarkerType: PIN,
+    });
+  };
+  handleCreateNewPost = () => {
+    this.setState({
+      postToEdit: this.initializePostData(this.state.currentMarkerLocation),
+      activeComponent: EDIT_POST_FORM,
+      currentMarkerType: POST,
+    });
+  };
+  closeDialogs = () => this.setState({
+    activeComponent: null,
+    currentMarkerIsSet: false,
+    currentMarkerType: UNDEFINED,
+  });
 
-    const position = { lat: leafletValues.LAT, lng: leafletValues.LNG };
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
-      center: position,
-      zoom: leafletValues.ZOOM,
-
-      userMarkerPosition: position,
-      userMarkerIsSet: false,
-      userMarkerIsPin: false,
-      userMarkerIsPost: false,
-      userMarkerRadius: 0,
 
       pins: [],
       posts: [],
 
-      editablePost: null,
-      editablePin: null,
+      currentMarkerIsSet: false,
+      currentMarkerLocation: null,
+      currentMarkerType: UNDEFINED,
 
-      chooserDialogIsActive: false,
+      postToEdit: this.initializePostData(),
+      pinToEdit: this.initializePinData(),
+
+      activeComponent: null,
     };
   }
 
@@ -115,273 +139,90 @@ class Home extends React.Component<Props, State> {
     });
   }
 
-  componentDidUpdate() {
-    setTimeout(() => {
-      this.refs.map.leafletElement.invalidateSize(false);
-    }, 300);
+  initializePinData(location = leafletValues.DEFAULT_POSITION): FormPinType {
+    return {
+      userId: this.props.authUser.uid,
+      title: '',
+      area: { location, radius: 3 },
+      categories: {},
+    };
   }
 
-  setMarker = (e: any) => {
-    const position = e.latlng;
-    this.setState({
-      userMarkerPosition: position,
-      userMarkerIsSet: true,
-      userMarkerIsPin: false,
-      userMarkerIsPost: false,
-      userMarkerRadius: 2,
-
-      chooserDialogIsActive: true,
-
-      editablePost: null,
-      editablePin: null,
-    });
-  };
-
-  updateMarker = (e: any) => {
-    const position = e.latlng;
-    this.setState({
-      userMarkerPosition: position,
-    });
-  };
-
-  handleEditPinRequest = () => {
-    this.setState({
-      center: this.state.userMarkerPosition,
-      userMarkerIsPin: true,
-      userMarkerIsPost: false,
-      chooserDialogIsActive: false,
-    });
-  };
-
-  handleEditPostRequest = () => {
-    this.setState({
-      center: this.state.userMarkerPosition,
-      userMarkerIsPost: true,
-      userMarkerIsPin: false,
-      chooserDialogIsActive: false,
-    });
-  };
-
-  unsetMarker = () => {
-    this.setState({ userMarkerIsSet: false });
-  };
-
-  handleDeletePin = (pin: PinType) => () => {
-    deletePin(this.props.authUser, pin.pinId);
-    this.unsetMarker();
-  };
-
-  handleEditPin = (pin: PinType) => () => {
-    this.handleEditPinRequest();
-    this.setState({ editablePin: pin });
-  };
-
-  handleCloseDialogs = () => this.setState({
-    userMarkerIsSet: false,
-    userMarkerIsPin: false,
-    userMarkerIsPost: false,
-    chooserDialogIsActive: false,
-    editablePost: null,
-    editablePin: null,
-  });
-
-  handleDeletePost = (post: PostType) => () => {
-    deletePost(this.props.authUser, post);
-    this.unsetMarker();
-  };
-
-  handleEditPost = (post: PostType) => () => {
-    this.handleEditPostRequest();
-    this.setState({ editablePost: post });
-  };
-
-  showMatches = (pin: PinType) => () => {
-    this.props.history.push(`${routes.PINS}?pinId=${pin.pinId}`);
-  };
-
-  showPost = (post: PostType) => () => {
-    this.props.history.push(`${routes.POSTS}?postId=${post.postId}`);
-  };
-
-  handleOnMapClick = (e: any) => {
-    if (this.state.userMarkerIsPin || this.state.userMarkerIsPost) {
-      this.updateMarker(e);
-      return;
-    }
-    if (!this.state.userMarkerIsSet) {
-      this.setMarker(e);
-    }
-  };
+  initializePostData(location = leafletValues.DEFAULT_POSITION): FormPostType {
+    return {
+      userId: this.props.authUser.uid,
+      title: '',
+      location,
+      category: '',
+    };
+  }
 
   render() {
     const {
-      center, zoom, pins, posts, editablePin, editablePost, chooserDialogIsActive,
-      userMarkerPosition, userMarkerIsSet, userMarkerIsPin, userMarkerIsPost, userMarkerRadius,
+      pins, posts, currentMarkerLocation, pinToEdit,
+      postToEdit, activeComponent, currentMarkerType, currentMarkerIsSet,
     } = this.state;
 
     const {
-      authUser,
+      authUser, classes,
     } = this.props;
 
-    const {
-      matchesButton, popup, popupDiv,
-      flexContainer, spaceAbove, PostButton, spaceUnder,
-    } = this.props.classes;
+    const pinupMap = (
+      <PinUpMap
+        center={activeComponent ? currentMarkerLocation : null}
 
-    const pinForm = userMarkerIsPin ? (
-      <CreatePinForm
-        className={this.props.classes.editRoot}
-        authUser={authUser}
-        position={convertToLocationType(userMarkerPosition)}
-        editablePin={editablePin}
-        onDone={this.handleCloseDialogs}
-        defaultRadius={userMarkerRadius}
-        onRadiusChange={radius => this.setState({ userMarkerRadius: radius })}
-      />
-    ) : null;
+        pins={pins}
+        posts={posts}
 
-    const postForm = userMarkerIsPost ? (
-      <CreatePostForm
-        className={this.props.classes.editRoot}
-        authUser={authUser}
-        position={convertToLocationType(userMarkerPosition)}
-        editablePost={editablePost}
-        onDone={this.handleCloseDialogs}
-      />
-    ) : null;
+        showMyEntries={activeComponent !== EDIT_PIN_FORM && activeComponent !== EDIT_POST_FORM}
 
-    let userMarker = null;
-    if (userMarkerIsSet) {
-      let userMarkerIcon;
-      if (userMarkerIsPin) {
-        userMarkerIcon = pinIcon;
-      } else if (userMarkerIsPost) {
-        userMarkerIcon = postIcon;
-      } else {
-        userMarkerIcon = newIcon;
-      }
+        currentMarkerIsSet={currentMarkerIsSet}
+        currentMarkerLocation={currentMarkerLocation}
+        currentMarkerType={currentMarkerType}
+        currentMarkerRadius={pinToEdit.area.radius}
 
-      userMarker = (
-        <Marker
-          position={userMarkerPosition}
-          ref="marker"
-          color="white"
-          icon={userMarkerIcon}
-        >
-          {userMarkerIsPin && <Circle
-            center={userMarkerPosition}
-            radius={convertToLeafletRadius(userMarkerRadius)}
-            color="white"
-          />}
-        </Marker>
-      );
-    }
+        onMarkerLocationChange={this.handleMarkerLocationChange}
+        onNewMarker={this.handleNewMarkerSet}
 
+        onEditPost={this.handleEditExistingPost}
+        onEditPin={this.handleEditExistingPin}
 
-    const selectionDialog = (
-      <SelectionDialog
-        handleSelectPin={this.handleEditPinRequest}
-        handleSelectPost={this.handleEditPostRequest}
-        dialogIsActive={chooserDialogIsActive}
-        onClose={() => (this.setState({
-          userMarkerIsSet: false,
-          chooserDialogIsActive: false,
-        }))}
+        onDeletePin={pin => deletePin(authUser, pin.pinId)}
+        onDeletePost={post => deletePost(authUser, post)}
       />
     );
 
+    const selectionDialog = (
+      <SelectionDialog
+        handleSelectPin={this.handleCreateNewPin}
+        handleSelectPost={this.handleCreateNewPost}
+        dialogIsActive={activeComponent === CHOOSER_DIALOG}
+        onClose={this.closeDialogs}
+      />
+    );
+
+    const pinForm = (activeComponent === EDIT_PIN_FORM) ? (
+      <CreatePinForm
+        className={classes.editRoot}
+        pinData={pinToEdit}
+        onPinDataChange={pinData => this.setState({ pinToEdit: pinData })}
+        onDone={this.closeDialogs}
+      />
+    ) : null;
+
+    const postForm = (activeComponent === EDIT_POST_FORM) ? (
+      <CreatePostForm
+        className={classes.editRoot}
+        postData={postToEdit}
+        onPostDataChange={postData => this.setState({ postToEdit: postData })}
+        onDone={this.closeDialogs}
+      />
+    ) : null;
+
     return (
-      <div className={this.props.classes.homeRoot}>
-        <div className={this.props.classes.mapRoot}>
-          <Map
-            ref="map"
-            center={center}
-            zoom={zoom}
-            minZoom={viewMinimumZoomRestriction}
-            maxBounds={[[lowerMapBoundLat, lowerMapBoundLng], [upperMapBoundLat, upperMapBoundLng]]}
-            onClick={this.handleOnMapClick}
-            className={this.props.classes.map}
-          >
-            <TileLayer
-              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-              url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-            />
-
-            {pins.map((pin: PinType) => (
-              <Marker
-                key={pin.pinId}
-                position={convertToLeafletLocation(pin.area.location)}
-                icon={pin.matches ? numberedPinIcon(pin.matches.length) : pinIcon}
-              >
-                <Popup>
-                  <div className={popup}>
-                    <div className={popupDiv}>
-
-                      <Typography variant="title" className={spaceAbove}>{pin.title}</Typography>
-                      <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}> {Object.keys(pin.categories).map(catId => (CATEGORIES[catId])).join(', ')} </Typography>
-
-                      <Divider />
-
-                      <div className={`${flexContainer} ${spaceAbove}`}>
-                        <Button onClick={this.handleEditPin(pin)}>
-                      Edit
-                        </Button>
-                        <Button onClick={this.handleDeletePin(pin)}>
-                      Delete
-                        </Button>
-                      </div>
-
-                      <Button variant="raised" id="show-matches-button" className={`${matchesButton} ${spaceAbove}`} onClick={this.showMatches(pin)}>
-                    Show Matches
-                      </Button>
-
-                    </div>
-                  </div>
-                </Popup>
-
-                <Circle
-                  center={convertToLeafletLocation(pin.area.location)}
-                  radius={convertToLeafletRadius(pin.area.radius)}
-                  color="white"
-                />
-              </Marker>
-          ))}
-
-            {posts.map((post: PostType) => (
-              <Marker
-                key={post.postId}
-                position={convertToLeafletLocation(post.location)}
-                icon={postIcon}
-              >
-                <Popup>
-                  <div className={popup}>
-                    <div className={popupDiv}>
-
-                      <Typography variant="title" className={spaceAbove}>{post.title}</Typography>
-                      <Typography variant="caption" className={`${spaceUnder} ${spaceAbove}`}>{CATEGORIES[post.category]}</Typography>
-
-                      <Divider />
-
-                      <div className={`${flexContainer} ${spaceAbove}`}>
-                        <Button onClick={this.handleEditPost(post)}>
-                    Edit
-                        </Button>
-                        <Button onClick={this.handleDeletePost(post)}>
-                    Delete
-                        </Button>
-                      </div>
-
-                      <Button variant="raised" id="show-post-button" className={`${PostButton} ${spaceAbove}`} onClick={this.showPost(post)}>
-                    Show Post
-                      </Button>
-
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-          ))}
-            {userMarker}
-          </Map>
+      <div className={classes.homeRoot}>
+        <div className={classes.mapRoot}>
+          {pinupMap}
           {selectionDialog}
           <div />
         </div>

@@ -3,68 +3,54 @@
 
 import React from 'react';
 import {
-  Checkbox, FormControl, FormHelperText, Input, InputLabel, ListItemText, Select, TextField,
-  MenuItem, Button, Divider, Paper, Typography,
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { savePin, convertCategoryArrayToObject, convertCategoryObjectToArray } from '../../business/Pin';
+import {
+  convertCategoryArrayToObject,
+  convertCategoryObjectToArray,
+  savePin,
+} from '../../business/Pin';
 import { CATEGORIES } from '../../constants/categories';
 import CompoundSlider from '../FormComponents/CompoundSlider';
-import type { AuthUserType, LocationType, PinType } from '../../business/Types';
+import type { FormPinType } from '../../business/Types';
 import ConfirmationAlertDialog from '../FormComponents/ConfirmationAlertDialog';
 import { formStyle } from '../../style/styles';
 
 type State = {
-  title: string,
-  radius: number,
-  categories: string[],
   invalidSubmit: boolean,
   sentToDB: boolean,
 };
 
 export type Props = {
-  classes: any,
-  authUser: AuthUserType,
-  position: LocationType,
-  editablePin?: PinType,
+  pinData: FormPinType,
+  onPinDataChange: (FormPinType) => void,
   onDone: () => void,
-  onRadiusChange?: (radius: number) => void,
 // eslint-disable-next-line react/no-unused-prop-types
-  defaultRadius?: number,
   className?: any,
+  classes: any,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps: any, prevState: State) {
-    if (nextProps.editablePin) {
-      return ({
-        title: nextProps.editablePin.title,
-        categories: convertCategoryObjectToArray(nextProps.editablePin.categories),
-        radius: nextProps.editablePin.area.radius,
-      });
-    }
-    if (prevState.radius === 0) {
-      return { radius: nextProps.defaultRadius ? nextProps.defaultRadius : 5 };
-    }
-    return {};
-  }
-
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: '',
-      radius: 0,
-      categories: [],
       invalidSubmit: false,
       sentToDB: false,
     };
   }
-
-  hanldeRadiusChange = (radius: number) => {
-    if (this.props.onRadiusChange) {
-      this.props.onRadiusChange(radius);
-    }
-  };
 
   handleClose = () => {
     if (this.props.onDone) {
@@ -73,34 +59,13 @@ class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleSubmit = (event: any) => {
-    if (this.state.categories.length > 0) {
+    if (convertCategoryObjectToArray(this.props.pinData.categories).length > 0) {
       if (event) { event.preventDefault(); }
-
-      const pin: any = {
-        userId: this.props.authUser.uid,
-        title: this.state.title,
-        area: {
-          radius: parseFloat(this.state.radius),
-        },
-        categories: convertCategoryArrayToObject(this.state.categories),
-      };
-
-      if (this.props.editablePin) {
-        pin.pinId = this.props.editablePin.pinId;
-        pin.area.location = this.props.editablePin.area.location;
-      } else {
-        pin.area.location = {
-          latitude: parseFloat(this.props.position.latitude),
-          longitude: parseFloat(this.props.position.longitude),
-        };
-      }
-
       savePin(
-        pin,
+        this.props.pinData,
         () => { this.setState({ sentToDB: true }); },
         (error) => { console.log('error:'); console.log(error); },
       );
-
       this.setState({ invalidSubmit: false });
       this.handleClose();
     } else {
@@ -109,26 +74,29 @@ class CreatePinForm extends React.Component<Props, State> {
   };
 
   handleChange = name => (event) => {
-    this.setState({
-      [name]: event.target.value,
-    }, () => {
-      if (name === 'radius') {
-        this.hanldeRadiusChange(event.target.value);
-      }
-    });
+    const newData = Object.assign({}, this.props.pinData);
+    const changedValue = event.target.value;
+    switch (name) {
+      case 'radius':
+        newData.area.radius = changedValue;
+        break;
+      case 'categories':
+        newData.categories = convertCategoryArrayToObject(changedValue);
+        break;
+      default:
+        newData[name] = changedValue;
+    }
+    this.props.onPinDataChange(newData);
   };
 
-
   render() {
-    const { classes } = this.props;
+    const { classes, pinData } = this.props;
     const savedAlert = this.state.sentToDB ? (<ConfirmationAlertDialog infoText="Pin" />) : null;
 
     return (
       <div className={this.props.className}>
         {savedAlert}
-        <Paper
-          className={classes.formRoot}
-        >
+        <Paper className={classes.formRoot}>
           <form noValidate autoComplete="off">
             <Typography variant="title" id="form-dialog-title">Edit Pin</Typography>
 
@@ -138,17 +106,18 @@ class CreatePinForm extends React.Component<Props, State> {
                 id="title"
                 label="Title"
                 onChange={this.handleChange('title')}
-                value={this.state.title}
+                value={pinData.title}
               />
 
               <FormControl
                 className={classes.field}
-                error={this.state.invalidSubmit && this.state.categories.length === 0}
+                error={pinData.invalidSubmit
+                && convertCategoryObjectToArray(pinData.categories).length === 0}
               >
                 <InputLabel htmlFor="select-multiple-checkbox">Categories</InputLabel>
                 <Select
                   multiple
-                  value={this.state.categories}
+                  value={convertCategoryObjectToArray(pinData.categories)}
                   onChange={this.handleChange('categories')}
                   input={<Input id="select-categories" />}
                   renderValue={selected => selected.map(category => (CATEGORIES[category])).join(', ')}
@@ -157,14 +126,15 @@ class CreatePinForm extends React.Component<Props, State> {
 
                     <MenuItem key={category[0]} value={category[0]}>
                       <Checkbox
-                        checked={this.state.categories.indexOf(category[0]) > -1}
+                        checked={convertCategoryObjectToArray(pinData.categories)
+                          .indexOf(category[0]) > -1}
                       />
                       <ListItemText primary={category[1]} />
                     </MenuItem>
                 ))}
                 </Select>
                 { this.state.invalidSubmit
-                && this.state.categories.length === 0
+                && convertCategoryObjectToArray(pinData.categories).length === 0
                 && (<FormHelperText>Requires one or more</FormHelperText>)}
               </FormControl>
 
@@ -174,8 +144,8 @@ class CreatePinForm extends React.Component<Props, State> {
                   min={0.1}
                   max={10}
                   step={0.1}
-                  value={this.state.radius}
-                  defaultValue={this.state.radius}
+                  value={pinData.area.radius}
+                  defaultValue={pinData.area.radius}
                   onUpdate={this.handleChange('radius')}
                   onChange={() => {}}
                 />
