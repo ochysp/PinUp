@@ -62,6 +62,7 @@ type State = {
   userMarkerIsSet: boolean,
   userMarkerIsPin: boolean,
   userMarkerIsPost: boolean,
+  userMarkerRadius: number,
 
   pins: Array<PinType>,
   posts: Array<PostType>,
@@ -92,6 +93,7 @@ class Home extends React.Component<Props, State> {
       userMarkerIsSet: false,
       userMarkerIsPin: false,
       userMarkerIsPost: false,
+      userMarkerRadius: 0,
 
       pins: [],
       posts: [],
@@ -120,6 +122,7 @@ class Home extends React.Component<Props, State> {
       userMarkerIsSet: true,
       userMarkerIsPin: false,
       userMarkerIsPost: false,
+      userMarkerRadius: 2,
 
       chooserDialogIsActive: true,
 
@@ -177,7 +180,8 @@ class Home extends React.Component<Props, State> {
 
   render() {
     const {
-      userMarkerPosition, center, zoom, userMarkerIsSet, userMarkerIsPin, userMarkerIsPost,
+      center, zoom,
+      userMarkerPosition, userMarkerIsSet, userMarkerIsPin, userMarkerIsPost, userMarkerRadius,
     } = this.state;
 
     const {
@@ -191,6 +195,8 @@ class Home extends React.Component<Props, State> {
         position={convertToLocationType(userMarkerPosition)}
         editablePin={this.state.editablePin}
         onDone={this.handleCloseDialogs}
+        defaultRadius={this.state.userMarkerRadius}
+        onRadiusChange={radius => this.setState({ userMarkerRadius: radius })}
       />
     ) : null;
 
@@ -214,13 +220,22 @@ class Home extends React.Component<Props, State> {
         userMarkerIcon = newIcon;
       }
 
-      userMarker = (<Marker
-        position={userMarkerPosition}
-        ref="marker"
-        color="white"
-        icon={userMarkerIcon}
-      />);
+      userMarker = (
+        <Marker
+          position={userMarkerPosition}
+          ref="marker"
+          color="white"
+          icon={userMarkerIcon}
+        >
+          {userMarkerIsPin && <Circle
+            center={userMarkerPosition}
+            radius={convertToLeafletRadius(userMarkerRadius)}
+            color="white"
+          />}
+        </Marker>
+      );
     }
+
 
     const selectionDialog = (
       <SelectionDialog

@@ -28,16 +28,22 @@ export type Props = {
   position: LocationType,
   editablePin?: PinType,
   onDone: () => void,
+  onRadiusChange?: (radius: number) => void,
+// eslint-disable-next-line react/no-unused-prop-types
+  defaultRadius?: number,
 };
 
 class CreatePinForm extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps) {
+  static getDerivedStateFromProps(nextProps: any, prevState: State) {
     if (nextProps.editablePin) {
       return ({
         title: nextProps.editablePin.title,
         categories: convertCategoryObjectToArray(nextProps.editablePin.categories),
         radius: nextProps.editablePin.area.radius,
       });
+    }
+    if (prevState.radius === 0) {
+      return { radius: nextProps.defaultRadius ? nextProps.defaultRadius : 5 };
     }
     return {};
   }
@@ -46,12 +52,18 @@ class CreatePinForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       title: '',
-      radius: 5,
+      radius: 0,
       categories: [],
       invalidSubmit: false,
       sentToDB: false,
     };
   }
+
+  hanldeRadiusChange = (radius: number) => {
+    if (this.props.onRadiusChange) {
+      this.props.onRadiusChange(radius);
+    }
+  };
 
   handleClose = () => {
     if (this.props.onDone) {
@@ -98,6 +110,10 @@ class CreatePinForm extends React.Component<Props, State> {
   handleChange = name => (event) => {
     this.setState({
       [name]: event.target.value,
+    }, () => {
+      if (name === 'radius') {
+        this.hanldeRadiusChange(event.target.value);
+      }
     });
   };
 
