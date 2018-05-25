@@ -1,35 +1,43 @@
 import globalTheme from './globalTheme';
 
 export const formStyle = theme => ({
-  container: {
+  fieldContainer: {
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+    margin: `0 -${theme.spacing.unit * 3}px`,
     display: 'flex',
+    flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  titleField: {
-    marginTop: 20,
-    width: 200,
+  field: {
+    flex: 1,
+    margin: `0 ${theme.spacing.unit * 3}px`,
+    minWidth: 200,
+    flexGrow: 1,
+    flexBasis: 0,
+    marginBottom: theme.spacing.unit * 3,
   },
-  descriptionField: {
-    width: 200,
+  formRoot: {
+    padding: theme.spacing.unit * 3,
   },
-  categoryField: {
-    marginBottom: 20,
-    width: 200,
+  sliderHeader: {
+    marginBottom: theme.spacing.unit * 2,
   },
-  menu: {
-    width: 200,
-  },
-  slider: {
-    width: 200,
-  },
-  grid: {
-    marginLeft: theme.spacing.unit + 10,
-    marginRight: theme.spacing.unit + 10,
+  buttonContainer: {
+    marginTop: theme.spacing.unit,
+    marginLeft: -theme.spacing.unit * 3,
+    marginBottom: -theme.spacing.unit * 2,
   },
   button: {
-    justifyContent: 'center',
-    alignContent: 'center',
+    marginTop: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
   },
+  checkbox: {
+    marginLeft: -11,
+  },
+});
+
+export const dialogStyles = theme => ({
   dialogButton: {
     flexGrow: 1,
     margin: `0 ${theme.spacing.unit}px`,
@@ -92,12 +100,6 @@ export const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
   },
-  mapRoot: {
-    height: '100%',
-  },
-  map: {
-    height: '100%',
-  },
   invisible: {
     visibility: 'hidden',
   },
@@ -129,39 +131,14 @@ export const styles = theme => ({
     lineHeight: 1,
     marginBottom: theme.spacing.unit,
   },
-  popup: {
-    textAlign: 'center',
-  },
-  popupDiv: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  matchesButton: {
-    background: globalTheme.palette.primary.main,
-    color: globalTheme.palette.common.white,
-    marginBottom: 5,
-  },
-  editButton: {
-
-  },
-  deleteButton: {
-
-  },
-  PostButton: {
-    background: globalTheme.palette.secondary.main,
-    color: globalTheme.palette.common.white,
-    marginBottom: 5,
-  },
   spaceAbove: {
     marginTop: theme.spacing.unit,
   },
   spaceLeft: {
     paddingLeft: 3 * theme.spacing.unit,
   },
-  spaceUnder: {
-    marginBottom: 3 * theme.spacing.unit,
-  },
 });
+
 export const menuBarStyles = theme => ({
   root: {
     backgroundColor: globalTheme.palette.primary.main,
@@ -188,5 +165,51 @@ export const menuBarStyles = theme => ({
     color: 'white',
     borderColor: globalTheme.palette.common.white,
   },
+});
+
+export const homeStyles = theme => ({
+  homeRoot: {
+    display: 'flex',
+    flexFlow: 'column',
+    height: '100%',
+  },
+  mapRoot: {
+    flex: '1 1',
+    display: 'flex',
+    minHeight: '150px',
+  },
+  map: {
+    flex: 1,
+    position: 'relative',
+  },
+  editRoot: {
+  },
+  matchesButton: {
+    background: globalTheme.palette.primary.main,
+    color: globalTheme.palette.common.white,
+    marginBottom: 5,
+  },
+  popup: {
+    textAlign: 'center',
+  },
+  popupDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  flexContainer: {
+    display: 'flex',
+  },
+  spaceAbove: {
+    marginTop: theme.spacing.unit,
+  },
+  PostButton: {
+    background: globalTheme.palette.secondary.main,
+    color: globalTheme.palette.common.white,
+    marginBottom: 5,
+  },
+  spaceUnder: {
+    marginBottom: 3 * theme.spacing.unit,
+  },
+
 });
 

@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styles } from '../../style/styles';
-import type { AuthUserType, PostType } from '../../business/Types';
+import type { AuthUserType, PostType, KeyType } from '../../business/Types';
 import { listenForPostData, detachPostListener } from '../../business/Post';
 import { CATEGORIES } from '../../constants/categories';
 import PostDetails from './PostDetails';
@@ -84,7 +84,6 @@ class PostListEntry extends React.Component<Props, State> {
           <PostDetails
             postData={this.state.postData}
             authUser={this.props.authUser}
-            onCloseClicked={this.handleClose}
           />
           }
       </ExpansionPanel>

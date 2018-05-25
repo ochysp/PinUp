@@ -35,13 +35,12 @@ export type CategoriesType = {
 
 export type PinType = {
   matches?: KeyType[],
-  pinId?: KeyType,
+  pinId: KeyType,
   userId: KeyType,
   title: string,
   area: AreaType,
   categories: CategoriesType
 };
-
 
 export type EventType = {
   date: Date,
@@ -49,7 +48,7 @@ export type EventType = {
 };
 
 export type PostType = {
-  postId?: KeyType,
+  postId: KeyType,
   userId: KeyType,
   title: string,
   description: string,

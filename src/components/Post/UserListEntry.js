@@ -3,6 +3,7 @@
 import React from 'react';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { getUserName } from '../../business/User';
+import type { KeyType } from '../../business/Types';
 
 type State = {
   name: string,
@@ -13,7 +14,7 @@ type Props = {
 };
 
 class UserListEntry extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = { name: '' };
   }

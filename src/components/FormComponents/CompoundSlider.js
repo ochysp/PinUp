@@ -6,8 +6,8 @@ import { Rail, Handle, Track } from './SliderComponents';
 
 const style = () => ({
   root: {
-    height: 120,
     width: '100%',
+    height: '28px',
   },
   slider: {
     position: 'relative',
