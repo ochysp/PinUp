@@ -210,6 +210,9 @@ export const homeStyles = theme => ({
   spaceUnder: {
     marginBottom: 3 * theme.spacing.unit,
   },
-
+  flexChild: {
+    flexGrow: 1,
+    flexBasis: 0,
+  },
 });
 

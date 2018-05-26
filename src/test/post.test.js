@@ -3,7 +3,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import CreatePostForm from '../components/Post/CreatePostForm';
+import EditingForm from '../components/FormComponents/EditingForm';
 import { deletePost, listenForAllPostsOfUser } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 // import { PostType } from '../business/Types';
@@ -38,18 +38,27 @@ beforeEach(() => {
 });
 
 const createPost = (modifiedStateValue) => {
-  const root = shallow(<CreatePostForm authUser={authUser} position={location} />);
-  const postForm = root.find('CreatePostForm').dive();
-
+  let data = {
+    userId: authUser.uid,
+    title: '',
+    description: expectedPostData.description,
+    location: expectedPostData.location,
+    category: '',
+  };
   if (modifiedStateValue === undefined) {
-    postForm.setState({
-      category: '0',
-      description: 'Text Sample',
-      title: 'default_testpost_1234',
-    });
+    data.title = expectedPostData.title;
+    data.category = expectedPostData.category;
   } else {
-    postForm.setState(modifiedStateValue);
+    data = Object.assign(data, modifiedStateValue);
   }
+  const root = shallow(<EditingForm
+    variant="post"
+    onDataChange={() => {}}
+    onDone={() => {}}
+    data={data}
+  />);
+
+  const postForm = root.find('EditingForm').dive();
   const button = postForm.find('[id="Save"]');
   button.simulate('click');
   return postForm;
@@ -66,7 +75,7 @@ const doAfterPostCreation = (toDo) => {
 };
 
 describe('Test Post', () => {
-  describe('createPin', () => {
+  describe('createPost', () => {
     it('should create valid Post', (done) => {
       const checkData = (postForm, data) => {
       // eslint-disable-next-line no-param-reassign
@@ -89,17 +98,17 @@ describe('Test Post', () => {
     it('should be deleted after Request from Client', () => {
       createPost();
       const myPost = { postId: '' };
-      function callbackThatContainsPin(data) {
+      function callbackThatContainsPost(data) {
         if (data.length && data.length > 0) {
           myPost.postId = data[0].postId;
         }
       }
-      listenForAllPostsOfUser(authUser.uid, callbackThatContainsPin);
+      listenForAllPostsOfUser(authUser.uid, callbackThatContainsPost);
       deletePost(authUser.uid, myPost);
-      function callbackWithoutPin(data) {
+      function callbackWithoutPost(data) {
         expect(data.length).toEqual(0);
       }
-      listenForAllPostsOfUser(authUser.uid, callbackWithoutPin);
+      listenForAllPostsOfUser(authUser.uid, callbackWithoutPost);
     });
   });
 });

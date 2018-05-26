@@ -3,8 +3,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import { listenForAllPinsOfUser, deletePin, convertCategoryArrayToObject } from '../business/Pin';
-import CreatePinForm from '../components/Pin/CreatePinForm';
+import { convertCategoryArrayToObject, deletePin, listenForAllPinsOfUser } from '../business/Pin';
+import EditingForm from '../components/FormComponents/EditingForm';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -41,18 +41,25 @@ beforeEach(() => {
 });
 
 const createPin = (modifiedStateValue) => {
-  const root = shallow(<CreatePinForm authUser={authUser} position={location} />);
-  const pinForm = root.find('CreatePinForm').dive();
+  let data = {
+    userId: authUser.uid,
+    title: '',
+    area: { location, radius: pinData.area.radius },
+    categories: {},
+  };
   if (modifiedStateValue === undefined) {
-    pinForm.setState({
-      title: 'testpin456',
-      radius: 2,
-      categories: ['2'],
-      invalidSubmit: false,
-    });
+    data.title = pinData.title;
+    data.categories = pinData.categories;
   } else {
-    pinForm.setState(modifiedStateValue);
+    data = Object.assign(data, modifiedStateValue);
   }
+  const root = shallow(<EditingForm
+    variant="pin"
+    onDataChange={() => {}}
+    onDone={() => {}}
+    data={data}
+  />);
+  const pinForm = root.find('EditingForm').dive();
   const button = pinForm.find('[id="Save"]');
   button.simulate('click');
   return pinForm;
