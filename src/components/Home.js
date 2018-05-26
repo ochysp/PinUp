@@ -10,7 +10,7 @@ import {
   listenForAllPinsWithMatchesOfUser,
 } from '../business/Pin';
 import { deletePost, detachAllPostListeners, listenForAllPostsOfUser } from '../business/Post';
-import CreateForm from './CreateForm';
+import CreateForm from './FormComponents/CreateForm';
 import type {
   AuthUserType,
   FormPinType,

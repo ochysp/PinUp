@@ -15,11 +15,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { convertCategoryObjectToArray } from '../business/Pin';
-import { CATEGORIES } from '../constants/categories';
-import CompoundSlider from './FormComponents/CompoundSlider';
-import type { FormPinType } from '../business/Types';
-import { formStyle } from '../style/styles';
+import { convertCategoryObjectToArray } from '../../business/Pin';
+import { CATEGORIES } from '../../constants/categories';
+import CompoundSlider from '../FormComponents/CompoundSlider';
+import type { FormPinType } from '../../business/Types';
+import { formStyle } from '../../style/styles';
 
 export type Props = {
   pinData: FormPinType,

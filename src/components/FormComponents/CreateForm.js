@@ -4,17 +4,17 @@
 import React from 'react';
 import { Button, Divider, Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { savePost } from '../business/Post';
-import type { FormPinType, FormPostType } from '../business/Types';
-import ConfirmationAlertDialog from './FormComponents/ConfirmationAlertDialog';
-import { formStyle } from '../style/styles';
-import PostFormFields from './PostFormFields';
-import PinFormFields from './PinFormFields';
+import { savePost } from '../../business/Post';
+import type { FormPinType, FormPostType } from '../../business/Types';
+import ConfirmationAlertDialog from './ConfirmationAlertDialog';
+import { formStyle } from '../../style/styles';
+import PostFormFields from '../Post/PostFormFields';
+import PinFormFields from '../Pin/PinFormFields';
 import {
   convertCategoryArrayToObject,
   convertCategoryObjectToArray,
   savePin,
-} from '../business/Pin';
+} from '../../business/Pin';
 
 type State = {
   invalidSubmit: boolean,
