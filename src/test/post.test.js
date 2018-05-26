@@ -3,7 +3,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
-import CreateForm from '../components/FormComponents/CreateForm';
+import EditingForm from '../components/FormComponents/EditingForm';
 import { deletePost, listenForAllPostsOfUser } from '../business/Post';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 // import { PostType } from '../business/Types';
@@ -51,14 +51,14 @@ const createPost = (modifiedStateValue) => {
   } else {
     data = Object.assign(data, modifiedStateValue);
   }
-  const root = shallow(<CreateForm
+  const root = shallow(<EditingForm
     variant="post"
     onDataChange={() => {}}
     onDone={() => {}}
     data={data}
   />);
 
-  const postForm = root.find('CreateForm').dive();
+  const postForm = root.find('EditingForm').dive();
   const button = postForm.find('[id="Save"]');
   button.simulate('click');
   return postForm;

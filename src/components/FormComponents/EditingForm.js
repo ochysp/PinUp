@@ -30,7 +30,7 @@ type Props = {
   className?: any,
 };
 
-class CreateForm extends React.Component<Props, State> {
+class EditingForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -194,4 +194,4 @@ class CreateForm extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(formStyle)(CreateForm);
+export default withStyles(formStyle)(EditingForm);

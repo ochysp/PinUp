@@ -4,7 +4,7 @@ import Enzyme, { shallow } from 'enzyme';
 // setTestRun activates the Firebase TestDB. It needs to be the first of all relative imports.
 import '../data/firebase/setTestRun';
 import { convertCategoryArrayToObject, deletePin, listenForAllPinsOfUser } from '../business/Pin';
-import CreateForm from '../components/FormComponents/CreateForm';
+import EditingForm from '../components/FormComponents/EditingForm';
 import { deleteTestDbOnRootLevel, haltIfLiveDB } from './testHelpers';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -53,13 +53,13 @@ const createPin = (modifiedStateValue) => {
   } else {
     data = Object.assign(data, modifiedStateValue);
   }
-  const root = shallow(<CreateForm
+  const root = shallow(<EditingForm
     variant="pin"
     onDataChange={() => {}}
     onDone={() => {}}
     data={data}
   />);
-  const pinForm = root.find('CreateForm').dive();
+  const pinForm = root.find('EditingForm').dive();
   const button = pinForm.find('[id="Save"]');
   button.simulate('click');
   return pinForm;
