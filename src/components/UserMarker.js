@@ -10,7 +10,7 @@ import { PIN, POST } from '../business/Marker';
 import type { LocationType } from '../business/Types';
 
 type Props = {
-  location: LocationType,
+  location?: LocationType,
   isSet: boolean,
   type: MarkerType,
   radius: number,
@@ -23,7 +23,7 @@ class UserMarker extends React.Component<Props> {
     } = this.props;
 
     let userMarker = null;
-    if (isSet) {
+    if (isSet && location) {
       let userMarkerIcon;
       switch (type) {
         case PIN:
