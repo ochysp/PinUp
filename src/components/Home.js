@@ -10,8 +10,7 @@ import {
   listenForAllPinsWithMatchesOfUser,
 } from '../business/Pin';
 import { deletePost, detachAllPostListeners, listenForAllPostsOfUser } from '../business/Post';
-import CreatePinForm from './Pin/CreatePinForm';
-import CreatePostForm from './Post/CreatePostForm';
+import CreateForm from './CreateForm';
 import type {
   AuthUserType,
   FormPinType,
@@ -152,6 +151,7 @@ class Home extends React.Component<Props, State> {
     return {
       userId: this.props.authUser.uid,
       title: '',
+      description: '',
       location,
       category: '',
     };
@@ -202,19 +202,21 @@ class Home extends React.Component<Props, State> {
     );
 
     const pinForm = (activeComponent === EDIT_PIN_FORM) ? (
-      <CreatePinForm
+      <CreateForm
         className={classes.editRoot}
-        pinData={pinToEdit}
-        onPinDataChange={pinData => this.setState({ pinToEdit: pinData })}
+        variant="pin"
+        data={pinToEdit}
+        onDataChange={pinData => this.setState({ pinToEdit: pinData })}
         onDone={this.closeDialogs}
       />
     ) : null;
 
     const postForm = (activeComponent === EDIT_POST_FORM) ? (
-      <CreatePostForm
+      <CreateForm
         className={classes.editRoot}
-        postData={postToEdit}
-        onPostDataChange={postData => this.setState({ postToEdit: postData })}
+        variant="post"
+        data={postToEdit}
+        onDataChange={postData => this.setState({ postToEdit: postData })}
         onDone={this.closeDialogs}
       />
     ) : null;
