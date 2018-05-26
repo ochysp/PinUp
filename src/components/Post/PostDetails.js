@@ -71,7 +71,7 @@ class PostDetails extends React.Component<Props, State> {
           .map(userId => (<UserListEntry userId={userId} key={userId} />))
         : (
           <Typography variant="caption" className={this.props.classes.spaceLeft}>
-            No Participants jet.
+            No Participants yet.
           </Typography>
         );
 
