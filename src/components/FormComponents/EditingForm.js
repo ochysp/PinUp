@@ -133,6 +133,7 @@ class EditingForm extends React.Component<Props, State> {
 
     let formFields;
     let saveButtonColor;
+    let pinPost;
     switch (this.props.variant) {
       case 'post':
         formFields = (
@@ -142,6 +143,7 @@ class EditingForm extends React.Component<Props, State> {
             onChange={this.handleChange}
           />);
         saveButtonColor = 'secondary';
+        pinPost = 'Post';
         break;
       case 'pin':
         formFields = (
@@ -151,6 +153,7 @@ class EditingForm extends React.Component<Props, State> {
             onChange={this.handleChange}
           />);
         saveButtonColor = 'primary';
+        pinPost = 'Pin';
         break;
       default:
         throw 'not implemented';
@@ -164,7 +167,7 @@ class EditingForm extends React.Component<Props, State> {
           className={classes.formRoot}
         >
           <form noValidate autoComplete="off">
-            <Typography variant="title" id="form-dialog-title">Edit Post</Typography>
+            <Typography variant="title" id="form-dialog-title">Edit {pinPost}</Typography>
 
             {formFields}
 
