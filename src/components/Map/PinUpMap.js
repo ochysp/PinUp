@@ -7,20 +7,20 @@ import { Button, withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { withRouter } from 'react-router-dom';
-import * as leafletValues from '../constants/leafletValues';
-import type { LocationType, PinType, PostType } from '../business/Types';
-import { CATEGORIES } from '../constants/categories';
-import { numberedPinIcon, pinIcon, postIcon } from '../img/LeafletIcons';
-import { homeStyles } from '../style/styles';
-import * as routes from '../constants/routes';
+import * as leafletValues from '../../constants/leafletValues';
+import type { LocationType, PinType, PostType } from '../../business/Types';
+import { CATEGORIES } from '../../constants/categories';
+import { numberedPinIcon, pinIcon, postIcon } from '../../img/LeafletIcons';
+import { homeStyles } from '../../style/styles';
+import * as routes from '../../constants/routes';
 import UserMarker from './UserMarker';
 import {
   convertToLeafletLocation,
   convertToLeafletRadius,
   convertToLocationType,
-} from '../business/Map';
-import type { MarkerType } from '../business/Marker';
-import { PIN, POST, UNDEFINED } from '../business/Marker';
+} from '../../business/Map';
+import type { MarkerType } from '../../business/Marker';
+import { PIN, POST, UNDEFINED } from '../../business/Marker';
 
 type State = {
   center: LocationType,

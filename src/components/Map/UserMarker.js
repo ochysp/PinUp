@@ -3,11 +3,11 @@
 
 import React from 'react';
 import { Circle, Marker } from 'react-leaflet';
-import { newIcon, pinIcon, postIcon } from '../img/LeafletIcons';
-import { convertToLeafletLocation, convertToLeafletRadius } from '../business/Map';
-import type { MarkerType } from '../business/Marker';
-import { PIN, POST } from '../business/Marker';
-import type { LocationType } from '../business/Types';
+import { newIcon, pinIcon, postIcon } from '../../img/LeafletIcons';
+import { convertToLeafletLocation, convertToLeafletRadius } from '../../business/Map';
+import type { MarkerType } from '../../business/Marker';
+import { PIN, POST } from '../../business/Marker';
+import type { LocationType } from '../../business/Types';
 
 type Props = {
   location?: LocationType,

@@ -21,7 +21,7 @@ import type {
 } from '../business/Types';
 import SelectionDialog from './FormComponents/SelectionDialog';
 import { homeStyles } from '../style/styles';
-import PinUpMap from './PinUpMap';
+import PinUpMap from './Map/PinUpMap';
 import type { MarkerType } from '../business/Marker';
 import { PIN, POST, UNDEFINED } from '../business/Marker';
 import * as leafletValues from '../constants/leafletValues';
