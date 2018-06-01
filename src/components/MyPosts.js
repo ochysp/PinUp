@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import QueryString from 'query-string';
+import qs from 'qs';
 import { Typography, withStyles } from '@material-ui/core';
 import { listenForPostsIDsOfUser } from '../business/Post';
 import type { AuthUserType, ConnectionType, KeyType } from '../business/Types';
@@ -71,7 +71,7 @@ class MyPosts extends React.Component<Props, State> {
               posts={this.state.posts}
               authUser={this.props.authUser}
               defaultOpen={this.props.location
-              && QueryString.parse(this.props.location.search).postId}
+              && qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).postId}
             />
           </div>
         </div>

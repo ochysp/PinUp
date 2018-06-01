@@ -2,7 +2,7 @@
 // @flow
 
 import React from 'react';
-import QueryString from 'query-string';
+import qs from 'qs';
 import {
   Grid,
   Hidden,
@@ -54,7 +54,7 @@ class MyPins extends React.Component<Props, State> {
         PinsDbReady: true,
       }, () => {
         if (this.props.location) {
-          const queryString = QueryString.parse(this.props.location.search);
+          const queryString = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
           if (queryString.pinId) {
             const queryPin = this.state.pins.find(pin => pin.pinId === queryString.pinId);
             if (queryPin) {
