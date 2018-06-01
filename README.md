@@ -7,11 +7,11 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 Before the first run, install all dependencies:
 
-### `npm install`
+`npm install`
 
 ## Run in development Mode
 
-### `npm start`
+`npm start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -23,12 +23,12 @@ You will also see any lint errors in the console.
 
 To run tests or to see test coverage run:
 
-### `npm test`
+`npm test`
 
-### `npm test -- --coverage`
+`npm test -- --coverage`
 
 ## Production Build
 
 To generate a production ready build use:
 
-### `npm build`
+`npm build`
