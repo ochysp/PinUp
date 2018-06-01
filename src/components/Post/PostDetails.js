@@ -2,9 +2,11 @@
 
 import React from 'react';
 import {
-  List, Button,
-  ExpansionPanelActions, ExpansionPanelDetails,
+  Button,
+  ExpansionPanelActions,
+  ExpansionPanelDetails,
   Grid,
+  List,
   ListSubheader,
   Typography,
   withStyles,
@@ -28,16 +30,14 @@ class PostDetails extends React.Component<Props, State> {
   handleNewParticipant = () => {
     if (this.props.postData.postId) {
       doSignUpForEvent(
-        this.props.postData.postId, this.props.authUser,
-        () => { /* TODO: onSuccess */ }, () => { /* TODO: onSuccess */ },
+        this.props.postData.postId, this.props.authUser, () => {}, () => {},
       );
     }
   };
   handleDeleteParticipant = () => {
     if (this.props.postData.postId) {
       doSignOutOfEvent(
-        this.props.postData.postId, this.props.authUser,
-        () => { /* TODO: onSuccess */ }, () => { /* TODO: onSuccess */ },
+        this.props.postData.postId, this.props.authUser, () => {}, () => {},
       );
     }
   };

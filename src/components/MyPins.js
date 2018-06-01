@@ -3,7 +3,15 @@
 
 import React from 'react';
 import QueryString from 'query-string';
-import { Grid, Hidden, IconButton, LinearProgress, Paper, Typography, withStyles } from '@material-ui/core';
+import {
+  Grid,
+  Hidden,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import ListPins from './Pin/ListPins';
 import type { AuthUserType, ConnectionType, KeyType, PinType } from '../business/Types';
@@ -51,8 +59,6 @@ class MyPins extends React.Component<Props, State> {
             const queryPin = this.state.pins.find(pin => pin.pinId === queryString.pinId);
             if (queryPin) {
               this.handleSelect(queryPin);
-            } else {
-            // Todo Pin not found
             }
           }
         }
